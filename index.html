@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RoS Framework — Return on Sovereignty v3.0</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #1c2330;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --text3: #484f58;
+  --blue: #58a6ff;
+  --blue-dark: #1f6feb;
+  --gold: #d4a017;
+  --gold-light: #f0c040;
+  --green: #3fb950;
+  --orange: #e3b341;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --teal: #39d353;
+  --pink: #f778ba;
+
+  --dim1: #58a6ff;
+  --dim2: #bc8cff;
+  --dim3: #f0883e;
+  --dim4: #3fb950;
+  --dim5: #f778ba;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  font-size: 14px;
+}
+
+/* LAYOUT */
+.app { display:flex; min-height:100vh; }
+
+.sidebar {
+  width: 240px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  z-index: 100;
+}
+
+.logo {
+  padding: 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.logo-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 16px;
+  color: var(--gold-light);
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+.logo-sub {
+  font-size: 10px;
+  color: var(--text2);
+  margin-top: 4px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.nav {
+  padding: 16px 0;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: var(--text2);
+  font-size: 13px;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+  transition: all .15s;
+}
+.nav-item:hover { color: var(--text); background: var(--bg3); }
+.nav-item.active { color: var(--blue); border-left-color: var(--blue); background: rgba(88,166,255,.08); }
+.nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+.sector-panel {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+}
+.sector-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.sector-btns { display: flex; flex-wrap: wrap; gap: 4px; }
+.sector-btn {
+  padding: 4px 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text2);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.sector-btn:hover { border-color: var(--blue); color: var(--blue); }
+.sector-btn.active { background: var(--blue-dark); border-color: var(--blue); color: white; }
+
+.main {
+  margin-left: 240px;
+  flex: 1;
+  padding: 28px;
+  min-height: 100vh;
+}
+
+/* PAGE HEADER */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.page-title { font-size: 22px; font-weight: 700; color: var(--text); }
+.page-sub { color: var(--text2); font-size: 13px; margin-top: 4px; }
+
+/* TABS CONTENT */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* CARDS */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+}
+.card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+
+/* GRID */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid5 { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
+
+/* ROS SCORE CARD */
+.ros-main {
+  background: linear-gradient(135deg, var(--bg2) 0%, #1a2235 100%);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.ros-main::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(88,166,255,.06) 0%, transparent 70%);
+}
+.ros-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+.ros-score {
+  font-family: 'Space Mono', monospace;
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 8px;
+  transition: color .3s;
+}
+.ros-interp { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+.ros-bar {
+  height: 8px;
+  background: var(--bg3);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+.ros-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width .6s cubic-bezier(.4,0,.2,1);
+  background: linear-gradient(90deg, var(--red), var(--orange), var(--gold), var(--green));
+}
+
+/* DIMENSION CARDS */
+.dim-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.dim-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.dim-name { font-size: 11px; font-weight: 600; }
+.dim-score {
+  font-family: 'Space Mono', monospace;
+  font-size: 20px;
+  font-weight: 700;
+}
+.dim-weight { font-size: 10px; color: var(--text3); margin-top: 2px; }
+.dim-bar { height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+.dim-bar-fill { height: 100%; border-radius: 2px; transition: width .5s ease; }
+.dim-1 { color: var(--dim1); }
+.dim-2 { color: var(--dim2); }
+.dim-3 { color: var(--dim3); }
+.dim-4 { color: var(--dim4); }
+.dim-5 { color: var(--dim5); }
+.fill-1 { background: var(--dim1); }
+.fill-2 { background: var(--dim2); }
+.fill-3 { background: var(--dim3); }
+.fill-4 { background: var(--dim4); }
+.fill-5 { background: var(--dim5); }
+
+/* BUTTONS */
+.btn {
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all .15s;
+}
+.btn-primary { background: var(--blue-dark); color: white; }
+.btn-primary:hover { background: var(--blue); }
+.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text2); }
+.btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+.btn-danger { color: var(--red); }
+.btn-danger:hover { background: rgba(248,81,73,.1); }
+.btn-row { display: flex; gap: 10px; margin-top: 20px; }
+
+/* CHART */
+.chart-wrap { height: 240px; position: relative; }
+
+/* INDICATORS FORM */
+.indicators-section { margin-bottom: 16px; }
+.ind-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.ind-section-dot { width: 12px; height: 12px; border-radius: 50%; }
+.ind-section-title { font-size: 15px; font-weight: 700; }
+.ind-section-sub { font-size: 12px; color: var(--text3); margin-left: auto; }
+
+.ind-row {
+  display: grid;
+  grid-template-columns: 50px 1fr 120px 50px;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(48,54,61,.5);
+}
+.ind-row:last-child { border-bottom: none; }
+.ind-id {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+}
+.ind-label { font-size: 13px; font-weight: 500; color: var(--text); }
+.ind-hint { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.ind-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  padding: 8px 12px;
+  width: 100%;
+  text-align: center;
+}
+.ind-input:focus { outline: none; border-color: var(--blue); }
+.ind-input.qual { background: var(--bg3); }
+.ind-score-pill {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* HISTORY TABLE */
+.hist-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.hist-table th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text3);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.hist-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(48,54,61,.5);
+}
+.hist-table tr:hover td { background: var(--bg3); }
+
+/* BADGES */
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-red { background: rgba(248,81,73,.15); color: var(--red); }
+.badge-orange { background: rgba(227,179,65,.15); color: var(--orange); }
+.badge-yellow { background: rgba(240,192,64,.15); color: var(--gold-light); }
+.badge-green { background: rgba(63,185,80,.15); color: var(--green); }
+.badge-teal { background: rgba(57,211,83,.15); color: var(--teal); }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all .3s;
+  z-index: 9999;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* GUIDE */
+.guide-section { margin-bottom: 16px; }
+.guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.guide-table th, .guide-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.guide-table th { color: var(--text3); font-size: 11px; text-transform: uppercase; }
+
+/* ANALYSIS */
+.strength-card, .weakness-card {
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 16px;
+}
+.aw-title { font-size: 12px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+.aw-item { font-size: 13px; color: var(--text2); margin-bottom: 6px; }
+.reco-card {
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.reco-priority { font-size: 11px; font-weight: 700; margin-bottom: 6px; }
+.reco-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+/* COMPANY ROW */
+.company-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.company-input {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  padding: 8px 14px;
+  flex: 1;
+}
+.company-input:focus { outline: none; border-color: var(--blue); }
+
+.period-input {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  padding: 8px 14px;
+  width: 100px;
+}
+.period-input:focus { outline: none; border-color: var(--blue); }
+
+/* Version badge */
+.version-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--pink);
+  color: var(--bg);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo" style="position:relative;">
+    <div class="logo-title">RoS</div>
+    <div class="logo-sub">Return on Sovereignty v3.0</div>
+    <span class="version-badge">5 DIM</span>
+  </div>
+  <nav class="nav">
+    <div class="nav-item active" onclick="showTab('dashboard',this)">
+      <span class="nav-icon">◉</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showTab('saisie',this)">
+      <span class="nav-icon">⊞</span> Saisie données
+    </div>
+    <div class="nav-item" onclick="showTab('analyse',this)">
+      <span class="nav-icon">▲</span> Analyse stratégique
+    </div>
+    <div class="nav-item" onclick="showTab('historique',this)">
+      <span class="nav-icon">◷</span> Historique
+    </div>
+    <div class="nav-item" onclick="showTab('guide',this)">
+      <span class="nav-icon">≡</span> Guide
+    </div>
+  </nav>
+  <div class="sector-panel">
+    <div class="sector-label">Secteur</div>
+    <div class="sector-btns">
+      <button class="sector-btn active" onclick="setSector('standard',this)">Standard</button>
+      <button class="sector-btn" onclick="setSector('banque',this)">Banque</button>
+      <button class="sector-btn" onclick="setSector('industrie',this)">Industrie</button>
+      <button class="sector-btn" onclick="setSector('tech',this)">Tech</button>
+      <button class="sector-btn" onclick="setSector('energie',this)">Énergie</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- ===== DASHBOARD ===== -->
+<div id="tab-dashboard" class="tab-content active">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Dashboard exécutif</div>
+      <div class="page-sub">Vue synthétique du Return on Sovereignty — 5 dimensions</div>
+    </div>
+    <button class="btn btn-primary" onclick="calculate()">⟳ Recalculer</button>
+  </div>
+
+  <div class="company-row">
+    <input class="company-input" id="company-name" placeholder="Nom de l'entreprise" oninput="saveData()">
+    <input class="period-input" id="period" value="T1 2026" oninput="saveData()">
+  </div>
+
+  <div class="grid2" style="margin-bottom:16px;">
+    <div class="ros-main">
+      <div class="ros-label">Return on Sovereignty</div>
+      <div class="ros-score" id="ros-score">—</div>
+      <div class="ros-interp" id="ros-interp">Aucune donnée</div>
+      <div class="ros-bar"><div class="ros-bar-fill" id="ros-bar" style="width:0%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Radar des 5 dimensions</div>
+      <div class="chart-wrap"><canvas id="radar-chart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid5" style="margin-bottom:16px;">
+    <div class="dim-card">
+      <div class="dim-header">
+        <div>
+          <div class="dim-name dim-1">Souv. Informationnelle</div>
+          <div class="dim-weight">Poids: <span id="w-si">25</span>%</div>
+        </div>
+        <div class="dim-score dim-1" id="score-si">—</div>
+      </div>
+      <div class="dim-bar"><div class="dim-bar-fill fill-1" id="bar-si" style="width:0%"></div></div>
+    </div>
+    <div class="dim-card">
+      <div class="dim-header">
+        <div>
+          <div class="dim-name dim-2">Souv. Décisionnelle</div>
+          <div class="dim-weight">Poids: <span id="w-sd">20</span>%</div>
+        </div>
+        <div class="dim-score dim-2" id="score-sd">—</div>
+      </div>
+      <div class="dim-bar"><div class="dim-bar-fill fill-2" id="bar-sd" style="width:0%"></div></div>
+    </div>
+    <div class="dim-card">
+      <div class="dim-header">
+        <div>
+          <div class="dim-name dim-3">Souv. Normative</div>
+          <div class="dim-weight">Poids: <span id="w-sn">15</span>%</div>
+        </div>
+        <div class="dim-score dim-3" id="score-sn">—</div>
+      </div>
+      <div class="dim-bar"><div class="dim-bar-fill fill-3" id="bar-sn" style="width:0%"></div></div>
+    </div>
+    <div class="dim-card">
+      <div class="dim-header">
+        <div>
+          <div class="dim-name dim-4">Souv. Opérationnelle</div>
+          <div class="dim-weight">Poids: <span id="w-so">20</span>%</div>
+        </div>
+        <div class="dim-score dim-4" id="score-so">—</div>
+      </div>
+      <div class="dim-bar"><div class="dim-bar-fill fill-4" id="bar-so" style="width:0%"></div></div>
+    </div>
+    <div class="dim-card">
+      <div class="dim-header">
+        <div>
+          <div class="dim-name dim-5">Capacité d'Influence</div>
+          <div class="dim-weight">Poids: <span id="w-ci">20</span>%</div>
+        </div>
+        <div class="dim-score dim-5" id="score-ci">—</div>
+      </div>
+      <div class="dim-bar"><div class="dim-bar-fill fill-5" id="bar-ci" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Évolution temporelle</div>
+    <div class="chart-wrap"><canvas id="trend-chart"></canvas></div>
+  </div>
+</div>
+
+<!-- ===== SAISIE ===== -->
+<div id="tab-saisie" class="tab-content">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Saisie des indicateurs</div>
+      <div class="page-sub">30 indicateurs — 5 dimensions — Sauvegarde automatique</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-ghost" onclick="resetInputs()">Réinitialiser</button>
+      <button class="btn btn-primary" onclick="calculate(); saveSnapshot(); showTab('dashboard', document.querySelector('.nav-item'))">Calculer & Voir</button>
+    </div>
+  </div>
+
+  <!-- DIM 1: SI -->
+  <div class="indicators-section card" style="margin-bottom:16px;">
+    <div class="ind-section-header">
+      <div class="ind-section-dot" style="background:var(--dim1)"></div>
+      <div class="ind-section-title dim-1">Souveraineté Informationnelle</div>
+      <div class="ind-section-sub">Poids: <span id="w-si-s">25</span>% · 6 indicateurs</div>
+    </div>
+
+    <div class="ind-row">
+      <div class="ind-id">SI-1</div>
+      <div><div class="ind-label">Taux de contrôle des données critiques</div><div class="ind-hint">% données critiques hébergées en infrastructure souveraine · Cible: &gt;80%</div></div>
+      <div><input class="ind-input" type="number" id="si1" min="0" max="100" placeholder="ex: 75" oninput="onInput()"> </div>
+      <div class="ind-score-pill dim-1" id="p-si1">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SI-2</div>
+      <div><div class="ind-label">Indice de réversibilité cloud</div><div class="ind-hint">% services cloud avec plan de réversibilité documenté · Cible: &gt;70%</div></div>
+      <input class="ind-input" type="number" id="si2" min="0" max="100" placeholder="ex: 65" oninput="onInput()">
+      <div class="ind-score-pill dim-1" id="p-si2">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SI-3</div>
+      <div><div class="ind-label">Dépendance fournisseurs tech étrangers</div><div class="ind-hint">% dépenses tech vers fournisseurs étrangers critiques · Cible: &lt;40% (inverse)</div></div>
+      <input class="ind-input" type="number" id="si3" min="0" max="100" placeholder="ex: 45" oninput="onInput()">
+      <div class="ind-score-pill dim-1" id="p-si3">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SI-4</div>
+      <div><div class="ind-label">Délai de détection des fuites (heures)</div><div class="ind-hint">Temps moyen entre fuite et détection · Cible: &lt;24h (inverse)</div></div>
+      <input class="ind-input" type="number" id="si4" min="0" placeholder="ex: 18" oninput="onInput()">
+      <div class="ind-score-pill dim-1" id="p-si4">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SI-5</div>
+      <div><div class="ind-label">Couverture chiffrement données sensibles</div><div class="ind-hint">% données sensibles chiffrées · Cible: 100%</div></div>
+      <input class="ind-input" type="number" id="si5" min="0" max="100" placeholder="ex: 98" oninput="onInput()">
+      <div class="ind-score-pill dim-1" id="p-si5">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SI-Q1</div>
+      <div><div class="ind-label">Maturité politique classification info</div><div class="ind-hint">Score 1–5 : 1=inexistant · 3=partiel · 5=mature et testé</div></div>
+      <input class="ind-input qual" type="number" id="si6" min="1" max="5" placeholder="1–5" oninput="onInput()">
+      <div class="ind-score-pill dim-1" id="p-si6">—</div>
+    </div>
+  </div>
+
+  <!-- DIM 2: SD -->
+  <div class="indicators-section card" style="margin-bottom:16px;">
+    <div class="ind-section-header">
+      <div class="ind-section-dot" style="background:var(--dim2)"></div>
+      <div class="ind-section-title dim-2">Souveraineté Décisionnelle</div>
+      <div class="ind-section-sub">Poids: <span id="w-sd-s">20</span>% · 6 indicateurs</div>
+    </div>
+
+    <div class="ind-row">
+      <div class="ind-id">SD-1</div>
+      <div><div class="ind-label">Taux de décisions non contraintes</div><div class="ind-hint">% décisions stratégiques prises sans contrainte externe · Cible: &gt;75%</div></div>
+      <input class="ind-input" type="number" id="sd1" min="0" max="100" placeholder="ex: 70" oninput="onInput()">
+      <div class="ind-score-pill dim-2" id="p-sd1">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SD-2</div>
+      <div><div class="ind-label">Diversification des options stratégiques</div><div class="ind-hint">Nb de scénarios alternatifs documentés pour décisions critiques · Cible: ≥3 (score 0-100)</div></div>
+      <input class="ind-input" type="number" id="sd2" min="0" max="100" placeholder="ex: 60" oninput="onInput()">
+      <div class="ind-score-pill dim-2" id="p-sd2">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SD-3</div>
+      <div><div class="ind-label">Indépendance du conseil d'administration</div><div class="ind-hint">% administrateurs indépendants sans conflit d'intérêt étranger · Cible: &gt;60%</div></div>
+      <input class="ind-input" type="number" id="sd3" min="0" max="100" placeholder="ex: 65" oninput="onInput()">
+      <div class="ind-score-pill dim-2" id="p-sd3">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SD-4</div>
+      <div><div class="ind-label">Exposition aux clauses extraterritoriales</div><div class="ind-hint">% contrats avec clauses extraterritoriales (FCPA, Cloud Act...) · Cible: &lt;20% (inverse)</div></div>
+      <input class="ind-input" type="number" id="sd4" min="0" max="100" placeholder="ex: 25" oninput="onInput()">
+      <div class="ind-score-pill dim-2" id="p-sd4">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SD-5</div>
+      <div><div class="ind-label">Couverture cartographie des dépendances</div><div class="ind-hint">% dépendances critiques formellement cartographiées · Cible: &gt;80%</div></div>
+      <input class="ind-input" type="number" id="sd5" min="0" max="100" placeholder="ex: 55" oninput="onInput()">
+      <div class="ind-score-pill dim-2" id="p-sd5">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SD-Q1</div>
+      <div><div class="ind-label">Maturité processus IE interne</div><div class="ind-hint">Score 1–5 : capacité de veille, analyse, anticipation stratégique</div></div>
+      <input class="ind-input qual" type="number" id="sd6" min="1" max="5" placeholder="1–5" oninput="onInput()">
+      <div class="ind-score-pill dim-2" id="p-sd6">—</div>
+    </div>
+  </div>
+
+  <!-- DIM 3: SN -->
+  <div class="indicators-section card" style="margin-bottom:16px;">
+    <div class="ind-section-header">
+      <div class="ind-section-dot" style="background:var(--dim3)"></div>
+      <div class="ind-section-title dim-3">Souveraineté Normative</div>
+      <div class="ind-section-sub">Poids: <span id="w-sn-s">15</span>% · 6 indicateurs</div>
+    </div>
+
+    <div class="ind-row">
+      <div class="ind-id">SN-1</div>
+      <div><div class="ind-label">Participation aux instances de normalisation</div><div class="ind-hint">% comités normatifs sectoriels avec représentation active · Cible: &gt;50%</div></div>
+      <input class="ind-input" type="number" id="sn1" min="0" max="100" placeholder="ex: 30" oninput="onInput()">
+      <div class="ind-score-pill dim-3" id="p-sn1">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SN-2</div>
+      <div><div class="ind-label">Taux de normes subies vs influencées</div><div class="ind-hint">% nouvelles normes intégrées sans influence préalable · Cible: &lt;30% (inverse)</div></div>
+      <input class="ind-input" type="number" id="sn2" min="0" max="100" placeholder="ex: 65" oninput="onInput()">
+      <div class="ind-score-pill dim-3" id="p-sn2">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SN-3</div>
+      <div><div class="ind-label">Capacité de lobbying réglementaire</div><div class="ind-hint">Budget dédié + taux de succès des interventions (score 0-100) · Cible: &gt;60</div></div>
+      <input class="ind-input" type="number" id="sn3" min="0" max="100" placeholder="ex: 40" oninput="onInput()">
+      <div class="ind-score-pill dim-3" id="p-sn3">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SN-4</div>
+      <div><div class="ind-label">Conformité proactive vs réactive</div><div class="ind-hint">% exigences réglementaires anticipées avant mise en vigueur · Cible: &gt;70%</div></div>
+      <input class="ind-input" type="number" id="sn4" min="0" max="100" placeholder="ex: 55" oninput="onInput()">
+      <div class="ind-score-pill dim-3" id="p-sn4">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SN-5</div>
+      <div><div class="ind-label">Exposition aux sanctions extraterritoriales</div><div class="ind-hint">Incidents avec amendes ou sanctions/an · Cible: 0 (score: 100-20×nb)</div></div>
+      <input class="ind-input" type="number" id="sn5" min="0" placeholder="nb incidents, ex: 1" oninput="onInput()">
+      <div class="ind-score-pill dim-3" id="p-sn5">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SN-Q1</div>
+      <div><div class="ind-label">Maturité veille réglementaire & normative</div><div class="ind-hint">Score 1–5 : couverture géographique, fréquence, alertes</div></div>
+      <input class="ind-input qual" type="number" id="sn6" min="1" max="5" placeholder="1–5" oninput="onInput()">
+      <div class="ind-score-pill dim-3" id="p-sn6">—</div>
+    </div>
+  </div>
+
+  <!-- DIM 4: SO -->
+  <div class="indicators-section card" style="margin-bottom:16px;">
+    <div class="ind-section-header">
+      <div class="ind-section-dot" style="background:var(--dim4)"></div>
+      <div class="ind-section-title dim-4">Souveraineté Opérationnelle</div>
+      <div class="ind-section-sub">Poids: <span id="w-so-s">20</span>% · 6 indicateurs</div>
+    </div>
+
+    <div class="ind-row">
+      <div class="ind-id">SO-1</div>
+      <div><div class="ind-label">Diversification des fournisseurs critiques</div><div class="ind-hint">% fournisseurs critiques avec ≥2 alternatives qualifiées · Cible: &gt;70%</div></div>
+      <input class="ind-input" type="number" id="so1" min="0" max="100" placeholder="ex: 62" oninput="onInput()">
+      <div class="ind-score-pill dim-4" id="p-so1">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SO-2</div>
+      <div><div class="ind-label">Indice de résilience supply chain</div><div class="ind-hint">Score composite: géodiversification + stocks stratégiques · Cible: &gt;75</div></div>
+      <input class="ind-input" type="number" id="so2" min="0" max="100" placeholder="ex: 58" oninput="onInput()">
+      <div class="ind-score-pill dim-4" id="p-so2">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SO-3</div>
+      <div><div class="ind-label">MTTR des fonctions critiques (heures)</div><div class="ind-hint">Temps de récupération moyen testé en PCA · Cible: &lt;4h (inverse)</div></div>
+      <input class="ind-input" type="number" id="so3" min="0" placeholder="ex: 6" oninput="onInput()">
+      <div class="ind-score-pill dim-4" id="p-so3">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SO-4</div>
+      <div><div class="ind-label">Autonomie énergétique/ressources (heures)</div><div class="ind-hint">Capacité de fonctionnement autonome sans approvisionnement · Cible: ≥72h</div></div>
+      <input class="ind-input" type="number" id="so4" min="0" placeholder="ex: 48" oninput="onInput()">
+      <div class="ind-score-pill dim-4" id="p-so4">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SO-5</div>
+      <div><div class="ind-label">Localisation des actifs critiques</div><div class="ind-hint">% actifs critiques localisés en zones souveraines (UE/alliés) · Cible: &gt;60%</div></div>
+      <input class="ind-input" type="number" id="so5" min="0" max="100" placeholder="ex: 70" oninput="onInput()">
+      <div class="ind-score-pill dim-4" id="p-so5">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">SO-Q1</div>
+      <div><div class="ind-label">Maturité Plan de Continuité d'Activité</div><div class="ind-hint">Score 1–5 : exhaustivité, fréquence tests, taux succès</div></div>
+      <input class="ind-input qual" type="number" id="so6" min="1" max="5" placeholder="1–5" oninput="onInput()">
+      <div class="ind-score-pill dim-4" id="p-so6">—</div>
+    </div>
+  </div>
+
+  <!-- DIM 5: CI -->
+  <div class="indicators-section card" style="margin-bottom:16px;">
+    <div class="ind-section-header">
+      <div class="ind-section-dot" style="background:var(--dim5)"></div>
+      <div class="ind-section-title dim-5">Capacité d'Influence</div>
+      <div class="ind-section-sub">Poids: <span id="w-ci-s">20</span>% · 6 indicateurs · <span style="color:var(--pink)">NOUVEAU</span></div>
+    </div>
+
+    <div class="ind-row">
+      <div class="ind-id">CI-1</div>
+      <div><div class="ind-label">Présence dans les instances de décision</div><div class="ind-hint">% think tanks, fédérations, groupes d'influence avec siège actif · Cible: &gt;50%</div></div>
+      <input class="ind-input" type="number" id="ci1" min="0" max="100" placeholder="ex: 35" oninput="onInput()">
+      <div class="ind-score-pill dim-5" id="p-ci1">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">CI-2</div>
+      <div><div class="ind-label">Couverture médiatique maîtrisée</div><div class="ind-hint">% mentions presse/médias avec narratif favorable ou neutre · Cible: &gt;75%</div></div>
+      <input class="ind-input" type="number" id="ci2" min="0" max="100" placeholder="ex: 68" oninput="onInput()">
+      <div class="ind-score-pill dim-5" id="p-ci2">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">CI-3</div>
+      <div><div class="ind-label">Capacité de contre-influence (jours)</div><div class="ind-hint">Temps moyen de réponse à une attaque informationnelle · Cible: &lt;3 jours (inverse)</div></div>
+      <input class="ind-input" type="number" id="ci3" min="0" placeholder="ex: 5" oninput="onInput()">
+      <div class="ind-score-pill dim-5" id="p-ci3">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">CI-4</div>
+      <div><div class="ind-label">Réseau d'alliés stratégiques activables</div><div class="ind-hint">Nb partenaires mobilisables en cas de crise (score 0-100) · Cible: &gt;60</div></div>
+      <input class="ind-input" type="number" id="ci4" min="0" max="100" placeholder="ex: 45" oninput="onInput()">
+      <div class="ind-score-pill dim-5" id="p-ci4">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">CI-5</div>
+      <div><div class="ind-label">Ratio budget offensif IE / défensif</div><div class="ind-hint">Budget influence active vs conformité/défense · Cible: &gt;25%</div></div>
+      <input class="ind-input" type="number" id="ci5" min="0" max="100" placeholder="ex: 15" oninput="onInput()">
+      <div class="ind-score-pill dim-5" id="p-ci5">—</div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-id">CI-Q1</div>
+      <div><div class="ind-label">Maturité guerre cognitive</div><div class="ind-hint">Score 1–5 : capacité à façonner le narratif sectoriel</div></div>
+      <input class="ind-input qual" type="number" id="ci6" min="1" max="5" placeholder="1–5" oninput="onInput()">
+      <div class="ind-score-pill dim-5" id="p-ci6">—</div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="calculate(); saveSnapshot(); showTabByName('dashboard')">⟳ Calculer & Tableau de bord</button>
+    <button class="btn btn-ghost" onclick="exportCSV()">↓ Exporter CSV</button>
+    <button class="btn btn-danger" onclick="resetInputs()">✕ Réinitialiser</button>
+  </div>
+</div>
+
+<!-- ===== ANALYSE ===== -->
+<div id="tab-analyse" class="tab-content">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Analyse stratégique</div>
+      <div class="page-sub">Diagnostic automatisé basé sur les 30 indicateurs</div>
+    </div>
+    <button class="btn btn-primary" onclick="calculate(); renderAnalysis()">⟳ Actualiser</button>
+  </div>
+  <div id="analysis-content">
+    <div class="card" style="text-align:center; padding:40px; color:var(--text2);">
+      Saisissez les indicateurs et cliquez sur "Actualiser" pour générer l'analyse.
+    </div>
+  </div>
+</div>
+
+<!-- ===== HISTORIQUE ===== -->
+<div id="tab-historique" class="tab-content">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Historique des mesures</div>
+      <div class="page-sub">Suivi longitudinal du Return on Sovereignty</div>
+    </div>
+    <button class="btn btn-ghost btn-danger" onclick="clearHistory()">✕ Effacer l'historique</button>
+  </div>
+  <div class="card">
+    <table class="hist-table" id="hist-table">
+      <thead>
+        <tr>
+          <th>Période</th>
+          <th>Entreprise</th>
+          <th>Secteur</th>
+          <th>RoS</th>
+          <th>SI</th><th>SD</th><th>SN</th><th>SO</th><th>CI</th>
+          <th>Niveau</th>
+        </tr>
+      </thead>
+      <tbody id="hist-body">
+        <tr><td colspan="10" style="text-align:center; color:var(--text2); padding:30px;">Aucun enregistrement</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== GUIDE ===== -->
+<div id="tab-guide" class="tab-content">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Guide méthodologique</div>
+      <div class="page-sub">École de Guerre Économique — Mémoire CRO 3.0</div>
+    </div>
+  </div>
+
+  <div class="grid2" style="gap:16px;">
+    <div>
+      <div class="card guide-section">
+        <div class="card-title">Échelle d'interprétation</div>
+        <table class="guide-table">
+          <thead><tr><th>Score RoS</th><th>Niveau</th><th>Signification</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge badge-red">&lt; 30</span></td><td>Critique</td><td>Souveraineté quasi-nulle — l'entreprise subit totalement</td></tr>
+            <tr><td><span class="badge badge-orange">30–49</span></td><td>Faible</td><td>Dépendances majeures non maîtrisées</td></tr>
+            <tr><td><span class="badge badge-yellow">50–64</span></td><td>Moyen</td><td>Capacité partielle — efforts en cours</td></tr>
+            <tr><td><span class="badge badge-green">65–79</span></td><td>Élevé</td><td>Autonomie forte — leader environnement</td></tr>
+            <tr><td><span class="badge badge-teal">≥ 80</span></td><td>Souverain</td><td>L'entreprise dicte les règles</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card guide-section" style="margin-top:16px;">
+        <div class="card-title">Pondérations sectorielles (5 dimensions)</div>
+        <table class="guide-table">
+          <thead><tr><th>Secteur</th><th>SI</th><th>SD</th><th>SN</th><th>SO</th><th style="color:var(--pink)">CI</th></tr></thead>
+          <tbody>
+            <tr><td>Standard</td><td>25%</td><td>20%</td><td>15%</td><td>20%</td><td>20%</td></tr>
+            <tr><td>Banque</td><td>30%</td><td>20%</td><td>15%</td><td>15%</td><td>20%</td></tr>
+            <tr><td>Industrie</td><td>20%</td><td>20%</td><td>15%</td><td>25%</td><td>20%</td></tr>
+            <tr><td>Tech</td><td>25%</td><td>15%</td><td>20%</td><td>15%</td><td>25%</td></tr>
+            <tr><td>Énergie</td><td>20%</td><td>25%</td><td>10%</td><td>25%</td><td>20%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="card guide-section">
+        <div class="card-title">Formule RoS v3.0</div>
+        <div style="font-family:'Space Mono',monospace; font-size:13px; line-height:2; color:var(--text2);">
+          <div style="color:var(--text); font-size:15px; margin-bottom:12px;"><strong>RoS = Σ (Poids<sub>i</sub> × Score<sub>i</sub>)</strong></div>
+          <div><span style="color:var(--dim1)">SI</span> = Souveraineté Informationnelle</div>
+          <div><span style="color:var(--dim2)">SD</span> = Souveraineté Décisionnelle</div>
+          <div><span style="color:var(--dim3)">SN</span> = Souveraineté Normative</div>
+          <div><span style="color:var(--dim4)">SO</span> = Souveraineté Opérationnelle</div>
+          <div><span style="color:var(--dim5)">CI</span> = Capacité d'Influence <span style="color:var(--pink)">(NEW)</span></div>
+          <br>
+          <div style="color:var(--text2); font-size:12px;">Indicateurs inverses: SI-3, SI-4, SD-4, SN-2, SN-5, SO-3, CI-3</div>
+        </div>
+      </div>
+      <div class="card guide-section" style="margin-top:16px;">
+        <div class="card-title">Les 5 dimensions du RoS</div>
+        <div style="font-size:13px; line-height:1.8; color:var(--text2);">
+          <div>• <strong style="color:var(--dim1)">Informationnelle</strong> — Contrôle données, flux, souveraineté digitale</div>
+          <div>• <strong style="color:var(--dim2)">Décisionnelle</strong> — Autonomie, indépendance des contraintes</div>
+          <div>• <strong style="color:var(--dim3)">Normative</strong> — Participation aux standards, conformité choisie</div>
+          <div>• <strong style="color:var(--dim4)">Opérationnelle</strong> — Résilience supply chain, continuité</div>
+          <div>• <strong style="color:var(--dim5)">Influence</strong> — Soft power, narratif, guerre cognitive <span style="color:var(--pink)">(OFFENSIF)</span></div>
+          <div style="margin-top:12px; font-size:12px; color:var(--text3);">Développé par Naouphel Ouakaoui — Mémoire CRO 3.0<br>École de Guerre Économique 2025-2026 · MaCyb09</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// CONFIGURATION v3.0 — 5 DIMENSIONS
+// ============================================================
+const WEIGHTS = {
+  standard:  { si:.25, sd:.20, sn:.15, so:.20, ci:.20 },
+  banque:    { si:.30, sd:.20, sn:.15, so:.15, ci:.20 },
+  industrie: { si:.20, sd:.20, sn:.15, so:.25, ci:.20 },
+  tech:      { si:.25, sd:.15, sn:.20, so:.15, ci:.25 },
+  energie:   { si:.20, sd:.25, sn:.10, so:.25, ci:.20 }
+};
+
+let currentSector = 'standard';
+let radarChart = null, trendChart = null;
+
+// ============================================================
+// NORMALIZATION
+// ============================================================
+function norm(val, target, isReverse=false) {
+  if (val === '' || val === null || isNaN(parseFloat(val))) return null;
+  const v = parseFloat(val);
+  if (isReverse) {
+    if (v <= 0) return 100;
+    return Math.max(0, Math.min(100, (target / v) * 100));
+  }
+  return Math.max(0, Math.min(100, (v / target) * 100));
+}
+
+function normQual(val) {
+  if (val === '' || val === null || isNaN(parseFloat(val))) return null;
+  const v = Math.max(1, Math.min(5, parseFloat(val)));
+  return (v - 1) / 4 * 100;
+}
+
+// ============================================================
+// CALCULATE SCORES
+// ============================================================
+function getScores() {
+  const g = id => document.getElementById(id)?.value ?? '';
+
+  const si = [
+    norm(g('si1'), 80),
+    norm(g('si2'), 70),
+    norm(g('si3'), 40, true),
+    norm(g('si4'), 24, true),
+    norm(g('si5'), 100),
+    normQual(g('si6'))
+  ];
+  const sd = [
+    norm(g('sd1'), 75),
+    norm(g('sd2'), 100),
+    norm(g('sd3'), 60),
+    norm(g('sd4'), 20, true),
+    norm(g('sd5'), 80),
+    normQual(g('sd6'))
+  ];
+  const sn = [
+    norm(g('sn1'), 50),
+    norm(g('sn2'), 30, true),
+    norm(g('sn3'), 60),
+    norm(g('sn4'), 70),
+    (() => { const v=parseFloat(g('sn5')); return isNaN(v) ? null : Math.max(0, 100 - v*20); })(),
+    normQual(g('sn6'))
+  ];
+  const so = [
+    norm(g('so1'), 70),
+    norm(g('so2'), 75),
+    norm(g('so3'), 4, true),
+    norm(g('so4'), 72),
+    norm(g('so5'), 60),
+    normQual(g('so6'))
+  ];
+  const ci = [
+    norm(g('ci1'), 50),
+    norm(g('ci2'), 75),
+    norm(g('ci3'), 3, true),
+    norm(g('ci4'), 60),
+    norm(g('ci5'), 25),
+    normQual(g('ci6'))
+  ];
+
+  const avg = arr => {
+    const valid = arr.filter(v => v !== null);
+    if (valid.length === 0) return null;
+    return valid.reduce((a,b) => a+b, 0) / valid.length;
+  };
+
+  const SI = avg(si), SD = avg(sd), SN = avg(sn), SO = avg(so), CI = avg(ci);
+  const w = WEIGHTS[currentSector];
+
+  let ros = null;
+  const dims = [SI, SD, SN, SO, CI];
+  const validDims = dims.filter(d => d !== null);
+  if (validDims.length > 0) {
+    let total = 0, wTotal = 0;
+    [[SI,w.si],[SD,w.sd],[SN,w.sn],[SO,w.so],[CI,w.ci]].forEach(([s,ww]) => {
+      if (s !== null) { total += s*ww; wTotal += ww; }
+    });
+    ros = wTotal > 0 ? total / wTotal : null;
+  }
+
+  return { si, sd, sn, so, ci, SI, SD, SN, SO, CI, ros };
+}
+
+function rosLevel(v) {
+  if (v === null) return { label: 'Aucune donnée', color: 'var(--text3)' };
+  if (v < 30) return { label: '⚠ Critique', color: 'var(--red)' };
+  if (v < 50) return { label: '↓ Faible', color: 'var(--orange)' };
+  if (v < 65) return { label: '~ Moyen', color: 'var(--gold-light)' };
+  if (v < 80) return { label: '↑ Élevé', color: 'var(--green)' };
+  return { label: '★ Souverain', color: 'var(--teal)' };
+}
+
+function rosLevelBadge(v) {
+  if (v === null) return '<span>—</span>';
+  const lvl = rosLevel(v);
+  const cls = v<30?'badge-red':v<50?'badge-orange':v<65?'badge-yellow':v<80?'badge-green':'badge-teal';
+  return `<span class="badge ${cls}">${lvl.label}</span>`;
+}
+
+// ============================================================
+// CALCULATE & UPDATE UI
+// ============================================================
+function calculate() {
+  const s = getScores();
+
+  const pills = [
+    ['p-si1',s.si[0]],['p-si2',s.si[1]],['p-si3',s.si[2]],
+    ['p-si4',s.si[3]],['p-si5',s.si[4]],['p-si6',s.si[5]],
+    ['p-sd1',s.sd[0]],['p-sd2',s.sd[1]],['p-sd3',s.sd[2]],
+    ['p-sd4',s.sd[3]],['p-sd5',s.sd[4]],['p-sd6',s.sd[5]],
+    ['p-sn1',s.sn[0]],['p-sn2',s.sn[1]],['p-sn3',s.sn[2]],
+    ['p-sn4',s.sn[3]],['p-sn5',s.sn[4]],['p-sn6',s.sn[5]],
+    ['p-so1',s.so[0]],['p-so2',s.so[1]],['p-so3',s.so[2]],
+    ['p-so4',s.so[3]],['p-so5',s.so[4]],['p-so6',s.so[5]],
+    ['p-ci1',s.ci[0]],['p-ci2',s.ci[1]],['p-ci3',s.ci[2]],
+    ['p-ci4',s.ci[3]],['p-ci5',s.ci[4]],['p-ci6',s.ci[5]],
+  ];
+  pills.forEach(([id, v]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = v !== null ? Math.round(v) : '—';
+  });
+
+  const fmt = v => v !== null ? Math.round(v) : '—';
+  document.getElementById('score-si').textContent = fmt(s.SI);
+  document.getElementById('score-sd').textContent = fmt(s.SD);
+  document.getElementById('score-sn').textContent = fmt(s.SN);
+  document.getElementById('score-so').textContent = fmt(s.SO);
+  document.getElementById('score-ci').textContent = fmt(s.CI);
+  document.getElementById('bar-si').style.width = (s.SI ?? 0) + '%';
+  document.getElementById('bar-sd').style.width = (s.SD ?? 0) + '%';
+  document.getElementById('bar-sn').style.width = (s.SN ?? 0) + '%';
+  document.getElementById('bar-so').style.width = (s.SO ?? 0) + '%';
+  document.getElementById('bar-ci').style.width = (s.CI ?? 0) + '%';
+
+  const lvl = rosLevel(s.ros);
+  const rosEl = document.getElementById('ros-score');
+  rosEl.textContent = s.ros !== null ? Math.round(s.ros) : '—';
+  rosEl.style.color = lvl.color;
+  document.getElementById('ros-interp').textContent = lvl.label;
+  document.getElementById('ros-interp').style.color = lvl.color;
+  document.getElementById('ros-bar').style.width = (s.ros ?? 0) + '%';
+
+  const w = WEIGHTS[currentSector];
+  ['si','sd','sn','so','ci'].forEach(k => {
+    ['w-'+k, 'w-'+k+'-s'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = Math.round(w[k]*100);
+    });
+  });
+
+  updateRadar(s);
+  saveData();
+}
+
+function onInput() { calculate(); }
+
+// ============================================================
+// CHARTS
+// ============================================================
+function updateRadar(s) {
+  const data = [s.SI??0, s.SD??0, s.SN??0, s.SO??0, s.CI??0];
+  const ctx = document.getElementById('radar-chart');
+  if (!ctx) return;
+
+  if (radarChart) {
+    radarChart.data.datasets[0].data = data;
+    radarChart.update();
+    return;
+  }
+
+  radarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['Informationnelle', 'Décisionnelle', 'Normative', 'Opérationnelle', 'Influence'],
+      datasets: [{
+        data: data,
+        backgroundColor: 'rgba(88, 166, 255, 0.15)',
+        borderColor: 'rgba(88, 166, 255, 0.8)',
+        borderWidth: 2,
+        pointBackgroundColor: ['#58a6ff', '#bc8cff', '#f0883e', '#3fb950', '#f778ba'],
+        pointBorderColor: '#0d1117',
+        pointBorderWidth: 2,
+        pointRadius: 5
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          beginAtZero: true,
+          max: 100,
+          ticks: { stepSize: 25, color: '#484f58', backdropColor: 'transparent' },
+          grid: { color: '#30363d' },
+          angleLines: { color: '#30363d' },
+          pointLabels: { color: '#8b949e', font: { size: 11 } }
+        }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+function updateTrend(history) {
+  const ctx = document.getElementById('trend-chart');
+  if (!ctx) return;
+  if (history.length === 0) return;
+
+  const labels = history.map(h => h.period);
+  const rosData = history.map(h => h.ros);
+  const siData = history.map(h => h.si);
+  const sdData = history.map(h => h.sd);
+  const snData = history.map(h => h.sn);
+  const soData = history.map(h => h.so);
+  const ciData = history.map(h => h.ci);
+
+  if (trendChart) {
+    trendChart.data.labels = labels;
+    trendChart.data.datasets[0].data = rosData;
+    trendChart.data.datasets[1].data = siData;
+    trendChart.data.datasets[2].data = sdData;
+    trendChart.data.datasets[3].data = snData;
+    trendChart.data.datasets[4].data = soData;
+    trendChart.data.datasets[5].data = ciData;
+    trendChart.update();
+    return;
+  }
+
+  trendChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'RoS', data: rosData, borderColor: '#f0c040', backgroundColor: 'rgba(240,192,64,.1)', borderWidth: 3, tension: .3 },
+        { label: 'SI', data: siData, borderColor: '#58a6ff', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
+        { label: 'SD', data: sdData, borderColor: '#bc8cff', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
+        { label: 'SN', data: snData, borderColor: '#f0883e', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
+        { label: 'SO', data: soData, borderColor: '#3fb950', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
+        { label: 'CI', data: ciData, borderColor: '#f778ba', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true, max: 100, grid: { color: '#30363d' }, ticks: { color: '#8b949e' } },
+        x: { grid: { color: '#30363d' }, ticks: { color: '#8b949e' } }
+      },
+      plugins: {
+        legend: { position: 'top', labels: { color: '#8b949e', boxWidth: 12, padding: 15 } }
+      }
+    }
+  });
+}
+
+// ============================================================
+// ANALYSIS
+// ============================================================
+function renderAnalysis() {
+  const s = getScores();
+  const container = document.getElementById('analysis-content');
+  if (!container) return;
+
+  const lvl = rosLevel(s.ros);
+
+  const dims = [
+    { name: 'Souveraineté Informationnelle', score: s.SI, color: 'var(--dim1)' },
+    { name: 'Souveraineté Décisionnelle', score: s.SD, color: 'var(--dim2)' },
+    { name: 'Souveraineté Normative', score: s.SN, color: 'var(--dim3)' },
+    { name: 'Souveraineté Opérationnelle', score: s.SO, color: 'var(--dim4)' },
+    { name: 'Capacité d\'Influence', score: s.CI, color: 'var(--dim5)' }
+  ].filter(d => d.score !== null);
+
+  const strengths = dims.filter(d => d.score >= 65).sort((a,b) => b.score - a.score);
+  const weaknesses = dims.filter(d => d.score < 50).sort((a,b) => a.score - b.score);
+
+  let diag = '';
+  if (s.ros === null) diag = 'Données insuffisantes pour établir un diagnostic.';
+  else if (s.ros < 30) diag = 'L\'organisation est en situation de vulnérabilité critique. Les dépendances externes compromettent sa capacité d\'action autonome. Une refonte structurelle de la gouvernance du risque est impérative.';
+  else if (s.ros < 50) diag = 'La souveraineté est fragile avec des dépendances majeures identifiées. Des actions prioritaires sur les dimensions les plus faibles sont nécessaires pour éviter une dégradation.';
+  else if (s.ros < 65) diag = 'L\'organisation dispose d\'une capacité partielle de souveraineté. Des progrès notables mais des efforts ciblés restent nécessaires pour atteindre une position de force.';
+  else if (s.ros < 80) diag = 'Bonne maîtrise globale de la souveraineté. L\'organisation est en position de force relative dans son environnement avec une capacité d\'influence croissante.';
+  else diag = 'L\'organisation a atteint un niveau de souveraineté exemplaire. Elle dicte les règles de son marché et peut exporter son modèle de gouvernance.';
+
+  const recos = [];
+  if (s.SI !== null && s.SI < 60) recos.push({ priority:'🔴 Priorité critique', color:'var(--red)', text:`Souveraineté Informationnelle (${Math.round(s.SI)}/100) : Rapatrier les données critiques vers infrastructure souveraine. Documenter les plans de réversibilité cloud. Réduire la dépendance aux GAFAM.` });
+  if (s.SD !== null && s.SD < 60) recos.push({ priority:'🔴 Priorité critique', color:'var(--red)', text:`Souveraineté Décisionnelle (${Math.round(s.SD)}/100) : Cartographier toutes les dépendances stratégiques. Auditer les clauses extraterritoriales des contrats. Diversifier les options pour chaque décision critique.` });
+  if (s.SN !== null && s.SN < 60) recos.push({ priority:'🟠 Priorité haute', color:'var(--orange)', text:`Souveraineté Normative (${Math.round(s.SN)}/100) : Rejoindre les comités normatifs sectoriels. Passer d'une conformité réactive à proactive. Développer la veille réglementaire anticipative.` });
+  if (s.SO !== null && s.SO < 60) recos.push({ priority:'🟠 Priorité haute', color:'var(--orange)', text:`Souveraineté Opérationnelle (${Math.round(s.SO)}/100) : Diversifier les fournisseurs critiques (≥2 alternatives). Tester le PCA et réduire le MTTR. Renforcer l'autonomie énergétique à 72h minimum.` });
+  if (s.CI !== null && s.CI < 60) recos.push({ priority:'🟣 Priorité stratégique', color:'var(--pink)', text:`Capacité d'Influence (${Math.round(s.CI)}/100) : Investir dans le réseau d'alliés stratégiques. Développer la capacité de contre-influence. Augmenter le budget IE offensif vs défensif.` });
+  if (recos.length === 0) recos.push({ priority:'✅ Optimisation', color:'var(--teal)', text:'Niveaux satisfaisants sur toutes les dimensions. Focaliser sur l\'influence normative active et la consolidation des positions acquises.' });
+
+  container.innerHTML = `
+    <div class="grid2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">Diagnostic global</div>
+        <div style="font-size:28px;font-family:'Space Mono',monospace;font-weight:700;color:${lvl.color};margin-bottom:8px;">${s.ros !== null ? Math.round(s.ros) : '—'} <span style="font-size:14px;color:var(--text2);">/ 100</span></div>
+        <div style="font-size:14px;font-weight:600;color:${lvl.color};margin-bottom:12px;">${lvl.label}</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7;">${diag}</div>
+      </div>
+      <div>
+        <div class="strength-card" style="margin-bottom:12px;">
+          <div class="aw-title" style="color:var(--green)">Forces</div>
+          ${strengths.length ? strengths.map(d => `<div class="aw-item">✓ ${d.name} — <strong style="color:${d.color}">${Math.round(d.score)}</strong>/100</div>`).join('') : '<div class="aw-item" style="color:var(--text3)">Aucune dimension forte identifiée</div>'}
+        </div>
+        <div class="weakness-card">
+          <div class="aw-title" style="color:var(--red)">Faiblesses</div>
+          ${weaknesses.length ? weaknesses.map(d => `<div class="aw-item">✗ ${d.name} — <strong style="color:${d.color}">${Math.round(d.score)}</strong>/100</div>`).join('') : '<div class="aw-item" style="color:var(--text3)">Aucune faiblesse critique</div>'}
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Recommandations stratégiques</div>
+      <div style="margin-top:4px;">
+        ${recos.map(r => `
+          <div class="reco-card">
+            <div class="reco-priority" style="color:${r.color}">${r.priority}</div>
+            <div class="reco-text">${r.text}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// HISTORY / SNAPSHOT
+// ============================================================
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem('ros_history_v3') || '[]'); }
+  catch { return []; }
+}
+
+function saveSnapshot() {
+  const s = getScores();
+  if (s.ros === null) { showToast('Saisissez au moins quelques indicateurs avant de sauvegarder.'); return; }
+  const history = getHistory();
+  const period = document.getElementById('period')?.value || 'T?';
+  const company = document.getElementById('company-name')?.value || 'N/A';
+  history.push({
+    period, company, sector: currentSector,
+    ros: Math.round(s.ros),
+    si: s.SI !== null ? Math.round(s.SI) : null,
+    sd: s.SD !== null ? Math.round(s.SD) : null,
+    sn: s.SN !== null ? Math.round(s.SN) : null,
+    so: s.SO !== null ? Math.round(s.SO) : null,
+    ci: s.CI !== null ? Math.round(s.CI) : null,
+    ts: Date.now()
+  });
+  localStorage.setItem('ros_history_v3', JSON.stringify(history));
+  renderHistory();
+  updateTrend(history);
+  showToast('Snapshot sauvegardé ✓');
+}
+
+function renderHistory() {
+  const history = getHistory();
+  const tbody = document.getElementById('hist-body');
+  if (!tbody) return;
+  if (history.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text2);padding:30px;">Aucun enregistrement</td></tr>';
+    return;
+  }
+  tbody.innerHTML = history.slice().reverse().map(h => `
+    <tr>
+      <td style="font-family:'Space Mono',monospace;font-size:12px;">${h.period}</td>
+      <td>${h.company}</td>
+      <td><span style="color:var(--text2)">${h.sector}</span></td>
+      <td style="font-family:'Space Mono',monospace;font-weight:700;">${h.ros}</td>
+      <td style="color:var(--dim1)">${h.si??'—'}</td>
+      <td style="color:var(--dim2)">${h.sd??'—'}</td>
+      <td style="color:var(--dim3)">${h.sn??'—'}</td>
+      <td style="color:var(--dim4)">${h.so??'—'}</td>
+      <td style="color:var(--dim5)">${h.ci??'—'}</td>
+      <td>${rosLevelBadge(h.ros)}</td>
+    </tr>
+  `).join('');
+  updateTrend(history.slice(-10));
+}
+
+function clearHistory() {
+  if (!confirm('Effacer tout l\'historique ?')) return;
+  localStorage.removeItem('ros_history_v3');
+  renderHistory();
+  if (trendChart) { trendChart.destroy(); trendChart = null; }
+  showToast('Historique effacé');
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showTab(name, el) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-'+name)?.classList.add('active');
+  el?.classList.add('active');
+  if (name === 'analyse') renderAnalysis();
+  if (name === 'historique') renderHistory();
+}
+
+function showTabByName(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.textContent.trim().toLowerCase().includes(name.toLowerCase())) n.classList.add('active');
+    else n.classList.remove('active');
+  });
+  document.getElementById('tab-'+name)?.classList.add('active');
+}
+
+// ============================================================
+// SECTOR
+// ============================================================
+function setSector(sector, btn) {
+  currentSector = sector;
+  document.querySelectorAll('.sector-btn').forEach(b => b.classList.remove('active'));
+  btn?.classList.add('active');
+  calculate();
+  localStorage.setItem('ros_sector', sector);
+  showToast('Secteur: '+sector+' — pondérations mises à jour');
+}
+
+// ============================================================
+// PERSIST
+// ============================================================
+function saveData() {
+  const fields = ['si1','si2','si3','si4','si5','si6','sd1','sd2','sd3','sd4','sd5','sd6',
+                  'sn1','sn2','sn3','sn4','sn5','sn6','so1','so2','so3','so4','so5','so6',
+                  'ci1','ci2','ci3','ci4','ci5','ci6',
+                  'company-name','period'];
+  const data = {};
+  fields.forEach(id => { const el = document.getElementById(id); if (el) data[id] = el.value; });
+  data['__sector'] = currentSector;
+  localStorage.setItem('ros_data_v3', JSON.stringify(data));
+}
+
+function loadData() {
+  try {
+    const data = JSON.parse(localStorage.getItem('ros_data_v3') || '{}');
+    Object.entries(data).forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (el) el.value = val;
+    });
+    const sector = data['__sector'] || 'standard';
+    currentSector = sector;
+    document.querySelectorAll('.sector-btn').forEach(b => {
+      b.classList.toggle('active', b.textContent.trim().toLowerCase() === sector.toLowerCase() ||
+        (sector==='standard' && b.textContent.trim()==='Standard'));
+    });
+  } catch {}
+}
+
+function resetInputs() {
+  if (!confirm('Réinitialiser tous les indicateurs ?')) return;
+  ['si1','si2','si3','si4','si5','si6','sd1','sd2','sd3','sd4','sd5','sd6',
+   'sn1','sn2','sn3','sn4','sn5','sn6','so1','so2','so3','so4','so5','so6',
+   'ci1','ci2','ci3','ci4','ci5','ci6'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  localStorage.removeItem('ros_data_v3');
+  calculate();
+  showToast('Indicateurs réinitialisés');
+}
+
+// ============================================================
+// CSV EXPORT
+// ============================================================
+function exportCSV() {
+  const s = getScores();
+  const company = document.getElementById('company-name')?.value || '';
+  const period  = document.getElementById('period')?.value || '';
+  const headers = ['Entreprise','Période','Secteur','RoS Global','SI','SD','SN','SO','CI',
+    'SI-1','SI-2','SI-3','SI-4','SI-5','SI-Q1',
+    'SD-1','SD-2','SD-3','SD-4','SD-5','SD-Q1',
+    'SN-1','SN-2','SN-3','SN-4','SN-5','SN-Q1',
+    'SO-1','SO-2','SO-3','SO-4','SO-5','SO-Q1',
+    'CI-1','CI-2','CI-3','CI-4','CI-5','CI-Q1'];
+  const vals = [
+    company, period, currentSector,
+    s.ros!==null?Math.round(s.ros):'',
+    s.SI!==null?Math.round(s.SI):'', s.SD!==null?Math.round(s.SD):'',
+    s.SN!==null?Math.round(s.SN):'', s.SO!==null?Math.round(s.SO):'',
+    s.CI!==null?Math.round(s.CI):'',
+    ...s.si.map(v=>v!==null?Math.round(v):''),
+    ...s.sd.map(v=>v!==null?Math.round(v):''),
+    ...s.sn.map(v=>v!==null?Math.round(v):''),
+    ...s.so.map(v=>v!==null?Math.round(v):''),
+    ...s.ci.map(v=>v!==null?Math.round(v):'')
+  ];
+  const csv = headers.join(',')+'\n'+vals.join(',');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `RoS_${company||'export'}_${period||'T0'}.csv`;
+  a.click();
+  showToast('Export CSV téléchargé ✓');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  calculate();
+  renderHistory();
+  const h = getHistory();
+  if (h.length > 0) updateTrend(h.slice(-10));
+});
+</script>
+</body>
+</html>

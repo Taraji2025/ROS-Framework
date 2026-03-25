@@ -1,0 +1,68 @@
+{
+  "name": "ros-return-on-sovereignty",
+  "version": "1.0.0",
+  "description": "Return on Sovereignty v3.0 — Audit de souveraineté d'entreprise",
+  "main": "main.js",
+  "author": "Naouphel Ouakaoui",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start":       "electron .",
+    "build:linux": "electron-builder --linux",
+    "build:win":   "electron-builder --win",
+    "build:mac":   "electron-builder --mac"
+  },
+  "build": {
+    "appId": "fr.taraji-conseil.ros",
+    "productName": "Return on Sovereignty",
+    "copyright": "Copyright © 2026 Naouphel Ouakaoui — École de Guerre Économique",
+    "directories": {
+      "output": "dist-electron",
+      "buildResources": "assets"
+    },
+    "files": [
+      "main.js"
+    ],
+    "extraResources": [
+      {
+        "from": "../backend",
+        "to": "backend",
+        "filter": [
+          "**/*",
+          "!data/**",
+          "!*.bak.*"
+        ]
+      },
+      {
+        "from": "../dist",
+        "to": "frontend-dist"
+      }
+    ],
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Return on Sovereignty"
+    },
+    "mac": {
+      "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }],
+      "icon": "assets/icon.icns",
+      "category": "public.app-category.business"
+    },
+    "linux": {
+      "target": [{ "target": "AppImage", "arch": ["x64"] }],
+      "icon": "assets/icon.png",
+      "category": "Office"
+    }
+  },
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3"
+  }
+}

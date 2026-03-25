@@ -1,0 +1,106 @@
+name: Build Electron — RoS
+
+on:
+  push:
+    tags:
+      - 'v*'          # déclenché sur git tag v1.0.0, v1.1.0...
+  workflow_dispatch:  # ou manuellement depuis GitHub
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            platform: win
+            artifact: '*.exe'
+          - os: macos-latest
+            platform: mac
+            artifact: '*.dmg'
+          - os: ubuntu-latest
+            platform: linux
+            artifact: '*.AppImage'
+
+    runs-on: ${{ matrix.os }}
+    name: Build ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build frontend React
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+
+      - name: Installer dépendances backend
+        run: |
+          cd backend
+          npm ci
+
+      - name: Installer dépendances Electron
+        run: |
+          cd electron
+          npm ci
+
+      - name: Package Electron (${{ matrix.platform }})
+        run: |
+          cd electron
+          npm run build:${{ matrix.platform }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RoS-${{ matrix.platform }}
+          path: electron/dist-electron/${{ matrix.artifact }}
+          retention-days: 30
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    name: Créer la Release GitHub
+
+    steps:
+      - name: Télécharger tous les artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Créer la Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Return on Sovereignty ${{ github.ref_name }}
+          body: |
+            ## Return on Sovereignty ${{ github.ref_name }}
+
+            ### Téléchargements
+
+            | Plateforme | Fichier |
+            |---|---|
+            | Windows | `RoS-Setup-*.exe` |
+            | macOS | `Return on Sovereignty-*.dmg` |
+            | Linux | `Return on Sovereignty-*.AppImage` |
+
+            ### Installation
+
+            **Windows** : Télécharger et exécuter le `.exe` — l'installeur crée un raccourci bureau.
+            **macOS** : Ouvrir le `.dmg`, glisser l'app dans Applications.
+            **Linux** : `chmod +x *.AppImage && ./Return\ on\ Sovereignty-*.AppImage`
+
+            ---
+            *Données stockées localement — aucune connexion externe requise.*
+          files: artifacts/**/*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
