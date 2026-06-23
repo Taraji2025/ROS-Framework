@@ -2,6 +2,36 @@
 
 > État de reprise rapide. Détail des tâches dans `tasks/todo.md`, leçons dans `tasks/lessons.md`.
 
+## ⏸️ REPRISE EN COURS (2026-06-23) — Brainstorming « diagnostic défendable »
+
+**Où on en est :** en plein skill `superpowers:brainstorming` pour concevoir une nouvelle feature ROS. On a fait passer les idées par le **conseil LLM** (5 conseillers + revue croisée). Naouphel a **choisi le bundle « diagnostic défendable »** (reco du conseil). On commençait les questions de cadrage (1 à la fois) quand il a dû partir.
+
+**Prochaine action à la reprise :** finir les questions de cadrage → présenter le design par sections → écrire la spec dans `docs/superpowers/specs/2026-06-23-ros-diagnostic-defendable-design.md` → self-review → validation user → `superpowers:writing-plans`. **HARD-GATE brainstorming : aucun code avant design validé.**
+
+**La question en suspens (Q1/5) :** d'où vient le contenu des *sources/justifications* des cibles et pondérations (« pourquoi 80 ? »). Naouphel a voulu **clarifier la question** avant de répondre — reprendre par : « qu'est-ce que tu veux clarifier ? ». Les 4 questions de cadrage restantes prévues : (2) seuil de complétude « non publiable » ; (3) champ preuve par indicateur = texte libre ou structuré {source, date, note} ; (4) PDF via `window.print()`+CSS print vs Puppeteer ; (5) confirmer livraison incrémentale des 5 morceaux.
+
+### Le bundle retenu (5 morceaux, à concevoir comme un ensemble cohérent)
+1. **Sens du chiffre** : bandeau niveau RoS + verdict en mots + **top3/flop3 contributeurs**. (`rosLevel()` existe déjà ; manque la phrase d'interprétation.)
+2. **Plan d'action priorisé** : `computeActionPlan()` = trier indicateurs par **poids × écart au max**.
+3. **Traçabilité** : source + justification par cible/pondération + champ **preuve/commentaire par indicateur**.
+4. **Indice de complétude** : score « partiel / non publiable » sous un seuil (X/30 remplis).
+5. **Export PDF** rapport de soutenance (radar + score + verdict + top/flop).
++ **Méta (hors feature, chantier mémoire)** : la *validité externe* — angle mort raté par les 5 conseillers (le score corrèle-t-il à un fait réel ? fidélité inter-évaluateur ? trajectoire dans le temps ?). À traiter comme section du mémoire/rapport.
+
+### Découvertes code (vérifiées sur pièce — à réutiliser pour la spec)
+- **Cibles en double** : codées en dur dans `ros-engine.js` (`computeScores`, ex. `norm(g('si1'),80)`) **ET** en prose dans les `hint` de `DIMS` (`pages/Assessment.jsx`). Aucune source attachée. → **Backbone du design : créer une source unique de vérité par indicateur** (métadonnées {id, code, label, dimension, target, isReverse/qual, type, source, justification, scénario de risque}) consommée par le moteur + l'affichage. Tue le doublon, débloque #1/#2/#3.
+- `avg()` (ros-engine.js) **ignore les nulls** → score complet possible avec 3/30 indicateurs (trou réel → #4 complétude).
+- `rosLevel(v)` existe : 5 paliers (`<30 Critique`, `<50 Faible`, `<65 Moyen`, `<80 Élevé`, `≥80 Souverain`) avec label+couleur.
+- `computeScores` renvoie déjà les **sous-scores par indicateur** (arrays si/sd/sn/so/ci) → top/flop et plan d'action s'appuient dessus.
+- `DIMS` (Assessment.jsx) = métadonnées riches par indicateur (id, code, label, hint, min/max, qual).
+- Schéma assessment (storage.json) : `{id, period, sector, scores:{SI,SD,SN,SO,CI,ros}, indicators:{si1..ci6}}` — **pas** de champ preuve/notes (à ajouter pour #3).
+- **ROS reste déterministe** (décision actée) : tout ça est du calcul déterministe + frontend, pas d'IA.
+
+### Verdict du conseil (résumé)
+- **Accord** : donner du sens au chiffre ; boussole d'action (poids×écart) ; défendabilité (sources) ; artefact PDF.
+- **Clash** : l'Expansionniste voulait **sortir du mono-entreprise** (benchmark/SaaS/baromètre) → **écarté** (contrainte de confidentialité non négociable), les 5 relecteurs l'ont signalé comme le plus gros angle mort. SEULE idée upside compatible retenue : **simulateur de bascule contrefactuel** (« si je rapatrie ce SaaS US : +7 ») — candidate bonus.
+- **Raté collectif** : la validité externe (cf. méta ci-dessus).
+
 ## Le projet en une phrase
 Framework d'audit de souveraineté d'entreprise (RoS v3.0) — 5 dimensions, 30 indicateurs, **mono-entreprise**. React+Vite / Express / stockage JSON. Adossé au mémoire CRO 3.0 (EGE 2025-2026).
 
