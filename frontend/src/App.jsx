@@ -7,6 +7,10 @@ import History from './pages/History.jsx';
 import Guide from './pages/Guide.jsx';
 import Admin from './pages/Admin.jsx';
 
+// TEMPORAIRE — masque l'interface Admin (usage pédagogique/démo).
+// Repasser à true pour restaurer la gestion utilisateurs + profil entreprise.
+const SHOW_ADMIN = false;
+
 export default function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -70,7 +74,7 @@ export default function App() {
           <div className={`nav-item ${tab === 'guide' ? 'active' : ''}`} onClick={() => setTab('guide')}>
             <span className="nav-icon">≡</span> Guide
           </div>
-          {user.role === 'admin' && (
+          {SHOW_ADMIN && user.role === 'admin' && (
             <div className={`nav-item ${tab === 'admin' ? 'active' : ''}`} onClick={() => setTab('admin')}>
               <span className="nav-icon">⚙</span> Admin
             </div>
@@ -90,7 +94,7 @@ export default function App() {
         {tab === 'assessment' && <Assessment showToast={showToast} onSaved={() => setTab('history')} />}
         {tab === 'history'    && <History showToast={showToast} />}
         {tab === 'guide'      && <Guide />}
-        {tab === 'admin'      && user.role === 'admin' && <Admin showToast={showToast} />}
+        {SHOW_ADMIN && tab === 'admin' && user.role === 'admin' && <Admin showToast={showToast} />}
       </main>
 
       {toast && <div className="toast">{toast}</div>}
