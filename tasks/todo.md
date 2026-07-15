@@ -22,8 +22,10 @@ Specs V4 validées par Naouphel (spec produit + grille OSINT) → refonte du cœ
 - [x] Design complet écrit + self-review (comptage 24 mesures / 26 codes hérités).
 - [x] Spec validée par Naouphel (« on y va » sur défauts, amendables après).
 - [x] **Plan bloc A écrit** : `docs/superpowers/plans/2026-07-15-ros-v4-bloc-a-moteur.md` (8 tâches TDD, Vitest).
-- [ ] **EN COURS : exécuter le bloc A** (T0 Vitest → T7 lectures). Puis plans B/C/D.
-- [ ] Blocs B (saisie), C (restitution), D (annexes) — plans à écrire après stabilisation des interfaces de A.
+- [x] **BLOC A IMPLÉMENTÉ** (subagent-driven, 8/8 tâches TDD + revue finale opus) : `ros-model.js` + `ros-engine.js` purs, **36/36 tests verts**. Commits `98052a4`→`94d5a50`.
+- [ ] ⚠️ **DÉCISION : stratégie de merge** (build prod cassé jusqu'à B/C) — garder branche / merger A+B+C / shims. NE PAS déployer maintenant.
+- [ ] **Bloc B (saisie `Assessment.jsx`)** — plan à écrire (`writing-plans`) sur le contrat moteur figé. Rappel : `computeAssessment` ≠ lectures → appeler aussi `computeReadings`.
+- [ ] Blocs C (restitution), D (annexes) — plans après B.
 
 ## Décision (2026-06-23) — App mobile native : ABANDONNÉE
 Conseil LLM (5 advisors + revue croisée) → verdict unanime : **pas de natif, garder la PWA.**

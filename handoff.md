@@ -4,9 +4,13 @@
 
 ## ⏸️ REPRISE EN COURS (2026-07-15) — Refonte V4 (branche `v4-refonte`)
 
-**Où on en est :** Naouphel a apporté les **specs V4 validées** (spec produit + grille OSINT de codage) qui imposent une refonte du cœur. Skill `superpowers:brainstorming` mené : 5 arbitrages de cadrage tranchés (voir `tasks/todo.md`). **Design complet écrit + self-review** dans `docs/superpowers/specs/2026-07-15-ros-v4-refonte-design.md`. Le bundle « diagnostic défendable » de juin est **absorbé par V4** (traçabilité, plan d'action, sens du chiffre = des morceaux de la restitution V4).
+**Où on en est :** Specs V4 validées → brainstorming (5 arbitrages) → **design** (`docs/superpowers/specs/2026-07-11...` → en fait `2026-07-15-ros-v4-refonte-design.md`) → **plan bloc A** (`docs/superpowers/plans/2026-07-15-ros-v4-bloc-a-moteur.md`) → **BLOC A IMPLÉMENTÉ** en subagent-driven (8 tâches TDD, chacune revue) + **revue finale de branche (opus)**. Résultat : moteur v4 pur = `frontend/src/ros-model.js` + `frontend/src/ros-engine.js`, **36/36 tests verts** (Vitest). Ledger : `.superpowers/sdd/progress.md`. Commits `98052a4`→`94d5a50` sur `v4-refonte`.
 
-**Prochaine action à la reprise :** Naouphel **relit la spec V4** (garde-fou) + tranche les 4 points ouverts (§9) → intégrer ses retours → `superpowers:writing-plans` pour le plan TDD phasé (A moteur → B saisie → C restitution → D annexes). **HARD-GATE : aucun code avant spec relue + plan validé.**
+**⚠️ ÉTAT BRANCHE : `npm run build` est CASSÉ** (attendu) — les 5 pages v3 (Dashboard/Assessment/History/Admin/Companies) importent encore `computeScores`/`fmt`/`WEIGHTS`/`SECTORS` supprimés de `ros-engine.js`. **NE PAS déployer / merger vers `main` avant les blocs B/C.** Décision de stratégie de merge en suspens (garder la branche jusqu'à B+C / merger A+B+C ensemble / shims de compat).
+
+**Garde-fou bloc B :** `computeAssessment` ne renvoie **PAS** les lectures Maturité/Influence — elles sont dans `computeReadings(cells)` (fonction sœur). Restitution complète = `computeAssessment` + `computeReadings`. Contrat public du moteur : `scoreCell, aggregate, computeDimension, governanceCoef, computeGlobal, computeAssessment, computeReadings, rosLevel` + données `VOIES, MATURITE, INFLUENCE, PROFILES, DIMENSIONS, RULES, K_VALUES, LEVELS`.
+
+**Prochaine action à la reprise :** décider la stratégie de merge (ci-dessus) ; puis `writing-plans` pour le **bloc B (saisie `Assessment.jsx`)** sur le contrat moteur figé. Les 4 points ouverts §9 (Influence 5/7, matrice applicabilité, barèmes Maturité/Influence, PoC) restent amendables — tout est encodé comme défaut corrigeable dans `ros-model.js`.
 
 **Résumé technique V4 :** 3 familles jamais additionnées (Voies 11=score / Maturité 8 / Influence 5 / −4 sortis) ; agrégation 2 niveaux non-compensatoire sous 3 règles (lin/géom/**pénalisée Mazziotta-Pareto**) × k∈{1,2,3} ; profils = applicabilité seule + poids égaux ; coef gouvernance ×0,70-1,00 ; cellule = valeur + preuve {source,date,note} ; nouveau module `ros-model.js` (source unique) + `ros-engine.js` réécrit pur. Backend quasi inchangé (store-only). Migration triviale (2+2 évals v3 archivées, non recalculables).
 
