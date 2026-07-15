@@ -20,8 +20,10 @@ Specs V4 validées par Naouphel (spec produit + grille OSINT) → refonte du cœ
 ### État
 - [x] Blast radius mesuré (épicentre ros-engine.js + Assessment.jsx ; backend store-only ; Companies.jsx = mort).
 - [x] Design complet écrit + self-review (comptage 24 mesures / 26 codes hérités).
-- [ ] **EN ATTENTE : relecture de la spec par Naouphel** (garde-fou brainstorming avant plan).
-- [ ] Puis : `writing-plans` → plan TDD phasé A/B/C/D.
+- [x] Spec validée par Naouphel (« on y va » sur défauts, amendables après).
+- [x] **Plan bloc A écrit** : `docs/superpowers/plans/2026-07-15-ros-v4-bloc-a-moteur.md` (8 tâches TDD, Vitest).
+- [ ] **EN COURS : exécuter le bloc A** (T0 Vitest → T7 lectures). Puis plans B/C/D.
+- [ ] Blocs B (saisie), C (restitution), D (annexes) — plans à écrire après stabilisation des interfaces de A.
 
 ## Décision (2026-06-23) — App mobile native : ABANDONNÉE
 Conseil LLM (5 advisors + revue croisée) → verdict unanime : **pas de natif, garder la PWA.**
