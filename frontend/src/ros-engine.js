@@ -72,3 +72,21 @@ export function computeDimension(dim, cells, profile, rule, k = 1) {
     filled,
   };
 }
+
+// Coefficient de gouvernance : 1 − 0.1 × (critères absents), plancher 0.7.
+export function governanceCoef(g = {}) {
+  const criteria = [g.croReporting, g.vetoFormalized, g.vetoExercised];
+  const absent = criteria.filter(c => !c).length;
+  return Math.max(0.7, 1 - 0.1 * absent);
+}
+
+// Score global : dimensions (poids égaux) → global, × coefficient de gouvernance.
+export function computeGlobal(cells, profile, governance, rule, k = 1) {
+  const dims = {};
+  for (const d of DIMENSIONS) dims[d] = computeDimension(d, cells, profile, rule, k);
+  const dimScores = DIMENSIONS.map(d => dims[d].score).filter(s => s !== null);
+  const raw = aggregate(dimScores, rule, k); // poids égaux
+  const coef = governanceCoef(governance);
+  const final = raw === null ? null : clamp(raw * coef);
+  return { raw, final, coef, dims };
+}
