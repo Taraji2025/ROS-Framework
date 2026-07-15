@@ -85,3 +85,24 @@ export const PROFILES = {
   tech:      { label: 'Tech',      applicable: ALL_VOIE_IDS.filter(id => !['so2', 'so4'].includes(id)) },
   energie:   { label: 'Énergie',   applicable: ALL_VOIE_IDS },
 };
+
+// Famille MATURITÉ — 8 indicateurs, lecture « capacité à voir ». Hors score.
+export const MATURITE = [
+  { id: 'sd2', code: 'SD-2', label: 'Diversification des options stratégiques', kind: 'num', target: 100 },
+  { id: 'sd5', code: 'SD-5', label: 'Couverture cartographie des dépendances', kind: 'num', target: 80 },
+  { id: 'sn4', code: 'SN-4', label: 'Conformité proactive vs réactive', kind: 'num', target: 70 },
+  { id: 'siq1', code: 'SI-Q1', label: 'Maturité classification info', kind: 'qual' },
+  { id: 'sdq1', code: 'SD-Q1', label: 'Maturité IE interne', kind: 'qual' },
+  { id: 'snq1', code: 'SN-Q1', label: 'Maturité veille réglementaire', kind: 'qual' },
+  { id: 'soq1', code: 'SO-Q1', label: 'Maturité PCA (condition de licéité)', kind: 'qual' },
+  { id: 'ciq1', code: 'CI-Q1', label: 'Maturité guerre cognitive', kind: 'qual' },
+];
+
+// Famille INFLUENCE — 5 indicateurs (doublons SN/CI fusionnés). Lecture « capacité à peser ». Hors score.
+export const INFLUENCE = [
+  { id: 'inf_sieges', code: 'INF-1', label: 'Sièges en instances (ex SN-1/CI-1)', kind: 'num', target: 50 },
+  { id: 'inf_lobbying', code: 'INF-2', label: 'Budget lobbying (ex SN-3/CI-5)', kind: 'num', target: 60 },
+  { id: 'ci2', code: 'CI-2', label: 'Part de voix + tonalité', kind: 'num', target: 75 },
+  { id: 'ci3', code: 'CI-3', label: 'Capacité de contre-influence', kind: 'num', target: 60 },
+  { id: 'ci4', code: 'CI-4', label: 'Réseau d\'alliés activables', kind: 'num', target: 60 },
+];

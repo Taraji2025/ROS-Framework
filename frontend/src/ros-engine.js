@@ -1,5 +1,5 @@
 // RoS v4 — Moteur de calcul (fonctions pures, consomme ros-model.js)
-import { VOIES, PROFILES, DIMENSIONS, RULES, K_VALUES, LEVELS } from './ros-model.js';
+import { VOIES, PROFILES, DIMENSIONS, RULES, K_VALUES, LEVELS, MATURITE, INFLUENCE } from './ros-model.js';
 
 function isNum(x) {
   return x !== '' && x !== null && x !== undefined && !isNaN(parseFloat(x));
@@ -115,4 +115,39 @@ export function computeAssessment(assessment) {
   const coverageByDim = {};
   for (const d of DIMENSIONS) coverageByDim[d] = refDims[d].coverage;
   return { headline, level: rosLevel(headline), coef, matrix, coverageByDim };
+}
+
+// Normalisation v3 des lectures : qual 1-5 -> 0-100 ; num -> value/target×100 borné.
+function normReading(ind, cell) {
+  if (!cell || !isNum(cell.value)) return null;
+  const v = parseFloat(cell.value);
+  if (ind.kind === 'qual') {
+    const c = Math.max(1, Math.min(5, v));
+    return ((c - 1) / 4) * 100;
+  }
+  return clamp((v / ind.target) * 100);
+}
+
+function readFamily(indicators, cells) {
+  const scores = [];
+  let filled = 0;
+  for (const ind of indicators) {
+    const s = normReading(ind, cells[ind.id]);
+    if (s !== null) { scores.push(s); filled++; }
+  }
+  const applicable = indicators.length;
+  return {
+    score: aggregate(scores, 'linear', 1), // lecture = moyenne simple
+    coverage: applicable > 0 ? filled / applicable : 0,
+    filled,
+    applicable,
+  };
+}
+
+// Lectures Maturité + Influence (jamais dans le score global).
+export function computeReadings(cells = {}) {
+  return {
+    maturite: readFamily(MATURITE, cells),
+    influence: readFamily(INFLUENCE, cells),
+  };
 }
