@@ -40,6 +40,7 @@ export const VOIES = [
       { key: 'federation', score: 50, label: 'Présente via fédération seulement' },
       { key: 'absente', score: 0, label: 'Absente partout' },
     ] },
+  // Sentinelle 0.0001 : proxy pour « 0 % du CA → 100 » (un % de sanctions non nul, même infime, sort du palier 100).
   { id: 'sn5', code: 'SN-5', dim: 'SN', label: 'Sanctions extraterritoriales (% CA, 5 ans)', kind: 'num', dir: 'lower',
     steps: [ { threshold: 0.0001, score: 100 }, { threshold: 0.5, score: 70 }, { threshold: 5, score: 30 }, { threshold: Infinity, score: 0 } ] },
 
@@ -65,14 +66,15 @@ export const VOIES = [
     ] },
 ];
 
-// Paliers d'interprétation (repris de v3).
+// Paliers d'interprétation (repris de v3). Entrées gelées : rosLevel() en retourne une
+// par référence — Object.freeze empêche qu'un consommateur (UI) corrompe la table partagée.
 export const LEVELS = [
   { max: 30,  label: '⚠ Critique',  color: 'var(--red)',        cls: 'badge-red' },
   { max: 50,  label: '↓ Faible',    color: 'var(--orange)',     cls: 'badge-orange' },
   { max: 65,  label: '~ Moyen',     color: 'var(--gold-light)', cls: 'badge-yellow' },
   { max: 80,  label: '↑ Élevé',     color: 'var(--green)',      cls: 'badge-green' },
   { max: Infinity, label: '★ Souverain', color: 'var(--teal)',  cls: 'badge-teal' },
-];
+].map(Object.freeze);
 
 const ALL_VOIE_IDS = VOIES.map(v => v.id);
 
