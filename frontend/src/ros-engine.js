@@ -53,3 +53,22 @@ export function scoreCell(voie, cell) {
   }
   return 0;
 }
+
+// Score + couverture d'une dimension pour un profil, sous une règle/k donnés.
+export function computeDimension(dim, cells, profile, rule, k = 1) {
+  const applicableIds = new Set(PROFILES[profile]?.applicable ?? []);
+  const voies = VOIES.filter(v => v.dim === dim && applicableIds.has(v.id));
+  const scores = [];
+  let filled = 0;
+  for (const v of voies) {
+    const s = scoreCell(v, cells[v.id]);
+    if (s !== null) { scores.push(s); filled++; }
+  }
+  const applicable = voies.length;
+  return {
+    score: aggregate(scores, rule, k),
+    coverage: applicable > 0 ? filled / applicable : 0,
+    applicable,
+    filled,
+  };
+}
