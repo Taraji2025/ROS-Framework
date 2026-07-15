@@ -1,5 +1,5 @@
 // RoS v4 — Moteur de calcul (fonctions pures, consomme ros-model.js)
-import { VOIES, PROFILES, DIMENSIONS, RULES, K_VALUES } from './ros-model.js';
+import { VOIES, PROFILES, DIMENSIONS, RULES, K_VALUES, LEVELS } from './ros-model.js';
 
 function isNum(x) {
   return x !== '' && x !== null && x !== undefined && !isNaN(parseFloat(x));
@@ -89,4 +89,30 @@ export function computeGlobal(cells, profile, governance, rule, k = 1) {
   const coef = governanceCoef(governance);
   const final = raw === null ? null : clamp(raw * coef);
   return { raw, final, coef, dims };
+}
+
+export function rosLevel(v) {
+  if (v === null || v === undefined) {
+    return { label: 'Aucune donnée', color: 'var(--text3)', cls: '' };
+  }
+  return LEVELS.find(l => v < l.max) ?? LEVELS[LEVELS.length - 1];
+}
+
+// Pipeline complet : matrice règle×k + headline + couverture.
+export function computeAssessment(assessment) {
+  const { sector = 'standard', governance = {}, cells = {} } = assessment ?? {};
+  const matrix = {};
+  for (const rule of RULES) {
+    matrix[rule] = {};
+    for (const k of K_VALUES) {
+      const g = computeGlobal(cells, sector, governance, rule, k);
+      matrix[rule][k] = { raw: g.raw, final: g.final, dims: g.dims };
+    }
+  }
+  const headline = matrix.penalized[1].final;
+  const coef = governanceCoef(governance);
+  const refDims = matrix.penalized[1].dims;
+  const coverageByDim = {};
+  for (const d of DIMENSIONS) coverageByDim[d] = refDims[d].coverage;
+  return { headline, level: rosLevel(headline), coef, matrix, coverageByDim };
 }

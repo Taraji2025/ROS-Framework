@@ -65,6 +65,15 @@ export const VOIES = [
     ] },
 ];
 
+// Paliers d'interprétation (repris de v3).
+export const LEVELS = [
+  { max: 30,  label: '⚠ Critique',  color: 'var(--red)',        cls: 'badge-red' },
+  { max: 50,  label: '↓ Faible',    color: 'var(--orange)',     cls: 'badge-orange' },
+  { max: 65,  label: '~ Moyen',     color: 'var(--gold-light)', cls: 'badge-yellow' },
+  { max: 80,  label: '↑ Élevé',     color: 'var(--green)',      cls: 'badge-green' },
+  { max: Infinity, label: '★ Souverain', color: 'var(--teal)',  cls: 'badge-teal' },
+];
+
 const ALL_VOIE_IDS = VOIES.map(v => v.id);
 
 // Profils : applicabilité seule, poids égaux (D-D).
