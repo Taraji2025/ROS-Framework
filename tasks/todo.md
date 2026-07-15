@@ -1,5 +1,28 @@
 # ROS — tâches en cours
 
+## 🔴 CHANTIER ACTIF (2026-07-15) — Refonte V4 (branche `v4-refonte`)
+Specs V4 validées par Naouphel (spec produit + grille OSINT) → refonte du cœur.
+**Design écrit** : `docs/superpowers/specs/2026-07-15-ros-v4-refonte-design.md`.
+
+### Décisions de cadrage actées (15/07)
+- Une spec globale V4 → plan d'implémentation phasé (A moteur → B saisie → C restitution → D annexes).
+- Agrégation : **2 niveaux non-compensatoires** (voies→dim, dim→global, poids égaux au niveau dim).
+- Score titre : **pénalisée Mazziotta-Pareto**, k∈{1,2,3} challengé dans la restitution ; lin/géom à côté.
+- Profils : **applicabilité seule, poids égaux** (plus de WEIGHTS sectoriels).
+- Traçabilité : **{source, date, note} par cellule, tout optionnel** + taux de sourçage.
+
+### Points ouverts (à trancher en relecture spec)
+- [ ] Influence : 5 (fusion doublons) ou 7 indicateurs ?
+- [ ] Matrice d'applicabilité : profil `conseil/services` ? SO-2/SO-4 pour Banque ?
+- [ ] Barèmes Maturité/Influence : réutiliser v3 ou spécifier maintenant ?
+- [ ] PoC re-codage : Credit Suisse (28/02/2021) vs Lafarge — arbitrage mémoire (hors app).
+
+### État
+- [x] Blast radius mesuré (épicentre ros-engine.js + Assessment.jsx ; backend store-only ; Companies.jsx = mort).
+- [x] Design complet écrit + self-review (comptage 24 mesures / 26 codes hérités).
+- [ ] **EN ATTENTE : relecture de la spec par Naouphel** (garde-fou brainstorming avant plan).
+- [ ] Puis : `writing-plans` → plan TDD phasé A/B/C/D.
+
 ## Décision (2026-06-23) — App mobile native : ABANDONNÉE
 Conseil LLM (5 advisors + revue croisée) → verdict unanime : **pas de natif, garder la PWA.**
 Raisons : usage de bureau périodique (pas nomade), moteur en double = risque de divergence sur un

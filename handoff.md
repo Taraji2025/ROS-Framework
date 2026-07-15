@@ -2,11 +2,13 @@
 
 > État de reprise rapide. Détail des tâches dans `tasks/todo.md`, leçons dans `tasks/lessons.md`.
 
-## ⏸️ REPRISE EN COURS (2026-06-23) — Brainstorming « diagnostic défendable »
+## ⏸️ REPRISE EN COURS (2026-07-15) — Refonte V4 (branche `v4-refonte`)
 
-**Où on en est :** en plein skill `superpowers:brainstorming` pour concevoir une nouvelle feature ROS. On a fait passer les idées par le **conseil LLM** (5 conseillers + revue croisée). Naouphel a **choisi le bundle « diagnostic défendable »** (reco du conseil). On commençait les questions de cadrage (1 à la fois) quand il a dû partir.
+**Où on en est :** Naouphel a apporté les **specs V4 validées** (spec produit + grille OSINT de codage) qui imposent une refonte du cœur. Skill `superpowers:brainstorming` mené : 5 arbitrages de cadrage tranchés (voir `tasks/todo.md`). **Design complet écrit + self-review** dans `docs/superpowers/specs/2026-07-15-ros-v4-refonte-design.md`. Le bundle « diagnostic défendable » de juin est **absorbé par V4** (traçabilité, plan d'action, sens du chiffre = des morceaux de la restitution V4).
 
-**Prochaine action à la reprise :** finir les questions de cadrage → présenter le design par sections → écrire la spec dans `docs/superpowers/specs/2026-06-23-ros-diagnostic-defendable-design.md` → self-review → validation user → `superpowers:writing-plans`. **HARD-GATE brainstorming : aucun code avant design validé.**
+**Prochaine action à la reprise :** Naouphel **relit la spec V4** (garde-fou) + tranche les 4 points ouverts (§9) → intégrer ses retours → `superpowers:writing-plans` pour le plan TDD phasé (A moteur → B saisie → C restitution → D annexes). **HARD-GATE : aucun code avant spec relue + plan validé.**
+
+**Résumé technique V4 :** 3 familles jamais additionnées (Voies 11=score / Maturité 8 / Influence 5 / −4 sortis) ; agrégation 2 niveaux non-compensatoire sous 3 règles (lin/géom/**pénalisée Mazziotta-Pareto**) × k∈{1,2,3} ; profils = applicabilité seule + poids égaux ; coef gouvernance ×0,70-1,00 ; cellule = valeur + preuve {source,date,note} ; nouveau module `ros-model.js` (source unique) + `ros-engine.js` réécrit pur. Backend quasi inchangé (store-only). Migration triviale (2+2 évals v3 archivées, non recalculables).
 
 **La question en suspens (Q1/5) :** d'où vient le contenu des *sources/justifications* des cibles et pondérations (« pourquoi 80 ? »). Naouphel a voulu **clarifier la question** avant de répondre — reprendre par : « qu'est-ce que tu veux clarifier ? ». Les 4 questions de cadrage restantes prévues : (2) seuil de complétude « non publiable » ; (3) champ preuve par indicateur = texte libre ou structuré {source, date, note} ; (4) PDF via `window.print()`+CSS print vs Puppeteer ; (5) confirmer livraison incrémentale des 5 morceaux.
 
