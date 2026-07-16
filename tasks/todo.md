@@ -33,7 +33,28 @@ Specs V4 validées par Naouphel (spec produit + grille OSINT) → refonte du cœ
 - [x] **Cas CS & Lafarge saisis en prod** (codage hypothétique 16/07, sources vides → sourçage 0 %) : CS ros **24 (Critique)**, Lafarge ros **40 (Faible)** → valide la lecture croisée F11. `/rapport` affiche Credit Suisse (le + récent).
 - [x] **Sélecteur d'éval sur `/rapport`** (commit `e84bdfd`, déployé) : menu déroulant listant les évals V4 (défaut = + récente), masqué à l'impression. → CS **et** Lafarge consultables au choix.
 - [ ] **Passe de sourçage** (pièces 1-11 du doc session) : transforme les badges, fige les notes citables. Puis re-saisir/mettre à jour les cellules avec `source`.
-- [ ] **Follow-up avant soutenance** (Important, hors périmètre) : `Guide.jsx` enseigne encore l'ancien modèle 5 dims/CI/30 indicateurs → aligner sur 4 dims/11 voies.
+## 🔵 CHANTIER EN COURS (2026-07-16 midi) — Refonte du module Guide (V4)
+Signalé par Naouphel (« le guide n'est pas à jour », « il y a tout à refaire »). **Brainstorming bouclé → spec écrite** : `docs/superpowers/specs/2026-07-16-ros-guide-v4-design.md`.
+
+### Diagnostic (sur pièce)
+`Guide.jsx` (476 l., 32,8 Ko) n'importe **rien** de `ros-model.js` → contenu en dur → dérive. Enseigne encore : 5 dims + carte CI, « 30 indicateurs », pondérations sectorielles (`WEIGHTS` supprimé du moteur), `RoS = Σ(Poids×Score)`, normalisation valeur/cible, « si inconnu saisissez 0 » (contre-productif en V4). Absents : règles lin/géom/pénalisée + k, coef gouvernance, complétude, traçabilité, `/rapport`.
+
+### Arbitrages tranchés (16/07)
+1. **Deux publics, sections séparées** : mode d'emploi + référentiel défendable (6 sections).
+2. **Les 8 justifications manquantes rédigées dans ce chantier** (constat : 3/11 voies seulement portent `justification`+`source` — SI-1, SI-3, SN-5).
+3. **Deux registres** : `source` (texte opposable, cité et vérifié) vs `convention` (arbitrage du référentiel, affiché comme tel). Tranché après avoir détecté que le « CA dollar < 10 % » de SD-4 **n'est pas un seuil juridique**.
+4. **Maths** : principe + exemple chiffré en clair, formule Mazziotta-Pareto/k/variance dans un bloc repliable.
+5. **Architecture A** : dérivation depuis `ros-model.js` + verrou de test + découpe en composants `pages/guide/`.
+
+### État
+- [x] Diagnostic complet + cause racine identifiée (contenu en dur, zéro import du modèle).
+- [x] Brainstorming : 3 questions de cadrage + 2 sections de design validées par Naouphel.
+- [x] **Sources vérifiées sur pièce** (pas de citation de mémoire) : SecNumCloud v3.2 **§19.1.h/19.1.i** (PDF ANSSI ouvert, p. 48) ; Data Act (UE) 2023/2854 chap. VI art. 25-27 ; C. com. L.225-96/L.233-3. Exemple chiffré **exécuté** sur `ros-engine.js` (90/90/20/40 → **44,17**, et non 47 estimé de tête).
+- [x] **Les 8 justifications rédigées et validées** par Naouphel (SI-2, SD-3, SD-4, SN-2, SO-1, SO-2, SO-4, SO-5).
+- [x] **Spec écrite + self-review** → trouvaille : `ros-model.js` n'a **aucun libellé de dimension** (dupliqués en dur dans 4 pages) → ajout `DIM_META` au modèle, sinon le principe « aucun fait dans le Guide » est mort-né.
+- [ ] **Relecture de la spec par Naouphel** ← gate en cours
+- [ ] Plan d'implémentation TDD (`writing-plans`)
+- [ ] Build + verrou de test vert + déploiement
 - [ ] **Vérif visuelle manuelle** : page `/rapport` (Ctrl+P) + saisie V4 — via `/run` ou côté Naouphel.
 - [ ] (option) Seed traçabilité plus large (aujourd'hui 1/11 voies sourcées) avant soutenance.
 

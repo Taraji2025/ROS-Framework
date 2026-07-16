@@ -2,7 +2,25 @@
 
 > État de reprise rapide. Détail des tâches dans `tasks/todo.md`, leçons dans `tasks/lessons.md`.
 
-## ⏸️ REPRISE EN COURS (2026-07-15) — Refonte V4 (branche `v4-refonte`)
+## ✅ V4 EN PRODUCTION (2026-07-16) — https://ros.taraji-conseil.fr
+
+**État vérifié le 2026-07-16 12:00** : prod `/var/www/ros` sur `e84bdfd` (dev `main` = `07f545d`, docs uniquement → prod à jour côté code). Site 200, `/rapport` 200, API 401 (auth normale). Backend pm2 **root** (`sudo pm2 restart ros-backend`).
+
+**Livré et déployé depuis le merge V4 (`7e1f50a`) :**
+- `8aaace4` déploiement V4 en prod + leçon cache nginx (`no-cache` sur `index.html`, cf. `tasks/lessons.md`).
+- `dce733e` correction modèle : Banque = **SO-2 seul exclu** (10 voies, SO-4 réintégré) ; libellé SN-5 → « sanctions de juridictions tierces ». → **point ouvert §4 (matrice applicabilité Banque) TRANCHÉ.**
+- Cas **Credit Suisse (ros 24, Critique)** et **Lafarge (ros 40, Faible)** saisis en prod — codage hypothétique, sources vides → **sourçage 0 %**.
+- `e84bdfd` sélecteur d'évaluation sur `/rapport` (défaut = la + récente, masqué à l'impression) → CS et Lafarge consultables au choix.
+
+**➡️ RESTE À FAIRE (par ordre d'enjeu soutenance) :**
+1. **Passe de sourçage** (pièces 1-11 du doc de session) — transforme les badges 0 %, fige les notes citables, puis re-saisir les cellules avec `source`. *C'est le gros morceau restant.*
+2. **`Guide.jsx` obsolète** : enseigne encore l'ancien modèle 5 dims/CI/30 indicateurs → aligner sur 4 dims/11 voies.
+3. **Vérif visuelle manuelle** : `/rapport` (Ctrl+P) + saisie V4 — via `/run` ou côté Naouphel.
+4. (option) Élargir le seed traçabilité (1/11 voies sourcées aujourd'hui).
+
+---
+
+## Historique — Refonte V4 (branche `v4-refonte`, mergée)
 
 ### 🔵 MISE À JOUR (2026-07-15 soir) — CADRAGE V4 DU BUNDLE 5-MORCEAUX BOUCLÉ (brainstorming en cours)
 
@@ -21,9 +39,7 @@
 
 **✅ FAIT (2026-07-16) :** spec validée → plan 10 tâches → **BLOC UNIQUE IMPLÉMENTÉ de bout en bout** (subagent-driven : 9 tâches TDD chacune revue + revue finale de branche opus + polish). Livré : 4 fns pures (`voieScores`/`interpretScore`/`computeActionPlan`/`computeCompleteness`) + `verdict` par palier (`ros-model.js`) + seed traçabilité + compat `fmt`/`SECTORS` ; backend persiste `cells/readings/governance` ; `Assessment.jsx` réécrit V4 (voies cat/num + preuve + gouvernance + complétude) ; Dashboard/History passés à 4 dims ; `Companies.jsx` supprimé (code mort multi-entreprise) ; **nouvelle page `/rapport`** imprimable (5 morceaux + `window.print()` + `@media print`). **`npm run build` VERT + Vitest 51/51.** Ledger : `.superpowers/sdd/progress.md`. Commits `eb19081`→`e50bd74` sur `v4-refonte`. **Revue finale opus = READY TO MERGE** (0 Critical ; 2 Important non bloquants = Guide.jsx obsolète + Companies supprimé-vs-réparé ; 4 Minor déjà corrigés en `e50bd74`).
 
-**✅ MERGÉ dans `main` (2026-07-16)** : `--no-ff` → commit de merge `7e1f50a` ; tests 51/51 + build verts sur `main` ; branche `v4-refonte` (tip `8915f80`) conservée. **PAS déployé prod.**
-
-**➡️ PROCHAINE ACTION À LA REPRISE :** (1) **vérif visuelle** `/rapport` (Ctrl+P) + saisie V4 — via `/run` ou côté Naouphel ; (2) **déploiement** quand voulu via `/ros-ship` (rappel leçon : remote GitHub token mort → déployer en pullant prod depuis le clone dev local) ; (3) **follow-up avant soutenance** : aligner `Guide.jsx` sur 4 dims/11 voies (enseigne encore l'ancien modèle 5 dims/CI/30) ; (4) élargir le seed traçabilité (1/11 voies sourcées aujourd'hui).
+**✅ MERGÉ dans `main` (2026-07-16)** : `--no-ff` → commit de merge `7e1f50a` ; tests 51/51 + build verts sur `main` ; branche `v4-refonte` (tip `8915f80`) conservée. **→ Puis déployé en prod le même jour (`8aaace4`), cf. section du haut.**
 
 ---
 
