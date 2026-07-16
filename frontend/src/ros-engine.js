@@ -160,6 +160,24 @@ export function computeReadings(cells = {}) {
   };
 }
 
+// Morceau #4 — complétude : gate "publiable" (toutes voies applicables) + taux de sourçage.
+export function computeCompleteness(cells = {}, profile = 'standard') {
+  const rows = voieScores(cells, profile);
+  const required = rows.length;
+  const filledRows = rows.filter(r => r.score !== null);
+  const filled = filledRows.length;
+  const sourced = filledRows.filter(r => {
+    const s = cells[r.id]?.source;
+    return typeof s === 'string' && s.trim() !== '';
+  }).length;
+  return {
+    filled,
+    required,
+    isPublishable: required > 0 && filled === required,
+    tauxSourcage: filled > 0 ? sourced / filled : 0,
+  };
+}
+
 // Morceau #1 — sens du chiffre : niveau + verdict + top3/flop3.
 export function interpretScore(assessment) {
   const { sector = 'standard', cells = {} } = assessment ?? {};
