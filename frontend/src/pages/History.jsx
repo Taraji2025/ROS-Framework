@@ -42,7 +42,6 @@ export default function History({ showToast }) {
       { label: 'SD',  data: sorted.map(a => a.scores?.SD),  borderColor: '#bc8cff', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
       { label: 'SN',  data: sorted.map(a => a.scores?.SN),  borderColor: '#f0883e', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
       { label: 'SO',  data: sorted.map(a => a.scores?.SO),  borderColor: '#3fb950', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
-      { label: 'CI',  data: sorted.map(a => a.scores?.CI),  borderColor: '#f778ba', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
     ]
   };
 
@@ -87,7 +86,7 @@ export default function History({ showToast }) {
                   <th>Période</th>
                   <th>Secteur</th>
                   <th>RoS</th>
-                  <th>SI</th><th>SD</th><th>SN</th><th>SO</th><th>CI</th>
+                  <th>SI</th><th>SD</th><th>SN</th><th>SO</th>
                   <th>Niveau</th>
                   <th>Par</th>
                   <th></th>
@@ -105,7 +104,6 @@ export default function History({ showToast }) {
                       <td style={{ color: 'var(--dim2)' }}>{fmt(a.scores?.SD)}</td>
                       <td style={{ color: 'var(--dim3)' }}>{fmt(a.scores?.SN)}</td>
                       <td style={{ color: 'var(--dim4)' }}>{fmt(a.scores?.SO)}</td>
-                      <td style={{ color: 'var(--dim5)' }}>{fmt(a.scores?.CI)}</td>
                       <td><span className={'badge ' + lvl.cls}>{lvl.label}</span></td>
                       <td style={{ color: 'var(--text3)', fontSize: 12 }}>{a.createdBy || '—'}</td>
                       <td>
