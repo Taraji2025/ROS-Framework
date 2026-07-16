@@ -15,19 +15,17 @@ const VOIES_BY_CODE = Object.fromEntries(VOIES.map(v => [v.code, v]));
 
 export default function Report({ showToast }) {
   const [loading, setLoading] = useState(true);
-  const [assessment, setAssessment] = useState(null);
-  const [period, setPeriod] = useState('');
+  const [list, setList] = useState([]);          // évaluations V4 (avec cells), + récent d'abord
+  const [selectedId, setSelectedId] = useState('');
   const [companyName, setCompanyName] = useState('');
 
   useEffect(() => {
     (async () => {
       try {
         const assessments = await api.getAssessments();
-        const a = (assessments ?? []).find(x => x.cells);
-        if (a) {
-          setAssessment({ sector: a.sector, governance: a.governance ?? {}, cells: a.cells });
-          setPeriod(a.period ?? '');
-        }
+        const v4 = (assessments ?? []).filter(x => x.cells);
+        setList(v4);
+        if (v4.length > 0) setSelectedId(v4[0].id);
         const company = await api.getCompany().catch(() => ({}));
         setCompanyName(company?.name ?? '');
       } catch (err) {
@@ -40,7 +38,7 @@ export default function Report({ showToast }) {
 
   if (loading) return <div style={{ color: 'var(--text2)', padding: 40 }}>Chargement...</div>;
 
-  if (!assessment) {
+  if (list.length === 0) {
     return (
       <div className="card">
         <div className="empty-state">
@@ -51,6 +49,10 @@ export default function Report({ showToast }) {
       </div>
     );
   }
+
+  const raw = list.find(x => x.id === selectedId) ?? list[0];
+  const period = raw.period ?? '';
+  const assessment = { sector: raw.sector, governance: raw.governance ?? {}, cells: raw.cells };
 
   const interp = interpretScore(assessment);
   const plan = computeActionPlan(assessment);
@@ -78,7 +80,21 @@ export default function Report({ showToast }) {
           <div className="page-title">{companyName || 'Rapport'}</div>
           <div className="page-sub">Rapport de souveraineté — {period || '—'}</div>
         </div>
-        <button className="btn btn-primary no-print" onClick={() => window.print()}>Imprimer / PDF</button>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          {list.length > 1 && (
+            <select
+              className="form-select no-print"
+              style={{ minWidth: 200 }}
+              value={selectedId}
+              onChange={e => setSelectedId(e.target.value)}
+            >
+              {list.map(a => (
+                <option key={a.id} value={a.id}>{a.period || a.id}</option>
+              ))}
+            </select>
+          )}
+          <button className="btn btn-primary no-print" onClick={() => window.print()}>Imprimer / PDF</button>
+        </div>
       </div>
 
       {/* En-tête score : morceau #1 */}
