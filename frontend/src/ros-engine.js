@@ -159,3 +159,14 @@ export function computeReadings(cells = {}) {
     influence: readFamily(INFLUENCE, cells),
   };
 }
+
+// Morceau #1 — sens du chiffre : niveau + verdict + top3/flop3.
+export function interpretScore(assessment) {
+  const { sector = 'standard', cells = {} } = assessment ?? {};
+  const { headline } = computeAssessment(assessment ?? {});
+  const level = rosLevel(headline);
+  const filled = voieScores(cells, sector).filter(r => r.score !== null);
+  const byDesc = [...filled].sort((a, b) => b.score - a.score);
+  const pick = rows => rows.slice(0, 3).map(({ code, label, score }) => ({ code, label, score }));
+  return { level, verdict: level.verdict ?? '', top3: pick(byDesc), flop3: pick([...byDesc].reverse()) };
+}

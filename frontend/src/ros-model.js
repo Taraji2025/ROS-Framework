@@ -69,11 +69,16 @@ export const VOIES = [
 // Paliers d'interprétation (repris de v3). Entrées gelées : rosLevel() en retourne une
 // par référence — Object.freeze empêche qu'un consommateur (UI) corrompe la table partagée.
 export const LEVELS = [
-  { max: 30,  label: '⚠ Critique',  color: 'var(--red)',        cls: 'badge-red' },
-  { max: 50,  label: '↓ Faible',    color: 'var(--orange)',     cls: 'badge-orange' },
-  { max: 65,  label: '~ Moyen',     color: 'var(--gold-light)', cls: 'badge-yellow' },
-  { max: 80,  label: '↑ Élevé',     color: 'var(--green)',      cls: 'badge-green' },
-  { max: Infinity, label: '★ Souverain', color: 'var(--teal)',  cls: 'badge-teal' },
+  { max: 30,  label: '⚠ Critique',  color: 'var(--red)',        cls: 'badge-red',
+    verdict: 'Souveraineté critique : dépendances majeures non maîtrisées, exposition directe à des leviers externes.' },
+  { max: 50,  label: '↓ Faible',    color: 'var(--orange)',     cls: 'badge-orange',
+    verdict: 'Souveraineté faible : plusieurs angles morts structurels, marge de manœuvre réduite face aux pressions extérieures.' },
+  { max: 65,  label: '~ Moyen',     color: 'var(--gold-light)', cls: 'badge-yellow',
+    verdict: 'Souveraineté moyenne : socle partiel, des dépendances subsistent sur des fonctions sensibles.' },
+  { max: 80,  label: '↑ Élevé',     color: 'var(--green)',      cls: 'badge-green',
+    verdict: 'Souveraineté élevée : maîtrise solide, quelques leviers restent à sécuriser.' },
+  { max: Infinity, label: '★ Souverain', color: 'var(--teal)',  cls: 'badge-teal',
+    verdict: "Souveraineté maîtrisée : l'entreprise contrôle ses dépendances critiques et pèse sur son environnement." },
 ].map(Object.freeze);
 
 const ALL_VOIE_IDS = VOIES.map(v => v.id);
