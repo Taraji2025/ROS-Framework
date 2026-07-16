@@ -23,9 +23,10 @@ Specs V4 validées par Naouphel (spec produit + grille OSINT) → refonte du cœ
 - [x] Spec validée par Naouphel (« on y va » sur défauts, amendables après).
 - [x] **Plan bloc A écrit** : `docs/superpowers/plans/2026-07-15-ros-v4-bloc-a-moteur.md` (8 tâches TDD, Vitest).
 - [x] **BLOC A IMPLÉMENTÉ** (subagent-driven, 8/8 tâches TDD + revue finale opus) : `ros-model.js` + `ros-engine.js` purs, **36/36 tests verts**. Commits `98052a4`→`94d5a50`.
-- [ ] ⚠️ **DÉCISION : stratégie de merge** (build prod cassé jusqu'à B/C) — garder branche / merger A+B+C / shims. NE PAS déployer maintenant.
-- [ ] **Bloc B (saisie `Assessment.jsx`)** — plan à écrire (`writing-plans`) sur le contrat moteur figé. Rappel : `computeAssessment` ≠ lectures → appeler aussi `computeReadings`.
-- [ ] Blocs C (restitution), D (annexes) — plans après B.
+- [x] **Stratégie de merge tranchée** (arbitrage #5) : **1 spec → 1 plan → 1 build**, A+B+C mergés ENSEMBLE une fois build+tests verts. Plus de bloc B/C/D séparés.
+- [x] **Brainstorming « rapport défendable » bouclé** (2026-07-16) : Sections A/B/C validées → **spec écrite** `docs/superpowers/specs/2026-07-16-ros-v4-rapport-defendable-design.md` (5 morceaux + migration UI V4 + preuve saisie, dans un bloc unique).
+- [ ] **Relecture spec par Naouphel** (gate) → puis `writing-plans` (plan du bloc unique).
+- [ ] **Build unique** (TDD subagent-driven) : `ros-model.js` enrichi (verdict/source/justif) + 3 fns pures (`interpretScore`/`computeActionPlan`/`computeCompleteness`) + `Assessment.jsx` V4 + 4 pages réparées + page `/rapport` PDF. Sortie = `npm run build` vert + Vitest vert.
 
 ## Décision (2026-06-23) — App mobile native : ABANDONNÉE
 Conseil LLM (5 advisors + revue croisée) → verdict unanime : **pas de natif, garder la PWA.**

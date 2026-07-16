@@ -4,6 +4,25 @@
 
 ## ⏸️ REPRISE EN COURS (2026-07-15) — Refonte V4 (branche `v4-refonte`)
 
+### 🔵 MISE À JOUR (2026-07-15 soir) — CADRAGE V4 DU BUNDLE 5-MORCEAUX BOUCLÉ (brainstorming en cours)
+
+**Reprise du fil Q1/5 parké.** Brainstorming du bundle « rapport de souveraineté défendable ». **6 arbitrages tranchés** (à ce jour écrits SEULEMENT ici — pas encore de spec) :
+
+1. **Justif « pourquoi la cible/le barème »** = propriété du **RÉFÉRENTIEL**, écrite 1× par les auteurs, versionnée dans `ros-model.js` comme métadonnée `{justification, source}` sur les **24 indicateurs** (Voies → documente le *barème* bands/steps ; Maturité/Influence → documente la *cible* `target`). Identique pour toutes les entreprises. Tue le doublon cible-en-dur / cible-en-prose.
+2. **Preuve de la valeur saisie** (par l'évaluateur, par indicateur) = structuré léger **`{source, note}` + `date` auto-horodatée** à la saisie. À ajouter au schéma `storage.json` (aujourd'hui : valeurs seules).
+3. **Complétude « publiable »** = ⟺ **toutes les Voies applicables remplies** (Standard/Industrie/Énergie : 11/11 ; Banque/Tech : 9/9). Maturité/Influence = bonus non bloquant. (Le seuil v3 « 4/6 par dim » est CADUC : V4 = 4 dims, score porté par les 11 Voies seules, réparties SI=3/SD=2/SN=2/SO=4.)
+4. **Export PDF** = page React `/rapport` + CSS `@media print` + `window.print()`. Zéro dépendance serveur (VPS 8 Go, backend store-only). Prix = soigner pagination + impression radar.
+5. **Livraison** = **1 spec → 1 plan → 1 gros build** (pas de livraison intermédiaire, choix Naouphel). ⇒ tranche la stratégie de merge : **A+B+C mergés ENSEMBLE** une fois build vert + tests verts.
+6. **Correction structure V4 vérifiée sur `ros-model.js`** : 4 dims (SI/SD/SN/SO, CI fusionné) ; 3 familles jamais additionnées **Voies 11 (score) / Maturité 8 / Influence 5 (lectures hors score)** ; **poids ÉGAUX** (pas de pondération custom → morceau #2 = tri « écart au max », pas « poids×écart »).
+
+**Périmètre du bloc unique (Section A du design, présentée, EN ATTENTE DE VALIDATION Naouphel) :** backbone `ros-model.js` + saisie V4 `Assessment.jsx` (ex-bloc B) + réparation des 4 pages v3 cassées (Dashboard/History/Admin/Companies, sans shim) + les 5 morceaux. Nouvelles fonctions pures visées dans `ros-engine.js` : `interpretScore()` (verdict + top3/flop3), `computeActionPlan()` (tri écart au max), `computeCompleteness()` (gate Voies).
+
+**✅ FAIT (2026-07-16 matin) :** brainstorming repris, **Sections A/B/C validées** par Naouphel une à une → **spec écrite + self-review** : `docs/superpowers/specs/2026-07-16-ros-v4-rapport-defendable-design.md`. Contrat moteur & comptages re-vérifiés sur pièce (exports `ros-engine.js` ; VOIES 11 / MATURITE 8 / INFLUENCE 5 ; `justification`/`source`/`verdict` **absents** de `ros-model.js` → ajouts de cette spec). **Aucun fichier code touché.**
+
+**➡️ PROCHAINE ACTION À LA REPRISE :** (1) **relecture de la spec par Naouphel** (gate skill brainstorming) ; (2) si OK → `writing-plans` pour le plan d'implémentation du bloc unique (moteur+3 fns / saisie V4 / 4 pages réparées / page `/rapport` PDF / tests) ; (3) build TDD subagent-driven. Critère de sortie objectif = `npm run build` vert + Vitest vert (36 existants + nouveaux).
+
+---
+
 **Où on en est :** Specs V4 validées → brainstorming (5 arbitrages) → **design** (`docs/superpowers/specs/2026-07-11...` → en fait `2026-07-15-ros-v4-refonte-design.md`) → **plan bloc A** (`docs/superpowers/plans/2026-07-15-ros-v4-bloc-a-moteur.md`) → **BLOC A IMPLÉMENTÉ** en subagent-driven (8 tâches TDD, chacune revue) + **revue finale de branche (opus)**. Résultat : moteur v4 pur = `frontend/src/ros-model.js` + `frontend/src/ros-engine.js`, **36/36 tests verts** (Vitest). Ledger : `.superpowers/sdd/progress.md`. Commits `98052a4`→`94d5a50` sur `v4-refonte`.
 
 **⚠️ ÉTAT BRANCHE : `npm run build` est CASSÉ** (attendu) — les 5 pages v3 (Dashboard/Assessment/History/Admin/Companies) importent encore `computeScores`/`fmt`/`WEIGHTS`/`SECTORS` supprimés de `ros-engine.js`. **NE PAS déployer / merger vers `main` avant les blocs B/C.** Décision de stratégie de merge en suspens (garder la branche jusqu'à B+C / merger A+B+C ensemble / shims de compat).
