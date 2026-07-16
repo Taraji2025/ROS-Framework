@@ -99,7 +99,7 @@ export default function Dashboard({ showToast, onEvaluate }) {
             <div className="ros-bar-fill" style={{ width: `${last?.scores?.ros ?? 0}%` }} />
           </div>
           {last && (
-            <div style={{ marginTop: 20, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
+            <div style={{ marginTop: 20, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 10 }}>
               {[['SI', last.scores?.SI, 'dim-1'], ['SD', last.scores?.SD, 'dim-2'], ['SN', last.scores?.SN, 'dim-3'],
                 ['SO', last.scores?.SO, 'dim-4']].map(([k, v, cls]) => (
                 <div key={k} style={{ textAlign: 'center' }}>

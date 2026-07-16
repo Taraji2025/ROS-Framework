@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { api } from '../api.js';
 import {
   interpretScore, computeActionPlan, computeCompleteness,
-  computeReadings, computeAssessment, fmt,
+  computeAssessment, fmt,
 } from '../ros-engine.js';
 import { VOIES, DIMENSIONS } from '../ros-model.js';
 import { Radar } from 'react-chartjs-2';
@@ -20,17 +20,22 @@ export default function Report({ showToast }) {
   const [companyName, setCompanyName] = useState('');
 
   useEffect(() => {
-    Promise.all([api.getAssessments(), api.getCompany()])
-      .then(([assessments, company]) => {
+    (async () => {
+      try {
+        const assessments = await api.getAssessments();
         const a = (assessments ?? []).find(x => x.cells);
         if (a) {
           setAssessment({ sector: a.sector, governance: a.governance ?? {}, cells: a.cells });
           setPeriod(a.period ?? '');
         }
+        const company = await api.getCompany().catch(() => ({}));
         setCompanyName(company?.name ?? '');
-      })
-      .catch(err => showToast(err.message))
-      .finally(() => setLoading(false));
+      } catch (err) {
+        showToast(err.message);
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
   if (loading) return <div style={{ color: 'var(--text2)', padding: 40 }}>Chargement...</div>;
@@ -50,7 +55,6 @@ export default function Report({ showToast }) {
   const interp = interpretScore(assessment);
   const plan = computeActionPlan(assessment);
   const comp = computeCompleteness(assessment.cells, assessment.sector);
-  computeReadings(assessment.cells); // lectures Maturité/Influence — hors score, non affichées ici
   const assess = computeAssessment(assessment);
 
   const radarData = {

@@ -53,7 +53,7 @@ export default function Assessment({ showToast, onSaved }) {
   const voieScoreMap = Object.fromEntries(voieScores(cells, sector).map(r => [r.id, r.score]));
 
   const handleSave = async () => {
-    if (assess.headline === null) { showToast('Renseignez au moins une voie par dimension.'); return; }
+    if (assess.headline === null) { showToast('Renseignez au moins une voie.'); return; }
     setSaving(true);
     try {
       const round = s => s !== null && s !== undefined ? Math.round(s) : null;
