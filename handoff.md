@@ -19,7 +19,9 @@
 
 **✅ FAIT (2026-07-16 matin) :** brainstorming repris, **Sections A/B/C validées** par Naouphel une à une → **spec écrite + self-review** : `docs/superpowers/specs/2026-07-16-ros-v4-rapport-defendable-design.md`. Contrat moteur & comptages re-vérifiés sur pièce (exports `ros-engine.js` ; VOIES 11 / MATURITE 8 / INFLUENCE 5 ; `justification`/`source`/`verdict` **absents** de `ros-model.js` → ajouts de cette spec). **Aucun fichier code touché.**
 
-**➡️ PROCHAINE ACTION À LA REPRISE :** (1) **relecture de la spec par Naouphel** (gate skill brainstorming) ; (2) si OK → `writing-plans` pour le plan d'implémentation du bloc unique (moteur+3 fns / saisie V4 / 4 pages réparées / page `/rapport` PDF / tests) ; (3) build TDD subagent-driven. Critère de sortie objectif = `npm run build` vert + Vitest vert (36 existants + nouveaux).
+**✅ FAIT (2026-07-16) :** spec validée par Naouphel → **plan d'implémentation écrit** : `docs/superpowers/plans/2026-07-16-ros-v4-rapport-defendable.md` (**10 tâches TDD**, self-review intégrée). Blast radius re-vérifié sur pièce : `Companies.jsx` = code mort (non importé → suppression) ; backend `server.js:155-166` **jette** `cells/readings/governance` (→ Task 6) ; build redevient vert à la Task 7 (`Assessment.jsx` = dernier fichier cassé). 4 fns pures ciblées : `voieScores`, `interpretScore`, `computeActionPlan`, `computeCompleteness` + `verdict` par palier + compat `fmt`/`SECTORS`.
+
+**➡️ PROCHAINE ACTION À LA REPRISE :** **exécuter le plan** (subagent-driven recommandé, 1 sous-agent/tâche + revue) OU inline. Critère de sortie = `npm run build` vert + Vitest vert (36 + ~14 nouveaux). NE PAS merger vers `main` ni déployer avant revue de branche + feu vert Naouphel.
 
 ---
 
