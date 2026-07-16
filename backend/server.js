@@ -160,6 +160,9 @@ app.post('/api/assessments', auth, (req, res) => {
     sector: req.body.sector,
     scores: req.body.scores,
     indicators: req.body.indicators,
+    cells: req.body.cells ?? null,
+    readings: req.body.readings ?? null,
+    governance: req.body.governance ?? null,
     createdAt: Date.now(),
     createdBy: req.user.username
   };
