@@ -31,7 +31,7 @@ Specs V4 validées par Naouphel (spec produit + grille OSINT) → refonte du cœ
 - [x] **DÉPLOYÉ EN PROD** (2026-07-16, `/ros-ship`) : prod `/var/www/ros` pull local FF → `1b587f3`, build vert, `sudo pm2 restart ros-backend` (↺4 online). Vérif : site 200, api 401, /rapport 200, dist à jour, bundle `index-00b82b3f.js`. **Live : https://ros.taraji-conseil.fr**
 - [x] **Correction modèle (décisions session 16/07)** appliquée + déployée (`dce733e`) : Banque = SO-2 seul exclu (10 voies, SO-4 réintégré) ; libellé SN-5 → « sanctions de juridictions tierces ». 51/51. → **point ouvert §4 (matrice applicabilité Banque) TRANCHÉ.**
 - [x] **Cas CS & Lafarge saisis en prod** (codage hypothétique 16/07, sources vides → sourçage 0 %) : CS ros **24 (Critique)**, Lafarge ros **40 (Faible)** → valide la lecture croisée F11. `/rapport` affiche Credit Suisse (le + récent).
-- [ ] **Limite connue** : `/rapport` n'affiche que l'éval V4 **la plus récente** (pas de sélecteur par éval). Pour voir le rapport Lafarge → il faudrait le rendre le + récent, OU ajouter un sélecteur (enhancement hors périmètre).
+- [x] **Sélecteur d'éval sur `/rapport`** (commit `e84bdfd`, déployé) : menu déroulant listant les évals V4 (défaut = + récente), masqué à l'impression. → CS **et** Lafarge consultables au choix.
 - [ ] **Passe de sourçage** (pièces 1-11 du doc session) : transforme les badges, fige les notes citables. Puis re-saisir/mettre à jour les cellules avec `source`.
 - [ ] **Follow-up avant soutenance** (Important, hors périmètre) : `Guide.jsx` enseigne encore l'ancien modèle 5 dims/CI/30 indicateurs → aligner sur 4 dims/11 voies.
 - [ ] **Vérif visuelle manuelle** : page `/rapport` (Ctrl+P) + saisie V4 — via `/run` ou côté Naouphel.
