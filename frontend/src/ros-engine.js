@@ -170,3 +170,12 @@ export function interpretScore(assessment) {
   const pick = rows => rows.slice(0, 3).map(({ code, label, score }) => ({ code, label, score }));
   return { level, verdict: level.verdict ?? '', top3: pick(byDesc), flop3: pick([...byDesc].reverse()) };
 }
+
+// Morceau #2 — boussole : voies renseignées triées par écart au max (poids égaux).
+export function computeActionPlan(assessment) {
+  const { sector = 'standard', cells = {} } = assessment ?? {};
+  return voieScores(cells, sector)
+    .filter(r => r.score !== null)
+    .map(r => ({ code: r.code, label: r.label, dim: r.dim, score: r.score, gap: 100 - r.score }))
+    .sort((a, b) => b.gap - a.gap);
+}
