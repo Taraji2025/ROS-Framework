@@ -21,7 +21,9 @@
 
 **✅ FAIT (2026-07-16) :** spec validée → plan 10 tâches → **BLOC UNIQUE IMPLÉMENTÉ de bout en bout** (subagent-driven : 9 tâches TDD chacune revue + revue finale de branche opus + polish). Livré : 4 fns pures (`voieScores`/`interpretScore`/`computeActionPlan`/`computeCompleteness`) + `verdict` par palier (`ros-model.js`) + seed traçabilité + compat `fmt`/`SECTORS` ; backend persiste `cells/readings/governance` ; `Assessment.jsx` réécrit V4 (voies cat/num + preuve + gouvernance + complétude) ; Dashboard/History passés à 4 dims ; `Companies.jsx` supprimé (code mort multi-entreprise) ; **nouvelle page `/rapport`** imprimable (5 morceaux + `window.print()` + `@media print`). **`npm run build` VERT + Vitest 51/51.** Ledger : `.superpowers/sdd/progress.md`. Commits `eb19081`→`e50bd74` sur `v4-refonte`. **Revue finale opus = READY TO MERGE** (0 Critical ; 2 Important non bloquants = Guide.jsx obsolète + Companies supprimé-vs-réparé ; 4 Minor déjà corrigés en `e50bd74`).
 
-**➡️ PROCHAINE ACTION À LA REPRISE :** **décision de merge** (feu vert Naouphel requis) via `finishing-a-development-branch` → merger `v4-refonte` dans `main`. **NE PAS déployer prod** sans validation (`/ros-ship`). Puis follow-ups : aligner `Guide.jsx` sur 4 dims/11 voies avant soutenance ; vérif visuelle `/rapport` (Ctrl+P) ; élargir le seed traçabilité (1/11 aujourd'hui).
+**✅ MERGÉ dans `main` (2026-07-16)** : `--no-ff` → commit de merge `7e1f50a` ; tests 51/51 + build verts sur `main` ; branche `v4-refonte` (tip `8915f80`) conservée. **PAS déployé prod.**
+
+**➡️ PROCHAINE ACTION À LA REPRISE :** (1) **vérif visuelle** `/rapport` (Ctrl+P) + saisie V4 — via `/run` ou côté Naouphel ; (2) **déploiement** quand voulu via `/ros-ship` (rappel leçon : remote GitHub token mort → déployer en pullant prod depuis le clone dev local) ; (3) **follow-up avant soutenance** : aligner `Guide.jsx` sur 4 dims/11 voies (enseigne encore l'ancien modèle 5 dims/CI/30) ; (4) élargir le seed traçabilité (1/11 voies sourcées aujourd'hui).
 
 ---
 
