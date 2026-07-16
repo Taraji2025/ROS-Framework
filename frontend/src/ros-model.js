@@ -10,6 +10,8 @@ export const K_VALUES = [1, 2, 3];
 //   dir 'higher' → 1er step (thresholds descendants) où value >= threshold.
 export const VOIES = [
   { id: 'si1', code: 'SI-1', dim: 'SI', label: 'Contrôle des données critiques', kind: 'cat',
+    justification: 'Le palier « souverain qualifié » exige une qualification SecNumCloud : seule garantie contre l\'extraterritorialité (CLOUD Act). L\'hébergement UE sans qualification (60) reste exposé via maisons-mères US.',
+    source: 'ANSSI SecNumCloud v3.2 ; CLOUD Act (2018)',
     bands: [
       { key: 'souverain', score: 100, label: 'Souverain qualifié' },
       { key: 'ue', score: 60, label: 'Hébergeur UE hors qualification' },
@@ -23,6 +25,7 @@ export const VOIES = [
       { key: 'mono', score: 0, label: 'Mono-cloud' },
     ] },
   { id: 'si3', code: 'SI-3', dim: 'SI', label: 'Dépendance tech étrangère', kind: 'num', dir: 'lower',
+    justification: 'Une dépendance sous 20 % envers les technologies étrangères garantit l\'autonomie décisionnelle ; au-delà de 40 %, la marge de manœuvre rétrécit ; dépasser 70 % crée une vulnérabilité critique face aux embargos ou restrictions d\'accès.',
     steps: [ { threshold: 20, score: 100 }, { threshold: 40, score: 60 }, { threshold: 70, score: 30 }, { threshold: Infinity, score: 0 } ] },
 
   { id: 'sd3', code: 'SD-3', dim: 'SD', label: 'Exposition capitalistique du conseil', kind: 'num', dir: 'lower',
@@ -42,6 +45,7 @@ export const VOIES = [
     ] },
   // Sentinelle 0.0001 : proxy pour « 0 % du CA → 100 » (un % de sanctions non nul, même infime, sort du palier 100).
   { id: 'sn5', code: 'SN-5', dim: 'SN', label: 'Sanctions extraterritoriales (% CA, 5 ans)', kind: 'num', dir: 'lower',
+    justification: 'L\'absence de sanctions en 5 ans confirme la capacité à naviguer les régimes internationaux ; un impact au-delà de 0,5 % du CA signale une exposition régulière à des mesures restrictives ; au-delà de 5 %, l\'entreprise subit une pression stratégique chronique qui entrave sa liberté d\'action.',
     steps: [ { threshold: 0.0001, score: 100 }, { threshold: 0.5, score: 70 }, { threshold: 5, score: 30 }, { threshold: Infinity, score: 0 } ] },
 
   { id: 'so1', code: 'SO-1', dim: 'SO', label: 'Diversification fournisseurs critiques', kind: 'cat',

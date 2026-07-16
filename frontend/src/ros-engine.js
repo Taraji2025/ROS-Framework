@@ -160,6 +160,12 @@ export function computeReadings(cells = {}) {
   };
 }
 
+// Helpers d'affichage (compat pages v3 — présentation, pas de logique de score).
+export function fmt(v) {
+  return v !== null && v !== undefined ? Math.round(v) : '—';
+}
+export const SECTORS = Object.keys(PROFILES);
+
 // Morceau #4 — complétude : gate "publiable" (toutes voies applicables) + taux de sourçage.
 export function computeCompleteness(cells = {}, profile = 'standard') {
   const rows = voieScores(cells, profile);
