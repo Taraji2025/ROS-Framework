@@ -54,6 +54,14 @@ export function scoreCell(voie, cell) {
   return 0;
 }
 
+// Sous-scores par Voie applicable (ordre VOIES). score = 0-100 | null.
+export function voieScores(cells = {}, profile = 'standard') {
+  const applicableIds = new Set(PROFILES[profile]?.applicable ?? []);
+  return VOIES
+    .filter(v => applicableIds.has(v.id))
+    .map(v => ({ id: v.id, code: v.code, label: v.label, dim: v.dim, score: scoreCell(v, cells[v.id]) }));
+}
+
 // Score + couverture d'une dimension pour un profil, sous une règle/k donnés.
 export function computeDimension(dim, cells, profile, rule, k = 1) {
   const applicableIds = new Set(PROFILES[profile]?.applicable ?? []);
