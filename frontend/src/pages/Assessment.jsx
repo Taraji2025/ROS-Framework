@@ -1,75 +1,34 @@
 import { useState, useCallback, useEffect } from 'react';
 import { api } from '../api.js';
-import { computeScores, rosLevel, fmt, WEIGHTS } from '../ros-engine.js';
+import { computeAssessment, computeReadings, computeCompleteness, voieScores, rosLevel, fmt, SECTORS } from '../ros-engine.js';
+import { VOIES, MATURITE, INFLUENCE, DIMENSIONS } from '../ros-model.js';
 import { Radar } from 'react-chartjs-2';
 import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler, Tooltip } from 'chart.js';
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip);
 
-const DIMS = [
-  { key: 'SI', label: 'Souveraineté Informationnelle', color: 'var(--dim1)', cls: 'dim-1', fill: 'fill-1',
-    indicators: [
-      { id: 'si1', code: 'SI-1', label: 'Taux de contrôle des données critiques', hint: '% données critiques hébergées en infrastructure souveraine · Cible: >80%', max: 100 },
-      { id: 'si2', code: 'SI-2', label: 'Indice de réversibilité cloud', hint: '% services cloud avec plan de réversibilité documenté · Cible: >70%', max: 100 },
-      { id: 'si3', code: 'SI-3', label: 'Dépendance fournisseurs tech étrangers', hint: '% dépenses tech vers fournisseurs étrangers critiques · Cible: <40% (inverse)', max: 100 },
-      { id: 'si4', code: 'SI-4', label: 'Délai de détection des fuites (heures)', hint: 'Temps moyen entre fuite et détection · Cible: <24h (inverse)' },
-      { id: 'si5', code: 'SI-5', label: 'Couverture chiffrement données sensibles', hint: '% données sensibles chiffrées · Cible: 100%', max: 100 },
-      { id: 'si6', code: 'SI-Q1', label: 'Maturité politique classification info', hint: 'Score 1-5 : 1=inexistant · 3=partiel · 5=mature et testé', min: 1, max: 5, qual: true },
-    ]
-  },
-  { key: 'SD', label: 'Souveraineté Décisionnelle', color: 'var(--dim2)', cls: 'dim-2', fill: 'fill-2',
-    indicators: [
-      { id: 'sd1', code: 'SD-1', label: 'Taux de décisions non contraintes', hint: '% décisions stratégiques prises sans contrainte externe · Cible: >75%', max: 100 },
-      { id: 'sd2', code: 'SD-2', label: 'Diversification des options stratégiques', hint: 'Nb scénarios alternatifs documentés · Cible: >=3 (score 0-100)', max: 100 },
-      { id: 'sd3', code: 'SD-3', label: "Indépendance du conseil d'administration", hint: "% administrateurs indépendants sans conflit · Cible: >60%", max: 100 },
-      { id: 'sd4', code: 'SD-4', label: 'Exposition aux clauses extraterritoriales', hint: '% contrats avec clauses extraterritoriales · Cible: <20% (inverse)', max: 100 },
-      { id: 'sd5', code: 'SD-5', label: 'Couverture cartographie des dépendances', hint: '% dépendances critiques formellement cartographiées · Cible: >80%', max: 100 },
-      { id: 'sd6', code: 'SD-Q1', label: 'Maturité processus IE interne', hint: 'Score 1-5 : capacité de veille, analyse, anticipation stratégique', min: 1, max: 5, qual: true },
-    ]
-  },
-  { key: 'SN', label: 'Souveraineté Normative', color: 'var(--dim3)', cls: 'dim-3', fill: 'fill-3',
-    indicators: [
-      { id: 'sn1', code: 'SN-1', label: 'Participation aux instances de normalisation', hint: '% comités normatifs sectoriels avec représentation active · Cible: >50%', max: 100 },
-      { id: 'sn2', code: 'SN-2', label: 'Taux de normes subies vs influencées', hint: '% nouvelles normes sans influence préalable · Cible: <30% (inverse)', max: 100 },
-      { id: 'sn3', code: 'SN-3', label: 'Capacité de lobbying réglementaire', hint: 'Budget dédié + taux de succès (score 0-100) · Cible: >60', max: 100 },
-      { id: 'sn4', code: 'SN-4', label: 'Conformité proactive vs réactive', hint: '% exigences anticipées avant mise en vigueur · Cible: >70%', max: 100 },
-      { id: 'sn5', code: 'SN-5', label: 'Exposition aux sanctions extraterritoriales', hint: 'Incidents avec amendes ou sanctions/an · Cible: 0 (score: 100-20xnb)' },
-      { id: 'sn6', code: 'SN-Q1', label: 'Maturité veille réglementaire et normative', hint: 'Score 1-5 : couverture géographique, fréquence, alertes', min: 1, max: 5, qual: true },
-    ]
-  },
-  { key: 'SO', label: 'Souveraineté Opérationnelle', color: 'var(--dim4)', cls: 'dim-4', fill: 'fill-4',
-    indicators: [
-      { id: 'so1', code: 'SO-1', label: 'Diversification des fournisseurs critiques', hint: '% fournisseurs critiques avec >=2 alternatives qualifiées · Cible: >70%', max: 100 },
-      { id: 'so2', code: 'SO-2', label: 'Indice de résilience supply chain', hint: 'Score composite: géodiversification + stocks · Cible: >75', max: 100 },
-      { id: 'so3', code: 'SO-3', label: 'MTTR des fonctions critiques (heures)', hint: 'Temps de récupération moyen testé en PCA · Cible: <4h (inverse)' },
-      { id: 'so4', code: 'SO-4', label: 'Autonomie énergétique/ressources (heures)', hint: 'Capacité de fonctionnement autonome · Cible: >=72h' },
-      { id: 'so5', code: 'SO-5', label: 'Localisation des actifs critiques', hint: '% actifs critiques localisés en zones souveraines · Cible: >60%', max: 100 },
-      { id: 'so6', code: 'SO-Q1', label: "Maturité Plan de Continuité d'Activité", hint: "Score 1-5 : exhaustivité, fréquence tests, taux succès", min: 1, max: 5, qual: true },
-    ]
-  },
-  { key: 'CI', label: "Capacité d'Influence", color: 'var(--dim5)', cls: 'dim-5', fill: 'fill-5',
-    indicators: [
-      { id: 'ci1', code: 'CI-1', label: 'Présence dans les instances de décision', hint: "% think tanks, fédérations, groupes d'influence avec siège actif · Cible: >50%", max: 100 },
-      { id: 'ci2', code: 'CI-2', label: 'Couverture médiatique maîtrisée', hint: '% mentions presse/médias avec narratif favorable ou neutre · Cible: >75%', max: 100 },
-      { id: 'ci3', code: 'CI-3', label: 'Capacité de contre-influence (jours)', hint: "Temps moyen de réponse à une attaque informationnelle · Cible: <3 jours (inverse)" },
-      { id: 'ci4', code: 'CI-4', label: "Réseau d'alliés stratégiques activables", hint: 'Nb partenaires mobilisables en cas de crise (score 0-100) · Cible: >60', max: 100 },
-      { id: 'ci5', code: 'CI-5', label: 'Ratio budget offensif IE / défensif', hint: 'Budget influence active vs défense · Cible: >25%', max: 100 },
-      { id: 'ci6', code: 'CI-Q1', label: 'Maturité guerre cognitive', hint: "Score 1-5 : capacité à façonner le narratif sectoriel", min: 1, max: 5, qual: true },
-    ]
-  }
-];
+const DIM_META = {
+  SI: { label: 'Souveraineté Informationnelle', color: 'var(--dim1)', cls: 'dim-1', fill: 'fill-1' },
+  SD: { label: 'Souveraineté Décisionnelle', color: 'var(--dim2)', cls: 'dim-2', fill: 'fill-2' },
+  SN: { label: 'Souveraineté Normative', color: 'var(--dim3)', cls: 'dim-3', fill: 'fill-3' },
+  SO: { label: 'Souveraineté Opérationnelle', color: 'var(--dim4)', cls: 'dim-4', fill: 'fill-4' },
+};
+
+const VOIES_BY_DIM = DIMENSIONS.reduce((acc, d) => {
+  acc[d] = VOIES.filter(v => v.dim === d);
+  return acc;
+}, {});
 
 export default function Assessment({ showToast, onSaved }) {
-  const defaultIndicators = Object.fromEntries(
-    DIMS.flatMap(d => d.indicators.map(i => [i.id, 0]))
-  );
-  const [indicators, setIndicators] = useState(defaultIndicators);
   const PERIODS = (() => {
     const list = [];
     for (let y = 2024; y <= 2027; y++)
       for (let q = 1; q <= 4; q++) list.push(`T${q} ${y}`);
     return list;
   })();
+
+  const [cells, setCells] = useState({});
+  const [governance, setGovernance] = useState({ croReporting: false, vetoFormalized: false, vetoExercised: false });
   const [period, setPeriod] = useState('T1 2026');
   const [sector, setSector] = useState('standard');
   const [saving, setSaving] = useState(false);
@@ -81,31 +40,32 @@ export default function Assessment({ showToast, onSaved }) {
     api.getCompany().then(c => { if (c.sector) setSector(c.sector); }).catch(() => {});
   }, []);
 
-  const scores = computeScores(indicators, sector);
-  const w = WEIGHTS[sector] || WEIGHTS.standard;
-
-  const setVal = useCallback((id, val) => {
-    setIndicators(prev => ({ ...prev, [id]: val }));
+  const setCell = useCallback((id, patch) => {
+    setCells(prev => ({ ...prev, [id]: { ...(prev[id] ?? {}), ...patch, date: new Date().toISOString() } }));
   }, []);
 
+  // Step 2: calcul live
+  const assess = computeAssessment({ sector, governance, cells });
+  const readings = computeReadings(cells);
+  const completeness = computeCompleteness(cells, sector);
+  const lvl = rosLevel(assess.headline);
+  const dimScore = d => assess.matrix.penalized[1].dims[d].score;
+  const voieScoreMap = Object.fromEntries(voieScores(cells, sector).map(r => [r.id, r.score]));
+
   const handleSave = async () => {
-    if (scores.ros === null) { showToast('Erreur de calcul — vérifiez les valeurs saisies.'); return; }
+    if (assess.headline === null) { showToast('Renseignez au moins une voie.'); return; }
     setSaving(true);
     try {
+      const round = s => s !== null && s !== undefined ? Math.round(s) : null;
       await api.createAssessment({
-        period,
-        sector,
+        period, sector, cells, governance, readings,
         scores: {
-          SI: scores.SI !== null ? Math.round(scores.SI) : null,
-          SD: scores.SD !== null ? Math.round(scores.SD) : null,
-          SN: scores.SN !== null ? Math.round(scores.SN) : null,
-          SO: scores.SO !== null ? Math.round(scores.SO) : null,
-          CI: scores.CI !== null ? Math.round(scores.CI) : null,
-          ros: Math.round(scores.ros)
+          SI: round(dimScore('SI')), SD: round(dimScore('SD')),
+          SN: round(dimScore('SN')), SO: round(dimScore('SO')),
+          ros: round(assess.headline),
         },
-        indicators
       });
-      showToast('Évaluation sauvegardée ✓');
+      showToast('Évaluation V4 sauvegardée ✓');
       onSaved();
     } catch (err) {
       showToast(err.message);
@@ -114,51 +74,45 @@ export default function Assessment({ showToast, onSaved }) {
     }
   };
 
-  const exportCSV = () => {
-    const headers = ['Période', 'Secteur', 'RoS', 'SI', 'SD', 'SN', 'SO', 'CI',
-      ...DIMS.flatMap(d => d.indicators.map(i => i.code))];
-    const vals = [
-      period, sector,
-      scores.ros !== null ? Math.round(scores.ros) : '',
-      scores.SI !== null ? Math.round(scores.SI) : '',
-      scores.SD !== null ? Math.round(scores.SD) : '',
-      scores.SN !== null ? Math.round(scores.SN) : '',
-      scores.SO !== null ? Math.round(scores.SO) : '',
-      scores.CI !== null ? Math.round(scores.CI) : '',
-      ...DIMS.flatMap(d => d.indicators.map(i => indicators[i.id] ?? ''))
-    ];
-    const csv = headers.join(',') + '\n' + vals.join(',');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'RoS_' + period + '.csv';
-    a.click();
-  };
-
-  const lvl = rosLevel(scores.ros);
   const radarData = {
-    labels: ['Informationnelle', 'Décisionnelle', 'Normative', 'Opérationnelle', 'Influence'],
+    labels: ['Informationnelle', 'Décisionnelle', 'Normative', 'Opérationnelle'],
     datasets: [{
-      data: [scores.SI ?? 0, scores.SD ?? 0, scores.SN ?? 0, scores.SO ?? 0, scores.CI ?? 0],
+      data: DIMENSIONS.map(d => dimScore(d) ?? 0),
       backgroundColor: 'rgba(88,166,255,.15)',
       borderColor: 'rgba(88,166,255,.8)',
       borderWidth: 2,
-      pointBackgroundColor: ['#58a6ff','#bc8cff','#f0883e','#3fb950','#f778ba'],
+      pointBackgroundColor: ['#58a6ff', '#bc8cff', '#f0883e', '#3fb950'],
       pointBorderColor: '#0d1117',
       pointBorderWidth: 2,
       pointRadius: 5
     }]
   };
 
+  const ProofRow = ({ id }) => (
+    <div style={{ display: 'flex', gap: 8, marginLeft: 67, marginBottom: 10 }}>
+      <input
+        className="form-input"
+        placeholder="Source (URL, doc, page)"
+        value={cells[id]?.source ?? ''}
+        onChange={e => setCell(id, { source: e.target.value })}
+      />
+      <input
+        className="form-input"
+        placeholder="Commentaire"
+        value={cells[id]?.note ?? ''}
+        onChange={e => setCell(id, { note: e.target.value })}
+      />
+    </div>
+  );
+
   return (
     <div>
       <div className="page-header">
         <div>
           <div className="page-title">Nouvelle évaluation</div>
-          <div className="page-sub">30 indicateurs — 5 dimensions</div>
+          <div className="page-sub">11 voies — 4 dimensions · lectures Maturité/Influence hors score</div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-ghost" onClick={exportCSV}>Exporter CSV</button>
           <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
             {saving ? 'Sauvegarde...' : 'Sauvegarder'}
           </button>
@@ -170,7 +124,7 @@ export default function Assessment({ showToast, onSaved }) {
           {PERIODS.map(p => <option key={p} value={p}>{p}</option>)}
         </select>
         <select className="form-select" style={{ width: 160 }} value={sector} onChange={e => setSector(e.target.value)}>
-          {['standard', 'banque', 'industrie', 'tech', 'energie'].map(s => (
+          {SECTORS.map(s => (
             <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
           ))}
         </select>
@@ -179,14 +133,23 @@ export default function Assessment({ showToast, onSaved }) {
       <div className="grid2" style={{ marginBottom: 16 }}>
         <div className="ros-main">
           <div className="ros-label">Return on Sovereignty</div>
-          <div className="ros-score" style={{ color: lvl.color }}>{scores.ros !== null ? Math.round(scores.ros) : '—'}</div>
+          <div className="ros-score" style={{ color: lvl.color }}>{fmt(assess.headline)}</div>
           <div className="ros-interp" style={{ color: lvl.color }}>{lvl.label}</div>
           <div className="ros-bar">
-            <div className="ros-bar-fill" style={{ width: (scores.ros ?? 0) + '%' }} />
+            <div className="ros-bar-fill" style={{ width: (assess.headline ?? 0) + '%' }} />
           </div>
+          {completeness.isPublishable ? (
+            <div className="badge badge-teal" style={{ marginTop: 14 }}>
+              Publiable — {completeness.required}/{completeness.required} voies · sourçage {Math.round(completeness.tauxSourcage * 100)}%
+            </div>
+          ) : (
+            <div className="badge badge-orange" style={{ marginTop: 14 }}>
+              Partiel — {completeness.filled}/{completeness.required} voies renseignées (non publiable)
+            </div>
+          )}
         </div>
         <div className="card">
-          <div className="card-title">Radar des 5 dimensions</div>
+          <div className="card-title">Radar des 4 dimensions</div>
           <div className="chart-wrap">
             <Radar data={radarData} options={{
               responsive: true, maintainAspectRatio: false,
@@ -201,77 +164,169 @@ export default function Assessment({ showToast, onSaved }) {
         </div>
       </div>
 
-      <div className="grid5" style={{ marginBottom: 16 }}>
-        {DIMS.map(d => {
-          const s = scores[d.key];
+      <div className="grid4" style={{ marginBottom: 16 }}>
+        {DIMENSIONS.map(d => {
+          const s = dimScore(d);
+          const meta = DIM_META[d];
           return (
-            <div key={d.key} className="dim-card">
+            <div key={d} className="dim-card">
               <div className="dim-header">
                 <div>
-                  <div className={'dim-name ' + d.cls}>{d.key === 'CI' ? "Cap. Influence" : 'Souv. ' + d.key}</div>
-                  <div className="dim-weight">Poids: {Math.round((w[d.key.toLowerCase()] || 0) * 100)}%</div>
+                  <div className={'dim-name ' + meta.cls}>Souv. {d}</div>
+                  <div className="dim-weight">Couverture: {Math.round((assess.coverageByDim[d] ?? 0) * 100)}%</div>
                 </div>
-                <div className={'dim-score ' + d.cls}>{fmt(s)}</div>
+                <div className={'dim-score ' + meta.cls}>{fmt(s)}</div>
               </div>
-              <div className="dim-bar"><div className={'dim-bar-fill ' + d.fill} style={{ width: (s ?? 0) + '%' }} /></div>
+              <div className="dim-bar"><div className={'dim-bar-fill ' + meta.fill} style={{ width: (s ?? 0) + '%' }} /></div>
             </div>
           );
         })}
       </div>
 
-      {DIMS.map((dim) => {
-        const dimScores = scores[dim.key.toLowerCase()];
+      {DIMENSIONS.map(d => {
+        const meta = DIM_META[d];
+        const voies = VOIES_BY_DIM[d];
         return (
-          <div key={dim.key} className="card" style={{ marginBottom: 16 }}>
+          <div key={d} className="card" style={{ marginBottom: 16 }}>
             <div className="ind-section-header">
-              <div className="ind-section-dot" style={{ background: dim.color }} />
-              <div className={'ind-section-title ' + dim.cls}>{dim.label}</div>
-              <div className="ind-section-sub">Poids: {Math.round((w[dim.key.toLowerCase()] || 0) * 100)}% · 6 indicateurs</div>
+              <div className="ind-section-dot" style={{ background: meta.color }} />
+              <div className={'ind-section-title ' + meta.cls}>{meta.label}</div>
+              <div className="ind-section-sub">{voies.length} voie{voies.length > 1 ? 's' : ''}</div>
             </div>
-            {dim.indicators.map((ind, idx) => (
-              <div key={ind.id} className="ind-row-wrap">
+            {voies.map(voie => (
+              <div key={voie.id} className="ind-row-wrap">
                 <div className="ind-row">
-                  <div className="ind-id">{ind.code}</div>
+                  <div className="ind-id">{voie.code}</div>
                   <div className="ind-label-block">
-                    <div className="ind-label">{ind.label}</div>
+                    <div className="ind-label">{voie.label}</div>
                   </div>
                   <button
-                    className={'ind-tip-btn' + (openTip === ind.id ? ' active' : '')}
-                    onClick={() => toggleTip(ind.id)}
-                    title="Aide sur cet indicateur"
+                    className={'ind-tip-btn' + (openTip === voie.id ? ' active' : '')}
+                    onClick={() => toggleTip(voie.id)}
+                    title="Aide sur cette voie"
                   >ⓘ</button>
-                  <input
-                    className={'ind-input' + (ind.qual ? ' qual' : '')}
-                    type="number"
-                    min={ind.min ?? 0}
-                    max={ind.max}
-                    value={indicators[ind.id] ?? 0}
-                    onChange={e => setVal(ind.id, e.target.value === '' ? 0 : e.target.value)}
-                  />
-                  <div className={'ind-score-pill ' + dim.cls}>
-                    {dimScores && dimScores[idx] !== null ? Math.round(dimScores[idx]) : '—'}
-                  </div>
+                  {voie.kind === 'cat' ? (
+                    <select
+                      className="form-select"
+                      value={cells[voie.id]?.band ?? ''}
+                      onChange={e => setCell(voie.id, { band: e.target.value })}
+                    >
+                      <option value="">—</option>
+                      {voie.bands.map(b => <option key={b.key} value={b.key}>{b.label}</option>)}
+                    </select>
+                  ) : (
+                    <input
+                      className="ind-input"
+                      type="number"
+                      value={cells[voie.id]?.value ?? ''}
+                      onChange={e => setCell(voie.id, { value: e.target.value })}
+                    />
+                  )}
+                  <div className={'ind-score-pill ' + meta.cls}>{fmt(voieScoreMap[voie.id])}</div>
                 </div>
-                {openTip === ind.id && (
+                {openTip === voie.id && (
                   <div className="ind-tooltip">
-                    <div className="ind-tooltip-code">{ind.code} — {ind.label}</div>
-                    <div className="ind-tooltip-body">{ind.hint}</div>
-                    {ind.qual && <div className="ind-tooltip-scale">
-                      <span>1 — Inexistant</span><span>2 — Initial</span><span>3 — Partiel</span><span>4 — Avancé</span><span>5 — Mature</span>
-                    </div>}
+                    <div className="ind-tooltip-code">{voie.code} — {voie.label}</div>
+                    <div className="ind-tooltip-body">{voie.justification ?? 'Barème non documenté'}</div>
+                    {voie.source && <div className="ind-tooltip-body" style={{ marginTop: 6, color: 'var(--text3)' }}>Source : {voie.source}</div>}
                   </div>
                 )}
+                <ProofRow id={voie.id} />
               </div>
             ))}
           </div>
         );
       })}
 
+      <div className="card" style={{ marginBottom: 16 }}>
+        <div className="ind-section-header">
+          <div className="ind-section-dot" style={{ background: 'var(--blue)' }} />
+          <div className="ind-section-title">Lectures (hors score)</div>
+          <div className="ind-section-sub">Maturité + Influence — ne comptent pas dans le RoS</div>
+        </div>
+
+        <div className="card-title" style={{ marginTop: 4 }}>Maturité — {fmt(readings.maturite.score)}</div>
+        {MATURITE.map(ind => (
+          <div key={ind.id} className="ind-row-wrap">
+            <div className="ind-row">
+              <div className="ind-id">{ind.code}</div>
+              <div className="ind-label-block">
+                <div className="ind-label">{ind.label}</div>
+              </div>
+              <div />
+              <input
+                className={'ind-input' + (ind.kind === 'qual' ? ' qual' : '')}
+                type="number"
+                min={ind.kind === 'qual' ? 1 : undefined}
+                max={ind.kind === 'qual' ? 5 : undefined}
+                value={cells[ind.id]?.value ?? ''}
+                onChange={e => setCell(ind.id, { value: e.target.value })}
+              />
+              <div className="ind-score-pill">{cells[ind.id]?.value ?? '—'}</div>
+            </div>
+            <ProofRow id={ind.id} />
+          </div>
+        ))}
+
+        <div className="card-title" style={{ marginTop: 20 }}>Influence — {fmt(readings.influence.score)}</div>
+        {INFLUENCE.map(ind => (
+          <div key={ind.id} className="ind-row-wrap">
+            <div className="ind-row">
+              <div className="ind-id">{ind.code}</div>
+              <div className="ind-label-block">
+                <div className="ind-label">{ind.label}</div>
+              </div>
+              <div />
+              <input
+                className={'ind-input' + (ind.kind === 'qual' ? ' qual' : '')}
+                type="number"
+                min={ind.kind === 'qual' ? 1 : undefined}
+                max={ind.kind === 'qual' ? 5 : undefined}
+                value={cells[ind.id]?.value ?? ''}
+                onChange={e => setCell(ind.id, { value: e.target.value })}
+              />
+              <div className="ind-score-pill">{cells[ind.id]?.value ?? '—'}</div>
+            </div>
+            <ProofRow id={ind.id} />
+          </div>
+        ))}
+      </div>
+
+      <div className="card" style={{ marginBottom: 16 }}>
+        <div className="card-title">Gouvernance</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 12 }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <input
+              type="checkbox"
+              checked={governance.croReporting}
+              onChange={e => setGovernance(prev => ({ ...prev, croReporting: e.target.checked }))}
+            />
+            Reporting souveraineté remonté au Conseil (CRO reporting)
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <input
+              type="checkbox"
+              checked={governance.vetoFormalized}
+              onChange={e => setGovernance(prev => ({ ...prev, vetoFormalized: e.target.checked }))}
+            />
+            Droit de veto souveraineté formalisé
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <input
+              type="checkbox"
+              checked={governance.vetoExercised}
+              onChange={e => setGovernance(prev => ({ ...prev, vetoExercised: e.target.checked }))}
+            />
+            Veto déjà exercé au moins une fois
+          </label>
+        </div>
+        <div className="ind-section-sub">Coefficient de gouvernance appliqué au RoS : ×{assess.coef.toFixed(2)}</div>
+      </div>
+
       <div className="btn-row">
         <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
           {saving ? 'Sauvegarde...' : "Sauvegarder l'évaluation"}
         </button>
-        <button className="btn btn-ghost" onClick={exportCSV}>Exporter CSV</button>
       </div>
     </div>
   );

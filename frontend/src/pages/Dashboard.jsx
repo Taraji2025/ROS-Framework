@@ -29,13 +29,13 @@ export default function Dashboard({ showToast, onEvaluate }) {
   // Trend: 10 dernières évaluations (ordre chronologique pour le graphe)
   const trendData = [...assessments].reverse().slice(-10);
   const radarData = {
-    labels: ['Informationnelle', 'Décisionnelle', 'Normative', 'Opérationnelle', 'Influence'],
+    labels: ['Informationnelle', 'Décisionnelle', 'Normative', 'Opérationnelle'],
     datasets: [{
-      data: last ? [last.scores?.SI ?? 0, last.scores?.SD ?? 0, last.scores?.SN ?? 0, last.scores?.SO ?? 0, last.scores?.CI ?? 0] : [0,0,0,0,0],
+      data: last ? [last.scores?.SI ?? 0, last.scores?.SD ?? 0, last.scores?.SN ?? 0, last.scores?.SO ?? 0] : [0,0,0,0],
       backgroundColor: 'rgba(88,166,255,.15)',
       borderColor: 'rgba(88,166,255,.8)',
       borderWidth: 2,
-      pointBackgroundColor: ['#58a6ff','#bc8cff','#f0883e','#3fb950','#f778ba'],
+      pointBackgroundColor: ['#58a6ff','#bc8cff','#f0883e','#3fb950'],
       pointBorderColor: '#0d1117',
       pointBorderWidth: 2,
       pointRadius: 5
@@ -50,7 +50,6 @@ export default function Dashboard({ showToast, onEvaluate }) {
       { label: 'SD',  data: trendData.map(a => a.scores?.SD),  borderColor: '#bc8cff', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
       { label: 'SN',  data: trendData.map(a => a.scores?.SN),  borderColor: '#f0883e', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
       { label: 'SO',  data: trendData.map(a => a.scores?.SO),  borderColor: '#3fb950', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
-      { label: 'CI',  data: trendData.map(a => a.scores?.CI),  borderColor: '#f778ba', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
     ]
   };
 
@@ -100,9 +99,9 @@ export default function Dashboard({ showToast, onEvaluate }) {
             <div className="ros-bar-fill" style={{ width: `${last?.scores?.ros ?? 0}%` }} />
           </div>
           {last && (
-            <div style={{ marginTop: 20, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
+            <div style={{ marginTop: 20, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 10 }}>
               {[['SI', last.scores?.SI, 'dim-1'], ['SD', last.scores?.SD, 'dim-2'], ['SN', last.scores?.SN, 'dim-3'],
-                ['SO', last.scores?.SO, 'dim-4'], ['CI', last.scores?.CI, 'dim-5']].map(([k, v, cls]) => (
+                ['SO', last.scores?.SO, 'dim-4']].map(([k, v, cls]) => (
                 <div key={k} style={{ textAlign: 'center' }}>
                   <div className={`${cls}`} style={{ fontFamily: 'Space Mono', fontSize: 18, fontWeight: 700 }}>{fmt(v)}</div>
                   <div style={{ fontSize: 10, color: 'var(--text3)', marginTop: 2 }}>{k}</div>
@@ -112,7 +111,7 @@ export default function Dashboard({ showToast, onEvaluate }) {
           )}
         </div>
         <div className="card">
-          <div className="card-title">Radar des 5 dimensions</div>
+          <div className="card-title">Radar des 4 dimensions</div>
           <div className="chart-wrap">
             <Radar data={radarData} options={{
               responsive: true, maintainAspectRatio: false,

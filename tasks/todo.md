@@ -1,5 +1,37 @@
 # ROS — tâches en cours
 
+## 🔴 CHANTIER ACTIF (2026-07-15) — Refonte V4 (branche `v4-refonte`)
+Specs V4 validées par Naouphel (spec produit + grille OSINT) → refonte du cœur.
+**Design écrit** : `docs/superpowers/specs/2026-07-15-ros-v4-refonte-design.md`.
+
+### Décisions de cadrage actées (15/07)
+- Une spec globale V4 → plan d'implémentation phasé (A moteur → B saisie → C restitution → D annexes).
+- Agrégation : **2 niveaux non-compensatoires** (voies→dim, dim→global, poids égaux au niveau dim).
+- Score titre : **pénalisée Mazziotta-Pareto**, k∈{1,2,3} challengé dans la restitution ; lin/géom à côté.
+- Profils : **applicabilité seule, poids égaux** (plus de WEIGHTS sectoriels).
+- Traçabilité : **{source, date, note} par cellule, tout optionnel** + taux de sourçage.
+
+### Points ouverts (à trancher en relecture spec)
+- [ ] Influence : 5 (fusion doublons) ou 7 indicateurs ?
+- [ ] Matrice d'applicabilité : profil `conseil/services` ? SO-2/SO-4 pour Banque ?
+- [ ] Barèmes Maturité/Influence : réutiliser v3 ou spécifier maintenant ?
+- [ ] PoC re-codage : Credit Suisse (28/02/2021) vs Lafarge — arbitrage mémoire (hors app).
+
+### État
+- [x] Blast radius mesuré (épicentre ros-engine.js + Assessment.jsx ; backend store-only ; Companies.jsx = mort).
+- [x] Design complet écrit + self-review (comptage 24 mesures / 26 codes hérités).
+- [x] Spec validée par Naouphel (« on y va » sur défauts, amendables après).
+- [x] **Plan bloc A écrit** : `docs/superpowers/plans/2026-07-15-ros-v4-bloc-a-moteur.md` (8 tâches TDD, Vitest).
+- [x] **BLOC A IMPLÉMENTÉ** (subagent-driven, 8/8 tâches TDD + revue finale opus) : `ros-model.js` + `ros-engine.js` purs, **36/36 tests verts**. Commits `98052a4`→`94d5a50`.
+- [x] **Stratégie de merge tranchée** (arbitrage #5) : **1 spec → 1 plan → 1 build**, A+B+C mergés ENSEMBLE une fois build+tests verts. Plus de bloc B/C/D séparés.
+- [x] **Brainstorming « rapport défendable » bouclé** (2026-07-16) : Sections A/B/C validées → **spec écrite** `docs/superpowers/specs/2026-07-16-ros-v4-rapport-defendable-design.md` (5 morceaux + migration UI V4 + preuve saisie, dans un bloc unique).
+- [x] **Spec validée + plan écrit** (2026-07-16) : `docs/superpowers/plans/2026-07-16-ros-v4-rapport-defendable.md` (10 tâches TDD).
+- [x] **BLOC UNIQUE IMPLÉMENTÉ** (subagent-driven, 9 tâches + revue finale opus + polish) : 4 fns pures (`voieScores`/`interpretScore`/`computeActionPlan`/`computeCompleteness`) + `verdict` par palier + traçabilité + compat `fmt`/`SECTORS` ; backend persiste `cells/readings/governance` ; `Assessment.jsx` V4 réécrit ; Dashboard/History 4 dims ; `Companies.jsx` supprimé (code mort) ; page `/rapport` imprimable (`window.print()`+`@media print`). **`npm run build` vert + Vitest 51/51.** Commits `eb19081`→`e50bd74` sur `v4-refonte`. Revue finale opus = **READY TO MERGE**.
+- [ ] **DÉCISION merge** (feu vert Naouphel) : `finishing-a-development-branch` → merger `v4-refonte` dans `main`. NE PAS déployer prod sans validation.
+- [ ] **Follow-up avant soutenance** (Important, hors périmètre) : `Guide.jsx` enseigne encore l'ancien modèle 5 dims/CI/30 indicateurs → aligner sur 4 dims/11 voies.
+- [ ] **Vérif visuelle manuelle** : page `/rapport` (Ctrl+P) + saisie V4 — via `/run` ou côté Naouphel.
+- [ ] (option) Seed traçabilité plus large (aujourd'hui 1/11 voies sourcées) avant soutenance.
+
 ## Décision (2026-06-23) — App mobile native : ABANDONNÉE
 Conseil LLM (5 advisors + revue croisée) → verdict unanime : **pas de natif, garder la PWA.**
 Raisons : usage de bureau périodique (pas nomade), moteur en double = risque de divergence sur un
