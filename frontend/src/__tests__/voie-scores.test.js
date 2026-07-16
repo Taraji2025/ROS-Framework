@@ -16,10 +16,10 @@ describe('voieScores', () => {
     expect(rows.every(r => r.score === null)).toBe(true);
   });
 
-  it('exclut les voies non applicables au profil (banque: pas so2/so4)', () => {
+  it('exclut les voies non applicables au profil (banque: SO-2 seul exclu)', () => {
     const ids = voieScores({}, 'banque').map(r => r.id);
     expect(ids).not.toContain('so2');
-    expect(ids).not.toContain('so4');
-    expect(ids.length).toBe(9);
+    expect(ids).toContain('so4');
+    expect(ids.length).toBe(10);
   });
 });

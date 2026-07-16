@@ -38,11 +38,11 @@ describe('ros-model PROFILES', () => {
     }
   });
 
-  it('tech excludes SO-2 and SO-4; banque excludes them too', () => {
+  it('tech excludes SO-2 and SO-4; banque excludes only SO-2 (so4 applicable)', () => {
     expect(PROFILES.tech.applicable).not.toContain('so2');
     expect(PROFILES.tech.applicable).not.toContain('so4');
     expect(PROFILES.banque.applicable).not.toContain('so2');
-    expect(PROFILES.banque.applicable).not.toContain('so4');
+    expect(PROFILES.banque.applicable).toContain('so4');
   });
 
   it('standard applies all 11 voies', () => {

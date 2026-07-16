@@ -8,15 +8,16 @@ describe('computeCompleteness', () => {
     expect(c.filled).toBe(1);
     expect(c.isPublishable).toBe(false);
   });
-  it('publiable quand les 9 voies applicables (banque) sont remplies', () => {
+  it('publiable quand les 10 voies applicables (banque : SO-2 seul exclu) sont remplies', () => {
     const cells = {
       si1: { band: 'ue' }, si2: { band: 'mono' }, si3: { value: '5' },
       sd3: { value: '5' }, sd4: { band: 'aucune' }, sn2: { band: 'comites' },
-      sn5: { value: '0' }, so1: { band: 'diversifie' }, so5: { band: 'concentre' },
+      sn5: { value: '0' }, so1: { band: 'diversifie' },
+      so4: { band: 'dispositif' }, so5: { band: 'concentre' },
     };
     const c = computeCompleteness(cells, 'banque');
-    expect(c.required).toBe(9);
-    expect(c.filled).toBe(9);
+    expect(c.required).toBe(10);
+    expect(c.filled).toBe(10);
     expect(c.isPublishable).toBe(true);
   });
   it('taux de sourçage = part des cellules remplies avec source', () => {

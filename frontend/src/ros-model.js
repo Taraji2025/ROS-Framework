@@ -44,7 +44,7 @@ export const VOIES = [
       { key: 'absente', score: 0, label: 'Absente partout' },
     ] },
   // Sentinelle 0.0001 : proxy pour « 0 % du CA → 100 » (un % de sanctions non nul, même infime, sort du palier 100).
-  { id: 'sn5', code: 'SN-5', dim: 'SN', label: 'Sanctions extraterritoriales (% CA, 5 ans)', kind: 'num', dir: 'lower',
+  { id: 'sn5', code: 'SN-5', dim: 'SN', label: 'Sanctions de juridictions tierces (% CA, 5 ans)', kind: 'num', dir: 'lower',
     justification: 'L\'absence de sanctions en 5 ans confirme la capacité à naviguer les régimes internationaux ; un impact au-delà de 0,5 % du CA signale une exposition régulière à des mesures restrictives ; au-delà de 5 %, l\'entreprise subit une pression stratégique chronique qui entrave sa liberté d\'action.',
     steps: [ { threshold: 0.0001, score: 100 }, { threshold: 0.5, score: 70 }, { threshold: 5, score: 30 }, { threshold: Infinity, score: 0 } ] },
 
@@ -88,10 +88,11 @@ export const LEVELS = [
 const ALL_VOIE_IDS = VOIES.map(v => v.id);
 
 // Profils : applicabilité seule, poids égaux (D-D).
-// Banque et Tech : SO-2 (stocks physiques) et SO-4 (autonomie énergétique) sans objet.
+// Tech : SO-2 (stocks physiques) et SO-4 (autonomie énergétique) sans objet.
+// Banque : SO-2 sans objet uniquement ; SO-4 applicable (décision de session 16/07 — 10 voies).
 export const PROFILES = {
   standard:  { label: 'Standard',  applicable: ALL_VOIE_IDS },
-  banque:    { label: 'Banque',    applicable: ALL_VOIE_IDS.filter(id => !['so2', 'so4'].includes(id)) },
+  banque:    { label: 'Banque',    applicable: ALL_VOIE_IDS.filter(id => !['so2'].includes(id)) },
   industrie: { label: 'Industrie', applicable: ALL_VOIE_IDS },
   tech:      { label: 'Tech',      applicable: ALL_VOIE_IDS.filter(id => !['so2', 'so4'].includes(id)) },
   energie:   { label: 'Énergie',   applicable: ALL_VOIE_IDS },

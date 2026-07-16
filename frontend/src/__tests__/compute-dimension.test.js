@@ -23,9 +23,9 @@ describe('computeDimension', () => {
     expect(r.score).toBe(100); // only si1 valid
   });
 
-  it('excludes inapplicable voies (banque has no so2/so4)', () => {
+  it('excludes inapplicable voies (banque has no so2; so4 applicable)', () => {
     const r = computeDimension('SO', {}, 'banque', 'linear', 1);
-    expect(r.applicable).toBe(2); // so1, so5 only
+    expect(r.applicable).toBe(3); // so1, so4, so5 (so2 exclu)
     expect(r.filled).toBe(0);
     expect(r.score).toBeNull();
   });
