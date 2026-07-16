@@ -6,6 +6,7 @@ import Assessment from './pages/Assessment.jsx';
 import History from './pages/History.jsx';
 import Guide from './pages/Guide.jsx';
 import Admin from './pages/Admin.jsx';
+import Report from './pages/Report.jsx';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -67,6 +68,9 @@ export default function App() {
           <div className={`nav-item ${tab === 'history' ? 'active' : ''}`} onClick={() => setTab('history')}>
             <span className="nav-icon">◷</span> Historique
           </div>
+          <div className={`nav-item ${tab === 'rapport' ? 'active' : ''}`} onClick={() => setTab('rapport')}>
+            <span className="nav-icon">▤</span> Rapport
+          </div>
           <div className={`nav-item ${tab === 'guide' ? 'active' : ''}`} onClick={() => setTab('guide')}>
             <span className="nav-icon">≡</span> Guide
           </div>
@@ -89,6 +93,7 @@ export default function App() {
         {tab === 'dashboard'  && <Dashboard showToast={showToast} onEvaluate={() => setTab('assessment')} />}
         {tab === 'assessment' && <Assessment showToast={showToast} onSaved={() => setTab('history')} />}
         {tab === 'history'    && <History showToast={showToast} />}
+        {tab === 'rapport'    && <Report showToast={showToast} />}
         {tab === 'guide'      && <Guide />}
         {tab === 'admin' && user.role === 'admin' && <Admin showToast={showToast} />}
       </main>
