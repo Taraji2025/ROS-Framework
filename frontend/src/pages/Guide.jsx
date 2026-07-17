@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import GuideIntro from './guide/GuideIntro.jsx';
 import GuideWorkflow from './guide/GuideWorkflow.jsx';
+import GuideModele from './guide/GuideModele.jsx';
 
 const SECTIONS = [
   { id: 'intro', label: '🎯 Introduction', C: GuideIntro },
   { id: 'workflow', label: '📋 Comment évaluer', C: GuideWorkflow },
+  { id: 'modele', label: '🧭 Le modèle V4', C: GuideModele },
 ];
 
 export default function Guide() {
