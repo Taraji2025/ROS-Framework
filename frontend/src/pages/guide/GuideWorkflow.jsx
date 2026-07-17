@@ -11,7 +11,7 @@ export default function GuideWorkflow() {
     <div>
       <Section title="Le parcours d'une évaluation">
         <Step n={1} title="Choisir le profil de l'entreprise">
-          Le profil (Standard, Banque, Industrie, Tech, Énergie) détermine quelles Voies sont <strong style={{ color: 'var(--text)' }}>applicables</strong> —
+          Le profil ({Object.values(PROFILES).map(p => p.label).join(', ')}) détermine quelles Voies sont <strong style={{ color: 'var(--text)' }}>applicables</strong> —
           il ne pondère rien. Une Voie sans objet pour le profil retenu n'apparaît pas dans la saisie et n'entre pas dans le score.
         </Step>
         <Step n={2} title="Réunir les porteurs de données">
