@@ -83,7 +83,11 @@ Le champ de justification passe à **deux registres** :
 
 Règle : **au moins un** de `source` / `convention` doit être présent, en plus de `justification`. Les deux peuvent coexister (cas SD-3, SD-4 : une partie des seuils est légale, l'autre conventionnelle).
 
-Les 3 justifications existantes (SI-1, SI-3, SN-5) portent déjà `justification` + `source` — conformes, non modifiées.
+~~Les 3 justifications existantes (SI-1, SI-3, SN-5) portent déjà `justification` + `source` — conformes, non modifiées.~~
+
+> **CORRECTION (17/07, découverte à l'implémentation par le verrou lui-même).** Cette affirmation était **fausse**. État réel constaté : **SI-1** portait `justification` + `source` ✅ ; **SI-3** et **SN-5** ne portaient qu'une `justification`, **sans aucun registre**. Cause racine : le chantier V4 précédent (commit `6711f0f`) n'avait ajouté de `source` qu'à SI-1. Les 2 registres manquants ont été rédigés et **validés par Naouphel le 17/07** (cf. §5bis) — ce sont des **conventions**, aucune norme ne fixant ces seuils. Le verrou est passé à **11/11**.
+>
+> *Leçon : le verrou a trouvé l'erreur de la spec qui l'a commandé. C'est précisément à ça qu'il sert.*
 
 ### 4bis. Libellés de dimension (trouvaille de la self-review)
 
@@ -150,6 +154,20 @@ Les trois sources citées ont été **ouvertes et vérifiées** le 16/07 (cf. §
 ### SO-5 · Dispersion en zone souveraine — *convention*
 - **justification** : « Trois sites est le minimum qui survit à la perte d'un site sans revenir à un point unique de défaillance (à deux sites, une perte laisse un site seul). La zone compte autant que le nombre : trois sites dont certains hors zone souveraine (60) dispersent le risque physique mais pas le risque juridique. Un site unique, même souverain, vaut 20 et non 0 — la souveraineté juridique y est acquise, seule la résilience manque. »
 - **convention** : « Aucune norme ne fixe de nombre de sites. Le 3 dérive de la règle « survivre à une perte sans point unique restant ». »
+
+## 5bis. Les 2 registres manquants (textes validés par Naouphel le 17/07)
+
+Ajoutés après la découverte de l'écart §4. Aucune norme ne fixe ces seuils → registre **convention** dans les deux cas, jamais déguisé en norme.
+
+### SI-3 · Dépendance tech étrangère — *convention*
+- **convention** : « Aucun texte ne fixe de seuil de dépendance technologique étrangère. Les paliers 20/40/70 sont un arbitrage du référentiel, calé sur la capacité de substitution : sous 20 %, le remplacement d'un fournisseur reste absorbable ; entre 40 et 70 %, il engage une reconfiguration lourde ; au-delà de 70 %, la substitution devient structurellement impossible à court terme. »
+- *(la `justification` existante est conservée telle quelle)*
+
+### SN-5 · Sanctions de juridictions tierces — *convention*
+- **convention** : « Aucun texte ne fixe de seuil de matérialité pour les sanctions. Les paliers 0,5 % et 5 % du CA sont un arbitrage du référentiel : en deçà de 0,5 %, la sanction relève de l'incident absorbable ; au-delà de 5 %, elle pèse sur la trajectoire stratégique de l'entreprise. La sentinelle à 0 traduit qu'une sanction non nulle, même infime, fait sortir du palier d'excellence. »
+- *(la `justification` existante est conservée telle quelle)*
+
+**État final du référentiel : 11 voies · 11 justifications · 4 sources · 9 conventions** (SD-3 et SD-4 portent les deux registres). Verrou vert.
 
 ## 6. Contenu des 6 sections (Section C — à relire)
 
