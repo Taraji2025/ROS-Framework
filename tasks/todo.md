@@ -54,7 +54,10 @@ Signalé par Naouphel (« le guide n'est pas à jour », « il y a tout à refai
 - [x] **Spec écrite + self-review** → trouvaille : `ros-model.js` n'a **aucun libellé de dimension** (dupliqués en dur dans 4 pages) → ajout `DIM_META` au modèle, sinon le principe « aucun fait dans le Guide » est mort-né.
 - [x] **Spec validée par Naouphel** (17/07) — gate franchi.
 - [x] **Plan d'implémentation écrit** : `docs/superpowers/plans/2026-07-17-ros-guide-v4.md` (**9 tâches TDD**, tranches verticales → build vert à chaque tâche). Verrou d'abord (T1 : échoue 3/11 → 8 justifications → vert), `DIM_META` (T2), puis 1 section par tâche (T3-T8), DoD final (T9).
-- [ ] **Build** (subagent-driven) + verrou vert + DoD greps à 0 → puis déploiement (feu vert requis).
+- [x] **GUIDE V4 IMPLÉMENTÉ** (17/07, branche `guide-v4`, 9 tâches subagent-driven) : verrou `guide-model.test.js` **11/11 voies justifiées** ; `DIM_META` ; `Guide.jsx` 476 l. → **coquille 39 l.** ; 6 sections dérivées dans `pages/guide/`. **DoD 6/6 vert** : 57/57 tests, build ✓, greps anti-v3 et anti-fait-en-dur à **0**. Commits `57b49ed`→`6dfdc74`.
+  - 2 écarts trouvés **par l'exécution** : (a) spec §4 affirmait à tort que SI-3/SN-5 avaient une `source` → 2 conventions rédigées + validées Naouphel 17/07 ; (b) grep DoD bannissait `threshold` nu → rendait la dérivation invalidable, corrigé en `threshold: `.
+- [ ] **DÉCISION : merge `guide-v4` → `main` + déploiement** (feu vert requis). Vérif visuelle `/guide` recommandée avant.
+- [ ] Follow-ups spec §11 : migrer Dashboard/Report/Assessment vers `DIM_META` (cosmétique, ne pas déployer seul) ; passe de sourçage des cellules CS/Lafarge.
 - [ ] **Vérif visuelle manuelle** : page `/rapport` (Ctrl+P) + saisie V4 — via `/run` ou côté Naouphel.
 - [ ] (option) Seed traçabilité plus large (aujourd'hui 1/11 voies sourcées) avant soutenance.
 
