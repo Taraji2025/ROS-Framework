@@ -28,6 +28,7 @@ export const VOIES = [
     ] },
   { id: 'si3', code: 'SI-3', dim: 'SI', label: 'Dépendance tech étrangère', kind: 'num', dir: 'lower',
     justification: 'Une dépendance sous 20 % envers les technologies étrangères garantit l\'autonomie décisionnelle ; au-delà de 40 %, la marge de manœuvre rétrécit ; dépasser 70 % crée une vulnérabilité critique face aux embargos ou restrictions d\'accès.',
+    convention: "Aucun texte ne fixe de seuil de dépendance technologique étrangère. Les paliers 20/40/70 sont un arbitrage du référentiel, calé sur la capacité de substitution : sous 20 %, le remplacement d'un fournisseur reste absorbable ; entre 40 et 70 %, il engage une reconfiguration lourde ; au-delà de 70 %, la substitution devient structurellement impossible à court terme.",
     steps: [ { threshold: 20, score: 100 }, { threshold: 40, score: 60 }, { threshold: 70, score: 30 }, { threshold: Infinity, score: 0 } ] },
 
   { id: 'sd3', code: 'SD-3', dim: 'SD', label: 'Exposition capitalistique du conseil', kind: 'num', dir: 'lower',
@@ -56,6 +57,7 @@ export const VOIES = [
   // Sentinelle 0.0001 : proxy pour « 0 % du CA → 100 » (un % de sanctions non nul, même infime, sort du palier 100).
   { id: 'sn5', code: 'SN-5', dim: 'SN', label: 'Sanctions de juridictions tierces (% CA, 5 ans)', kind: 'num', dir: 'lower',
     justification: 'L\'absence de sanctions en 5 ans confirme la capacité à naviguer les régimes internationaux ; un impact au-delà de 0,5 % du CA signale une exposition régulière à des mesures restrictives ; au-delà de 5 %, l\'entreprise subit une pression stratégique chronique qui entrave sa liberté d\'action.',
+    convention: "Aucun texte ne fixe de seuil de matérialité pour les sanctions. Les paliers 0,5 % et 5 % du CA sont un arbitrage du référentiel : en deçà de 0,5 %, la sanction relève de l'incident absorbable ; au-delà de 5 %, elle pèse sur la trajectoire stratégique de l'entreprise. La sentinelle à 0 traduit qu'une sanction non nulle, même infime, fait sortir du palier d'excellence.",
     steps: [ { threshold: 0.0001, score: 100 }, { threshold: 0.5, score: 70 }, { threshold: 5, score: 30 }, { threshold: Infinity, score: 0 } ] },
 
   { id: 'so1', code: 'SO-1', dim: 'SO', label: 'Diversification fournisseurs critiques', kind: 'cat',
