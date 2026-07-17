@@ -3,12 +3,14 @@ import GuideIntro from './guide/GuideIntro.jsx';
 import GuideWorkflow from './guide/GuideWorkflow.jsx';
 import GuideModele from './guide/GuideModele.jsx';
 import GuideReferentiel from './guide/GuideReferentiel.jsx';
+import GuideCalcul from './guide/GuideCalcul.jsx';
 
 const SECTIONS = [
   { id: 'intro', label: '🎯 Introduction', C: GuideIntro },
   { id: 'workflow', label: '📋 Comment évaluer', C: GuideWorkflow },
   { id: 'modele', label: '🧭 Le modèle V4', C: GuideModele },
   { id: 'referentiel', label: '📊 Le référentiel', C: GuideReferentiel },
+  { id: 'calcul', label: '⚙ Le calcul', C: GuideCalcul },
 ];
 
 export default function Guide() {
