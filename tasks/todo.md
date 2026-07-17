@@ -52,9 +52,9 @@ Signalé par Naouphel (« le guide n'est pas à jour », « il y a tout à refai
 - [x] **Sources vérifiées sur pièce** (pas de citation de mémoire) : SecNumCloud v3.2 **§19.1.h/19.1.i** (PDF ANSSI ouvert, p. 48) ; Data Act (UE) 2023/2854 chap. VI art. 25-27 ; C. com. L.225-96/L.233-3. Exemple chiffré **exécuté** sur `ros-engine.js` (90/90/20/40 → **44,17**, et non 47 estimé de tête).
 - [x] **Les 8 justifications rédigées et validées** par Naouphel (SI-2, SD-3, SD-4, SN-2, SO-1, SO-2, SO-4, SO-5).
 - [x] **Spec écrite + self-review** → trouvaille : `ros-model.js` n'a **aucun libellé de dimension** (dupliqués en dur dans 4 pages) → ajout `DIM_META` au modèle, sinon le principe « aucun fait dans le Guide » est mort-né.
-- [ ] **Relecture de la spec par Naouphel** ← gate en cours
-- [ ] Plan d'implémentation TDD (`writing-plans`)
-- [ ] Build + verrou de test vert + déploiement
+- [x] **Spec validée par Naouphel** (17/07) — gate franchi.
+- [x] **Plan d'implémentation écrit** : `docs/superpowers/plans/2026-07-17-ros-guide-v4.md` (**9 tâches TDD**, tranches verticales → build vert à chaque tâche). Verrou d'abord (T1 : échoue 3/11 → 8 justifications → vert), `DIM_META` (T2), puis 1 section par tâche (T3-T8), DoD final (T9).
+- [ ] **Build** (subagent-driven) + verrou vert + DoD greps à 0 → puis déploiement (feu vert requis).
 - [ ] **Vérif visuelle manuelle** : page `/rapport` (Ctrl+P) + saisie V4 — via `/run` ou côté Naouphel.
 - [ ] (option) Seed traçabilité plus large (aujourd'hui 1/11 voies sourcées) avant soutenance.
 
