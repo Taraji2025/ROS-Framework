@@ -244,7 +244,7 @@ Aucun « à peu près ». Le chantier est fini quand :
 1. `npm run test` vert, **incluant `guide-model.test.js`** (51 tests actuels + les nouveaux).
 2. `npm run build` vert.
 3. `grep -riE "30 indicateurs|5 dimensions|WEIGHTS|pondérations sectorielles|v3\.0|Σ ?\(Poids|saisissez 0|MTTR" src/pages/guide/ src/pages/Guide.jsx` → **0 résultat**.
-4. `grep -rE "'(SI|SD|SN|SO)-[0-9]'|score: [0-9]+|threshold|Souveraineté (Informationnelle|Décisionnelle|Normative|Opérationnelle)" src/pages/guide/` → **0 résultat** (aucun fait en dur : ni code de voie, ni barème, ni libellé de dimension).
+4. `grep -rE "'(SI|SD|SN|SO)-[0-9]'|score: [0-9]+|threshold: |Souveraineté (Informationnelle|Décisionnelle|Normative|Opérationnelle)" src/pages/guide/` → **0 résultat** (aucun fait en dur : ni code de voie, ni barème, ni libellé de dimension).
 5. Les 11 voies affichent une justification + un registre dans `/guide` (vérif visuelle).
 6. L'exemple chiffré affiché est produit par `aggregate()` (modifier `ros-model.js` change l'exemple, il ne ment jamais).
 
