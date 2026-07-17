@@ -1,6 +1,16 @@
 // RoS v4 — Source unique de vérité (données seules, aucune logique)
 
 export const DIMENSIONS = ['SI', 'SD', 'SN', 'SO'];
+
+// Libellés de dimension : un libellé est un FAIT → il vit au modèle, pas dans les pages.
+// Consommé par pages/guide/GuideModele.jsx. (Dashboard/Report/Assessment non migrés : cf. spec §11.)
+export const DIM_META = {
+  SI: { short: 'Informationnelle', long: 'Souveraineté Informationnelle', color: 'var(--dim1)' },
+  SD: { short: 'Décisionnelle',    long: 'Souveraineté Décisionnelle',    color: 'var(--dim2)' },
+  SN: { short: 'Normative',        long: 'Souveraineté Normative',        color: 'var(--dim3)' },
+  SO: { short: 'Opérationnelle',   long: 'Souveraineté Opérationnelle',   color: 'var(--dim4)' },
+};
+
 export const RULES = ['linear', 'geometric', 'penalized'];
 export const K_VALUES = [1, 2, 3];
 

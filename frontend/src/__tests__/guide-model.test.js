@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { VOIES } from '../ros-model.js';
+import { VOIES, DIMENSIONS, DIM_META } from '../ros-model.js';
 
 const nonEmpty = s => typeof s === 'string' && s.trim() !== '';
 
@@ -25,5 +25,19 @@ describe('verrou cohérence de rendu — GuideReferentiel peut rendre chaque bar
     const ko = VOIES.filter(v => v.kind === 'num' &&
       !(Array.isArray(v.steps) && v.steps.length > 0 && ['lower', 'higher'].includes(v.dir))).map(v => v.code);
     expect(ko).toEqual([]);
+  });
+});
+
+describe('DIM_META — libellés de dimension au modèle', () => {
+  it('chaque dimension a short, long et color non vides', () => {
+    for (const d of DIMENSIONS) {
+      expect(DIM_META[d], `DIM_META manquant pour ${d}`).toBeDefined();
+      expect(DIM_META[d].short).toBeTruthy();
+      expect(DIM_META[d].long).toBeTruthy();
+      expect(DIM_META[d].color).toBeTruthy();
+    }
+  });
+  it('ne contient aucune dimension inconnue (CI dissoute)', () => {
+    expect(Object.keys(DIM_META).sort()).toEqual([...DIMENSIONS].sort());
   });
 });
