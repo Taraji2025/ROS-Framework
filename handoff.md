@@ -12,10 +12,12 @@
 - Cas **Credit Suisse (ros 24, Critique)** et **Lafarge (ros 40, Faible)** saisis en prod — codage hypothétique, sources vides → **sourçage 0 %**.
 - `e84bdfd` sélecteur d'évaluation sur `/rapport` (défaut = la + récente, masqué à l'impression) → CS et Lafarge consultables au choix.
 
+**✅ GUIDE V4 DÉPLOYÉ EN PROD (2026-07-18)** — `guide-v4` mergé `--no-ff` → `main` (`a3673fe`, 2 parents), prod FF `e84bdfd`→`a3673fe`, build `index-f4c4a4ab.js`, pas de restart backend (frontend seul). Vérif visuelle 6 sections OK (puppeteer, 0 fait v3, 0 erreur JS, exemple 44.17 = moteur) + preuve prod (site 200 / api 401 / dist à jour / pm2 online). **Point « Guide.jsx obsolète » CLOS.**
+
 **➡️ RESTE À FAIRE (par ordre d'enjeu soutenance) :**
 1. **Passe de sourçage** (pièces 1-11 du doc de session) — transforme les badges 0 %, fige les notes citables, puis re-saisir les cellules avec `source`. *C'est le gros morceau restant.*
-2. **`Guide.jsx` obsolète** : enseigne encore l'ancien modèle 5 dims/CI/30 indicateurs → aligner sur 4 dims/11 voies.
-3. **Vérif visuelle manuelle** : `/rapport` (Ctrl+P) + saisie V4 — via `/run` ou côté Naouphel.
+2. **Vérif visuelle manuelle** : `/rapport` (Ctrl+P) + saisie V4 — via `/run` ou côté Naouphel.
+3. (follow-up cosmétique) Sidebar App.jsx = `v3.0` + badge `5 DIM` (leftover) → migrer vers `DIM_META` avec Dashboard/Report/Assessment (§11).
 4. (option) Élargir le seed traçabilité (1/11 voies sourcées aujourd'hui).
 
 ---
