@@ -748,7 +748,7 @@ body {
 }
 
 /* ── Tokens partagés éditoriaux (élévation/accent/motion) ────── */
-.card { box-shadow: var(--elev-1); transition: transform var(--motion-fast) ease, box-shadow var(--motion-fast) ease, border-color var(--motion-fast) ease; }
+.card { box-shadow: var(--elev-1); transition: transform var(--motion-fast) ease, box-shadow var(--motion-fast) ease, background var(--motion-fast) ease, border-color var(--motion-fast) ease; }
 .card:hover { transform: translateY(-3px); box-shadow: var(--elev-2); }
 
 .accent-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent-grad); border-radius: 4px 0 0 4px; }
