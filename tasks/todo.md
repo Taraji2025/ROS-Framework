@@ -9,7 +9,9 @@ Naouphel veut un rendu plus beau/dynamique. Brainstorming en compagnon visuel �
 - [x] Relecture spec par Naouphel (gate) — « on part sur le plan ».
 - [x] **+ Disclaimer académique** tranché (discret partout + explicite /rapport print ; vrais noms conservés) → intégré à la spec.
 - [x] **Plan d'implémentation écrit** : `docs/superpowers/plans/2026-07-20-ros-visual-refresh-editorial.md` (6 tâches : tokens/classes, module disclaimer, chart-theme partagé, Dashboard éditorial, Report+print, preuve visuelle). Self-review OK.
-- [ ] Exécution (subagent-driven) → build vert + 57/57 + preuve visuelle dark/light/print → `/ros-ship`.
+- [x] **Exécution subagent-driven** : 6 tâches TDD (chacune impl+revue) + fix print + **revue finale opus = READY TO MERGE**. Build vert, 57/57, preuve visuelle dark/light/print (0 erreur JS), dim5 retiré.
+- [x] **MERGÉ `main` `9c4489c`** (--no-ff, 2 parents) + **DÉPLOYÉ PROD** (FF `81b44fc`→`9c4489c`, bundle `index-202fc440.js`, frontend seul). Preuve : site 200, api 401, disclaimer servi, dist à jour. **LIVE.**
+- [ ] Follow-ups non bloquants (revue finale) : (1) import `fmt` inutilisé Dashboard ; (2) `DIM_LABELS` inutilisé Report ; (3) radar `pointLabels` → passer un hex résolu au lieu de `var(--text2)` ; (4) print-polish : ajouter `.ros-main` à l'override clair pour blanchir le hero du /rapport à l'impression.
 
 ## 🔴 CHANTIER ACTIF (2026-07-15) — Refonte V4 (branche `v4-refonte`)
 Specs V4 validées par Naouphel (spec produit + grille OSINT) → refonte du cœur.

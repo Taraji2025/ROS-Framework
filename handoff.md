@@ -12,6 +12,8 @@
 - Cas **Credit Suisse (ros 24, Critique)** et **Lafarge (ros 40, Faible)** saisis en prod — codage hypothétique, sources vides → **sourçage 0 %**.
 - `e84bdfd` sélecteur d'évaluation sur `/rapport` (défaut = la + récente, masqué à l'impression) → CS et Lafarge consultables au choix.
 
+**✅ REFONTE GRAPHIQUE « Direction C » DÉPLOYÉE EN PROD (2026-07-20)** — merge `main` `9c4489c` (--no-ff) → prod FF `81b44fc`→`9c4489c`, bundle `index-202fc440.js`, frontend seul (pas de restart). Langage éditorial premium : tokens/classes `index.css`, Dashboard hero+verdict+plan+radar animé, `/rapport` éditorial + **disclaimer académique** (discret partout + explicite /rapport, impression forcée claire, vrais noms conservés). 0 dépendance, moteur intact. DoD verte (build, 57/57, preuve visuelle dark/light/print, dim5 retiré), revue finale opus READY TO MERGE. Spec/plan `2026-07-20-ros-visual-refresh-editorial*`. Branche `visual-refresh` conservée. Follow-ups non bloquants dans `tasks/todo.md` (2 imports morts, pointLabels hex, print-polish hero).
+
 **✅ GUIDE V4 DÉPLOYÉ EN PROD (2026-07-18)** — `guide-v4` mergé `--no-ff` → `main` (`a3673fe`, 2 parents), prod FF `e84bdfd`→`a3673fe`, build `index-f4c4a4ab.js`, pas de restart backend (frontend seul). Vérif visuelle 6 sections OK (puppeteer, 0 fait v3, 0 erreur JS, exemple 44.17 = moteur) + preuve prod (site 200 / api 401 / dist à jour / pm2 online). **Point « Guide.jsx obsolète » CLOS.**
 
 **➡️ RESTE À FAIRE (par ordre d'enjeu soutenance) :**
