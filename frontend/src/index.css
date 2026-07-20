@@ -747,6 +747,13 @@ body {
   @page { margin: 1.5cm; }
 }
 
+.report-disclaimer { margin: 12px 0 20px; padding: 10px 14px; border-left: 3px solid var(--orange); background: rgba(227,179,65,.08); color: var(--text2); font-size: 12px; line-height: 1.5; border-radius: 0 8px 8px 0; }
+@media print {
+  * { animation: none !important; transition: none !important; }
+  .card { box-shadow: none !important; border: 1px solid #ccc !important; }
+  .report-disclaimer { background: #f7f1e0 !important; color: #333 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
 /* ── Tokens partagés éditoriaux (élévation/accent/motion) ────── */
 .card { box-shadow: var(--elev-1); transition: transform var(--motion-fast) ease, box-shadow var(--motion-fast) ease, background var(--motion-fast) ease, border-color var(--motion-fast) ease; }
 .card:hover { transform: translateY(-3px); box-shadow: var(--elev-2); }
