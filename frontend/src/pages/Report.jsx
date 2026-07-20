@@ -7,6 +7,8 @@ import {
 import { VOIES, DIMENSIONS } from '../ros-model.js';
 import { Radar } from 'react-chartjs-2';
 import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler, Tooltip } from 'chart.js';
+import { DISCLAIMER_REPORT } from '../disclaimer.js';
+import { radarData as radarDataShared, radarOptions } from '../chart-theme.js';
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip);
 
@@ -59,20 +61,6 @@ export default function Report({ showToast }) {
   const comp = computeCompleteness(assessment.cells, assessment.sector);
   const assess = computeAssessment(assessment);
 
-  const radarData = {
-    labels: DIM_LABELS,
-    datasets: [{
-      data: DIMENSIONS.map(d => assess.matrix.penalized[1].dims[d].score ?? 0),
-      backgroundColor: 'rgba(88,166,255,.15)',
-      borderColor: 'rgba(88,166,255,.8)',
-      borderWidth: 2,
-      pointBackgroundColor: ['#58a6ff', '#bc8cff', '#f0883e', '#3fb950'],
-      pointBorderColor: '#0d1117',
-      pointBorderWidth: 2,
-      pointRadius: 5,
-    }],
-  };
-
   return (
     <div>
       <div className="page-header">
@@ -96,6 +84,8 @@ export default function Report({ showToast }) {
           <button className="btn btn-primary no-print" onClick={() => window.print()}>Imprimer / PDF</button>
         </div>
       </div>
+
+      <div className="report-disclaimer">{DISCLAIMER_REPORT}</div>
 
       {/* En-tête score : morceau #1 */}
       <div className="ros-main" style={{ marginBottom: 16 }}>
@@ -133,15 +123,10 @@ export default function Report({ showToast }) {
       <div className="card" style={{ marginBottom: 16 }}>
         <div className="card-title">Radar des 4 dimensions</div>
         <div className="chart-wrap">
-          <Radar data={radarData} options={{
-            responsive: true, maintainAspectRatio: false,
-            scales: { r: { beginAtZero: true, max: 100,
-              ticks: { stepSize: 25, color: '#484f58', backdropColor: 'transparent' },
-              grid: { color: '#30363d' }, angleLines: { color: '#30363d' },
-              pointLabels: { color: '#8b949e', font: { size: 11 } }
-            }},
-            plugins: { legend: { display: false } }
-          }} />
+          <Radar
+            data={radarDataShared(DIMENSIONS.map(d => assess.matrix.penalized[1].dims[d].score ?? 0))}
+            options={radarOptions({ animate: false })}
+          />
         </div>
       </div>
 
