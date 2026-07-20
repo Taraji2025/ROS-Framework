@@ -6,8 +6,10 @@ Naouphel veut un rendu plus beau/dynamique. Brainstorming en compagnon visuel �
 - [x] 3 directions maquettées (Glass / Néon / Éditorial) → **Direction C retenue**, validée à l'échelle page (Dashboard).
 - [x] Périmètre tranché : **Dashboard + /rapport** en direct, le reste hérite via tokens `index.css`. Zéro dépendance, moteur intact, parité light/dark, motion `prefers-reduced-motion`.
 - [x] **Spec écrite + self-review** (2026-07-20).
-- [ ] Relecture spec par Naouphel (gate).
-- [ ] Plan d'implémentation (writing-plans) → build → preuve visuelle puppeteer (dark/light/print) → `/ros-ship`.
+- [x] Relecture spec par Naouphel (gate) — « on part sur le plan ».
+- [x] **+ Disclaimer académique** tranché (discret partout + explicite /rapport print ; vrais noms conservés) → intégré à la spec.
+- [x] **Plan d'implémentation écrit** : `docs/superpowers/plans/2026-07-20-ros-visual-refresh-editorial.md` (6 tâches : tokens/classes, module disclaimer, chart-theme partagé, Dashboard éditorial, Report+print, preuve visuelle). Self-review OK.
+- [ ] Exécution (subagent-driven) → build vert + 57/57 + preuve visuelle dark/light/print → `/ros-ship`.
 
 ## 🔴 CHANTIER ACTIF (2026-07-15) — Refonte V4 (branche `v4-refonte`)
 Specs V4 validées par Naouphel (spec produit + grille OSINT) → refonte du cœur.
