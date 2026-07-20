@@ -8,6 +8,7 @@ import Guide from './pages/Guide.jsx';
 import Admin from './pages/Admin.jsx';
 import Report from './pages/Report.jsx';
 import { DIMENSIONS, MODEL_VERSION } from './ros-model.js';
+import { DISCLAIMER_SHORT } from './disclaimer.js';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -87,6 +88,7 @@ export default function App() {
           </button>
           <span>{user.username} · <span style={{ color: 'var(--blue)' }}>{user.role}</span></span>
           <button className="logout-btn" onClick={handleLogout}>Déconnexion</button>
+          <div className="disclaimer-mini">{DISCLAIMER_SHORT}</div>
         </div>
       </aside>
 
