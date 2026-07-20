@@ -28,7 +28,13 @@
   --dim2: #bc8cff;
   --dim3: #f0883e;
   --dim4: #3fb950;
-  --dim5: #f778ba;
+
+  --elev-1: 0 1px 2px rgba(0,0,0,.4), 0 2px 8px -4px rgba(0,0,0,.5);
+  --elev-2: 0 4px 16px -6px rgba(0,0,0,.55);
+  --elev-3: 0 20px 50px -20px rgba(0,0,0,.7);
+  --accent-grad: linear-gradient(180deg, var(--dim1), var(--dim4));
+  --motion-fast: .2s;
+  --motion-med: .6s;
 
   --ros-gradient: linear-gradient(135deg, var(--bg2) 0%, #1a2235 100%);
   --ros-orb: rgba(88,166,255,.06);
@@ -76,7 +82,10 @@
   --dim2: #7c3aed;
   --dim3: #c05c00;
   --dim4: #1a7f36;
-  --dim5: #c2185b;
+
+  --elev-1: 0 1px 2px rgba(16,24,40,.06), 0 2px 8px -4px rgba(16,24,40,.1);
+  --elev-2: 0 6px 20px -8px rgba(16,24,40,.14);
+  --elev-3: 0 20px 40px -18px rgba(16,24,40,.2);
 
   --ros-gradient: linear-gradient(135deg, #ffffff 0%, #eef3ff 100%);
   --ros-orb: rgba(26,111,235,.05);
@@ -443,12 +452,10 @@ body {
 .dim-2, .fill-2 { color: var(--dim2); }
 .dim-3, .fill-3 { color: var(--dim3); }
 .dim-4, .fill-4 { color: var(--dim4); }
-.dim-5, .fill-5 { color: var(--dim5); }
 .fill-1 { background: var(--dim1); }
 .fill-2 { background: var(--dim2); }
 .fill-3 { background: var(--dim3); }
 .fill-4 { background: var(--dim4); }
-.fill-5 { background: var(--dim5); }
 
 /* ── Indicator rows ───────────────────────────────────────── */
 .ind-section-header {
@@ -738,4 +745,25 @@ body {
   .card, .ros-main { break-inside: avoid; box-shadow: none !important; border: 1px solid #ccc; }
   .main { margin: 0 !important; padding: 0 !important; background: #fff !important; }
   @page { margin: 1.5cm; }
+}
+
+/* ── Tokens partagés éditoriaux (élévation/accent/motion) ────── */
+.card { box-shadow: var(--elev-1); transition: transform var(--motion-fast) ease, box-shadow var(--motion-fast) ease, border-color var(--motion-fast) ease; }
+.card:hover { transform: translateY(-3px); box-shadow: var(--elev-2); }
+
+.accent-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent-grad); border-radius: 4px 0 0 4px; }
+
+.stat-num { font-size: 64px; font-weight: 800; letter-spacing: -.03em; line-height: 1; animation: rise var(--motion-med) cubic-bezier(.2,.7,.2,1) both; }
+.stat-num small { font-size: 20px; color: var(--text2); font-weight: 500; }
+
+.chip-level { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; border: 1px solid currentColor; }
+
+.track { height: 5px; border-radius: 99px; background: rgba(127,127,127,.14); overflow: hidden; }
+.track > i { display: block; height: 100%; border-radius: 99px; animation: fill 1s ease both; }
+
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fill { from { width: 0 !important; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, .stat-num, .track > i, .card { animation: none !important; transition: none !important; }
 }
