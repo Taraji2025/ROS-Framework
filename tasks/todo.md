@@ -1,5 +1,14 @@
 # ROS — tâches en cours
 
+## 🟣 CHANTIER EN COURS (2026-07-20) — Refonte graphique « Direction C · Éditorial premium »
+Naouphel veut un rendu plus beau/dynamique. Brainstorming en compagnon visuel → **direction + périmètre tranchés**.
+**Spec écrite** : `docs/superpowers/specs/2026-07-20-ros-visual-refresh-editorial-design.md`.
+- [x] 3 directions maquettées (Glass / Néon / Éditorial) → **Direction C retenue**, validée à l'échelle page (Dashboard).
+- [x] Périmètre tranché : **Dashboard + /rapport** en direct, le reste hérite via tokens `index.css`. Zéro dépendance, moteur intact, parité light/dark, motion `prefers-reduced-motion`.
+- [x] **Spec écrite + self-review** (2026-07-20).
+- [ ] Relecture spec par Naouphel (gate).
+- [ ] Plan d'implémentation (writing-plans) → build → preuve visuelle puppeteer (dark/light/print) → `/ros-ship`.
+
 ## 🔴 CHANTIER ACTIF (2026-07-15) — Refonte V4 (branche `v4-refonte`)
 Specs V4 validées par Naouphel (spec produit + grille OSINT) → refonte du cœur.
 **Design écrit** : `docs/superpowers/specs/2026-07-15-ros-v4-refonte-design.md`.
