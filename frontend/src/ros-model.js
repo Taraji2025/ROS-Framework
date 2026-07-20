@@ -2,6 +2,9 @@
 
 export const DIMENSIONS = ['SI', 'SD', 'SN', 'SO'];
 
+// Version du modèle : un FAIT → vit au modèle, consommé par la sidebar (App.jsx).
+export const MODEL_VERSION = 'v4.0';
+
 // Libellés de dimension : un libellé est un FAIT → il vit au modèle, pas dans les pages.
 // Consommé par pages/guide/GuideModele.jsx. (Dashboard/Report/Assessment non migrés : cf. spec §11.)
 export const DIM_META = {

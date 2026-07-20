@@ -7,6 +7,7 @@ import History from './pages/History.jsx';
 import Guide from './pages/Guide.jsx';
 import Admin from './pages/Admin.jsx';
 import Report from './pages/Report.jsx';
+import { DIMENSIONS, MODEL_VERSION } from './ros-model.js';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -55,8 +56,8 @@ export default function App() {
       <aside className="sidebar">
         <div className="logo">
           <div className="logo-title">RoS</div>
-          <div className="logo-sub">Return on Sovereignty v3.0</div>
-          <span className="version-badge">5 DIM</span>
+          <div className="logo-sub">Return on Sovereignty {MODEL_VERSION}</div>
+          <span className="version-badge">{DIMENSIONS.length} DIM</span>
         </div>
         <nav className="nav">
           <div className={`nav-item ${tab === 'dashboard' ? 'active' : ''}`} onClick={() => setTab('dashboard')}>
