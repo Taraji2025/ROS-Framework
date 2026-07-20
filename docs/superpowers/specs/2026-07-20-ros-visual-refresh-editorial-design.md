@@ -18,6 +18,7 @@ Rehausser la qualité visuelle de ROS avec un langage **« éditorial premium »
 5. **Moteur intact** : `ros-engine.js` / `ros-model.js` non modifiés. Les fonctions déjà exportées sont réutilisées, pas réécrites.
 6. **Parité thèmes** : light **et** dark (l'app a déjà `[data-theme]`).
 7. **Motion responsable** : `@media (prefers-reduced-motion: reduce)` coupe toutes les animations.
+8. **Disclaimer académique** (ajout 2026-07-20) : mention permanente **discrète partout** + **explicite sur `/rapport`**. **Vrais noms d'entreprises conservés** (CS/Lafarge) — le disclaimer + l'auth suffisent (arbitrage de risque tranché).
 
 ## 3. Non-objectifs (hors périmètre de cette passe)
 
@@ -65,7 +66,13 @@ Fichiers touchés :
 - Même langage à l'écran (hero, radar thématisé, dims, plan).
 - **Garde impression** : `@media print` — motion coupé, ombres simplifiées/retirées, fonds forcés lisibles sur papier, `.no-print` conservé sur les contrôles. Le rendu papier reste net (le rapport est l'artefact jury).
 
-### 5.5 Motion responsable
+### 5.5bis Disclaimer académique
+- **Partout (discret)** : mention permanente sobre, ex. pied de sidebar ou footer — « Prototype académique · Mémoire MBA EGE ». Stylée dans le langage C (ne casse pas le rendu premium).
+- **`/rapport` (explicite)** : encart visible à l'écran **et à l'impression** (`@media print` le conserve) — « Les scores reposent sur un codage hypothétique non sourcé et ne constituent pas une évaluation réelle des entreprises citées. »
+- **Source unique** : texte du disclaimer factorisé (constante partagée) pour éviter la double rédaction / dérive.
+- **Vrais noms conservés** (décision de risque). Pas d'anonymisation en base.
+
+### 5.6 Motion responsable
 - Animations **au chargement** (rise, draw, fill) + transitions **au survol** uniquement. Aucun effet en boucle permanente.
 - Bloc `@media (prefers-reduced-motion: reduce)` neutralisant toutes les animations/transitions.
 
@@ -87,6 +94,7 @@ Inchangé. 100 % présentationnel. Les scores/lectures viennent déjà de l'API 
 - [ ] **Vitest 57/57 inchangés** (aucune logique touchée → non-régression).
 - [ ] **Preuve visuelle puppeteer** (headless, auth-bypass localStorage comme pour le Guide) : captures **Dashboard** et **/rapport**, en **dark + light**, plus une capture **rendu impression** de `/rapport` (media print). Avant/après archivées dans `tasks/screenshots/`.
 - [ ] Grep : **aucune référence `--dim5` / `dim-5`** restante.
+- [ ] **Disclaimer présent** : discret sur l'app (dark + light) **et** encart explicite sur `/rapport` **visible à l'impression** (capture print le prouve).
 - [ ] Vérif manuelle possible via `/run` (Dashboard + Ctrl+P sur /rapport).
 
 ## 9. Risques
