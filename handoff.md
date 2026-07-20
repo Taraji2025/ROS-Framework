@@ -17,7 +17,7 @@
 **➡️ RESTE À FAIRE (par ordre d'enjeu soutenance) :**
 1. **Passe de sourçage** (pièces 1-11 du doc de session) — transforme les badges 0 %, fige les notes citables, puis re-saisir les cellules avec `source`. *C'est le gros morceau restant.*
 2. **Vérif visuelle manuelle** : `/rapport` (Ctrl+P) + saisie V4 — via `/run` ou côté Naouphel.
-3. (follow-up cosmétique) Sidebar App.jsx = `v3.0` + badge `5 DIM` (leftover) → migrer vers `DIM_META` avec Dashboard/Report/Assessment (§11).
+3. ✅ **Sidebar V4 FAIT + déployé** (20/07, `81b44fc`) : `5 DIM`→`4 DIM`, `v3.0`→`v4.0`, dérivés du modèle (`DIMENSIONS.length`+`MODEL_VERSION`). Reste distinct : migration `DIM_META` de Dashboard/Report/Assessment (§11, libellés dims encore en dur là).
 4. (option) Élargir le seed traçabilité (1/11 voies sourcées aujourd'hui).
 
 ---

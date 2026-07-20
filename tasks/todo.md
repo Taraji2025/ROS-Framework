@@ -58,7 +58,8 @@ Signalé par Naouphel (« le guide n'est pas à jour », « il y a tout à refai
   - 2 écarts trouvés **par l'exécution** : (a) spec §4 affirmait à tort que SI-3/SN-5 avaient une `source` → 2 conventions rédigées + validées Naouphel 17/07 ; (b) grep DoD bannissait `threshold` nu → rendait la dérivation invalidable, corrigé en `threshold: `.
 - [x] **Vérif visuelle `/guide`** (18/07, puppeteer headless + auth-bypass localStorage) : 6 sections rendues, **0 erreur JS**, **0 fait v3** (grep vide), exemple chiffré **90/90/20/40 → 44.17** = moteur. Screenshots `tasks/screenshots/05-guide-*.png`.
 - [x] **MERGÉ `guide-v4` → `main`** (18/07, `--no-ff` → `a3673fe`, 2 parents) + **DÉPLOYÉ EN PROD** (pull local FF `e84bdfd`→`a3673fe`, build bundle `index-f4c4a4ab.js`, pas de restart backend). Preuve : site 200, api 401, dist à jour, pm2 online. **Guide V4 live.** → **point 2 « Guide.jsx obsolète » CLOS.**
-- [ ] (follow-up cosmétique) Sidebar App.jsx affiche encore `v3.0` + badge `5 DIM` (leftover v3, hors Guide) → à migrer avec Dashboard/Report/Assessment vers `DIM_META` (§11, ne pas déployer seul).
+- [x] **Sidebar V4** (20/07, `81b44fc`, déployé prod bundle `index-5f214fda.js`) : badge `5 DIM`→`4 DIM` et `v3.0`→`v4.0` **dérivés du modèle** (`DIMENSIONS.length` + nouvelle const `MODEL_VERSION`). Fin du leftover v3 signalé par Naouphel. Preuve visuelle `tasks/screenshots/06-sidebar-v4.png` + prod 200. 57/57.
+- [ ] (follow-up cosmétique, distinct) Migration `DIM_META` de Dashboard/Report/Assessment (§11) — libellés de dimension encore en dur dans ces 3 pages (la sidebar, elle, est faite).
 - [ ] Follow-ups spec §11 : migrer Dashboard/Report/Assessment vers `DIM_META` (cosmétique, ne pas déployer seul) ; passe de sourçage des cellules CS/Lafarge.
 - [ ] **Vérif visuelle manuelle** : page `/rapport` (Ctrl+P) + saisie V4 — via `/run` ou côté Naouphel.
 - [ ] (option) Seed traçabilité plus large (aujourd'hui 1/11 voies sourcées) avant soutenance.
