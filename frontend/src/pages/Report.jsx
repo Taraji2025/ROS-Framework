@@ -164,6 +164,17 @@ export default function Report({ showToast }) {
         <div className="aw-item" style={{ marginTop: 8 }}>
           Taux de sourçage : {Math.round(comp.tauxSourcage * 100)}%
         </div>
+        <div className="aw-item" style={{ marginTop: 10, marginBottom: 4, color: 'var(--text2)' }}>
+          Couverture par dimension
+        </div>
+        {DIMENSIONS.map((d, i) => {
+          const pct = Math.round((assess.coverageByDim[d] ?? 0) * 100);
+          return (
+            <div key={d} className="aw-item">
+              {DIM_LABELS[i]} : <span style={{ color: pct < 100 ? 'var(--orange)' : 'inherit' }}>{pct}%</span>
+            </div>
+          );
+        })}
       </div>
 
       {/* Traçabilité : morceau #3 */}
