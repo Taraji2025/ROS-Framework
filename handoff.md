@@ -2,6 +2,57 @@
 
 > État de reprise rapide. Détail des tâches dans `tasks/todo.md`, leçons dans `tasks/lessons.md`.
 
+## 🔧 SESSION 2026-07-27 SOIR — PARTIE B (4/6) + LE GRAPHE FAUX DU DASHBOARD (reprendre ICI)
+
+**État : 68 tests verts, build vert, RIEN DE DÉPLOYÉ.** Prod inchangée depuis `157aa61` côté code
+(seules les **données** des deux cas ont bougé, cf. bloc partie A ci-dessous).
+
+**Fait ce soir, en TDD (test retourné d'abord, rouge constaté, puis implémentation)** :
+- **B.2** — SO-4 réintégrée au profil **tech**. Un test verrouillait l'ancien comportement, il a été
+  retourné en premier. Raison écrite dans le code : « tech » couvre aussi les opérateurs
+  d'infrastructure (OVHcloud), pour qui l'électricité est une dépendance de premier ordre.
+- **B.7** — chaque profil porte sa **justification**, standard et énergie compris. **Deux verrous** :
+  aucun profil sans justification, et **toute voie exclue doit être nommée** dans celle de son profil
+  (une exclusion muette est une pondération sectorielle déguisée — or la V4 les a supprimées).
+  ⚠️ Trouvé en vérifiant : la table du Guide **n'affichait pas** la justification → colonne « Pourquoi »
+  ajoutée, sans quoi l'annexe B.4 n'aurait rien eu à exporter.
+- **B.5** *(arbitrage Naouphel)* — les **5 qualitatifs sont déclaratifs, non notés**. Garde posé dans
+  `normReading` (au plus près du calcul, donc incontournable) + étiquette à l'écran. **Conséquence non
+  anticipée et voulue** : la couverture des lectures ne porte plus que sur les **notables**, sinon un
+  dossier complet aurait plafonné à 3/8 en maturité.
+- **B.6** — les cibles portent leur **origine**, et un verrou l'exige. ⚠️ **La notice se trompe : il n'y
+  a pas 13 cibles, il y en a 8** (les 5 qualitatifs n'en portent aucune). Et **aucune n'est un seuil
+  juridique** — toutes sont nommées « cible indicative du référentiel », avec leur raisonnement.
+- **Le graphe du Dashboard** — il reliait **Credit Suisse (2021), Lafarge (2014) et deux évaluations de
+  test** par des courbes sur un même axe de temps, comme si une entité avait évolué. Remplacé par une
+  **comparaison en barres**, une seule série (donc ni légende ni palette catégorielle), avec **annonce
+  explicite** des évaluations v3 écartées — jamais d'exclusion muette. `comparableAssessments` est pure
+  et testée (4 tests).
+
+**⏭️ RESTE DE LA PARTIE B — B.3 et B.4**, d'une autre nature : de la **rédaction de référentiel** à
+valider phrase par phrase, comme les 8 justifications de juillet.
+- **B.4** : SI-1 et SI-2 n'ont **aucune convention** (elles ont une source). À écrire.
+- **B.3** : ⚠️ **deux items tombent**. (1) La « phrase tronquée `Les 90 jours de la di…` » ne l'est pas
+  dans l'app — le modèle écrit « directive **2009/119/CE** » en entier, et aucun composant du Guide ne
+  tronque ; la coupure était dans le relevé du 25/07. (2) Le verrou exige déjà « source **ou**
+  convention », et les 7 voies dites « sans source » ont **toutes** une convention. B.3 n'est donc pas
+  un trou à combler mais un **arbitrage voie par voie** : laquelle mérite une source opposable,
+  laquelle reste une convention assumée (la notice tranche déjà pour SI-3 et SO-1 → convention).
+
+**⚠️ PAS DE PREUVE VISUELLE** sur le nouveau graphe : tests et build verts, mais **il n'a pas été ouvert
+dans un navigateur**. C'est la première chose à faire à la reprise (le script puppeteer du 24/07 n'est
+plus au dépôt). Ne pas déployer avant.
+
+**🎨 Piste design, non décidée** : le vrai défaut visuel de ROS n'est pas son template mais que **la
+couleur n'y signale rien** — cinq teintes dimensionnelles (SI bleu, SD violet, SN orange, SO vert, RoS
+jaune) répétées sur le chiffre, la barre, l'étiquette du radar et la série du graphe. Modèle de
+discipline retenu si un jour on y va : **Fey** (`feyapp.com`, catalogue Refero) — tableau de bord de
+recherche quasi monochrome, couleur réservée aux variations. Second : **Linear changelog** pour la
+rigueur typographique. **C'est une deuxième refonte** (la première date du 20/07) — pas avant la
+soutenance.
+
+---
+
 ## ✅ NOTICE APP — PARTIE A FAITE EN PROD (2026-07-27 23h00) — ⚠️ DEUX RÉSULTATS QUI TOUCHENT LE MÉMOIRE
 
 Source : notice « tout ce qui reste à faire dans l'outil » (Naouphel, 27/07). **Écriture directe en prod
