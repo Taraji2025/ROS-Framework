@@ -167,6 +167,28 @@ export function computeReadings(cells = {}) {
   };
 }
 
+/**
+ * Sépare les évaluations comparables des autres.
+ *
+ * POURQUOI (constat du 27/07) : le Dashboard traçait Credit Suisse (28/02/2021),
+ * Lafarge (30/06/2014) et deux évaluations de test sur un MÊME axe de temps,
+ * reliés par des courbes. Ce sont deux entreprises différentes à deux dates
+ * historiques : la lecture « trajectoire » est fausse, et c'est le genre de
+ * graphique sur lequel un jury s'arrête. On compare des cas entre eux.
+ *
+ * Le critère de comparabilité est le codage v4 : une évaluation v4 porte des
+ * `cells`. Les évaluations v3 archivées n'en ont pas et ne sont pas recalculables
+ * — elles sont écartées du graphe, mais RENDUES dans `exclues` pour être
+ * annoncées à l'écran. Une exclusion silencieuse se lit comme « il n'y a rien ».
+ */
+export function comparableAssessments(list = []) {
+  const codee = a => a && a.cells && Object.keys(a.cells).length > 0;
+  return {
+    retenues: list.filter(codee),
+    exclues: list.filter(a => !codee(a)),
+  };
+}
+
 // Helpers d'affichage (compat pages v3 — présentation, pas de logique de score).
 export function fmt(v) {
   return v !== null && v !== undefined ? Math.round(v) : '—';

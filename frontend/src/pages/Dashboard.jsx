@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api.js';
-import { rosLevel, fmt, interpretScore, computeActionPlan } from '../ros-engine.js';
+import { rosLevel, fmt, interpretScore, computeActionPlan, comparableAssessments } from '../ros-engine.js';
 import { radarData, radarOptions } from '../chart-theme.js';
-import { Radar, Line } from 'react-chartjs-2';
+import { Radar, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS, RadialLinearScale, PointElement, LineElement,
-  Filler, Tooltip, Legend, CategoryScale, LinearScale
+  Filler, Tooltip, Legend, CategoryScale, LinearScale, BarElement
 } from 'chart.js';
 
-ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend, CategoryScale, LinearScale);
+ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
 export default function Dashboard({ showToast, onEvaluate }) {
   const [stats, setStats] = useState(null);
@@ -36,18 +36,16 @@ export default function Dashboard({ showToast, onEvaluate }) {
     ['SO', 'Opérationnelle',   last?.scores?.SO, 'dim-4'],
   ];
 
-  // Trend: 10 dernières évaluations (ordre chronologique pour le graphe)
-  const trendData = [...assessments].reverse().slice(-10);
-
-  const lineData = {
-    labels: trendData.map(a => a.period),
-    datasets: [
-      { label: 'RoS', data: trendData.map(a => a.scores?.ros), borderColor: '#f0c040', backgroundColor: 'rgba(240,192,64,.1)', borderWidth: 3, tension: .3 },
-      { label: 'SI',  data: trendData.map(a => a.scores?.SI),  borderColor: '#58a6ff', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
-      { label: 'SD',  data: trendData.map(a => a.scores?.SD),  borderColor: '#bc8cff', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
-      { label: 'SN',  data: trendData.map(a => a.scores?.SN),  borderColor: '#f0883e', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
-      { label: 'SO',  data: trendData.map(a => a.scores?.SO),  borderColor: '#3fb950', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
-    ]
+  // Comparaison entre cas — jamais une série temporelle (voir comparableAssessments).
+  const comparaison = comparableAssessments([...assessments].reverse());
+  const barData = {
+    labels: comparaison.retenues.map(a => a.period),
+    datasets: [{
+      data: comparaison.retenues.map(a => a.scores?.ros),
+      backgroundColor: '#8b949e',   // neutre : la barre porte une valeur, pas une identité
+      borderRadius: 4,
+      barThickness: 22,
+    }],
   };
 
   return (
@@ -130,20 +128,38 @@ export default function Dashboard({ showToast, onEvaluate }) {
         </div>
       )}
 
-      {/* Trend */}
-      {trendData.length >= 2 && (
+      {/* Comparaison entre cas — remplace l'ancienne « évolution temporelle », qui
+          reliait par des courbes deux entreprises différentes à deux dates
+          historiques (constat du 27/07). Une seule série : pas de légende, pas de
+          palette catégorielle, la couleur reste disponible pour signaler. */}
+      {comparaison.retenues.length >= 2 && (
         <div className="card">
-          <div className="card-title">Évolution temporelle</div>
+          <div className="card-title">Comparaison des cas codés</div>
+          <div className="page-sub" style={{ marginBottom: 12 }}>
+            Score RoS par évaluation. Ce ne sont pas des points d'une trajectoire : chaque barre
+            est une entreprise à une date donnée.
+          </div>
           <div className="chart-wrap">
-            <Line data={lineData} options={{
+            <Bar data={barData} options={{
+              indexAxis: 'y',
               responsive: true, maintainAspectRatio: false,
               scales: {
-                y: { beginAtZero: true, max: 100, grid: { color: '#30363d' }, ticks: { color: '#8b949e' } },
-                x: { grid: { color: '#30363d' }, ticks: { color: '#8b949e' } }
+                x: { beginAtZero: true, max: 100, grid: { color: '#30363d' }, ticks: { color: '#8b949e' } },
+                y: { grid: { display: false }, ticks: { color: '#8b949e' } }
               },
-              plugins: { legend: { position: 'top', labels: { color: '#8b949e', boxWidth: 12, padding: 15 } } }
+              plugins: { legend: { display: false } }
             }} />
           </div>
+          {comparaison.exclues.length > 0 && (
+            /* Jamais d'exclusion muette : une barre qui manque doit s'expliquer. */
+            <div className="page-sub" style={{ marginTop: 12 }}>
+              {comparaison.exclues.length} évaluation{comparaison.exclues.length > 1 ? 's' : ''} antérieure
+              {comparaison.exclues.length > 1 ? 's' : ''} au modèle v4 ({comparaison.exclues.map(a => a.period).join(', ')})
+              {comparaison.exclues.length > 1 ? ' sont écartées' : ' est écartée'} : sans cellules codées,
+              {comparaison.exclues.length > 1 ? ' elles ne sont' : ' elle n’est'} pas recalculable
+              {comparaison.exclues.length > 1 ? 's' : ''} dans le référentiel actuel.
+            </div>
+          )}
         </div>
       )}
 
