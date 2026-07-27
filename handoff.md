@@ -2,6 +2,68 @@
 
 > État de reprise rapide. Détail des tâches dans `tasks/todo.md`, leçons dans `tasks/lessons.md`.
 
+## ✅ NOTICE APP — PARTIE A FAITE EN PROD (2026-07-27 23h00) — ⚠️ DEUX RÉSULTATS QUI TOUCHENT LE MÉMOIRE
+
+Source : notice « tout ce qui reste à faire dans l'outil » (Naouphel, 27/07). **Écriture directe en prod
+avec sauvegarde** `storage.json.bak-2026-07-27-notice-A` (backend relit à chaud, aucun redémarrage).
+
+**⚠️ D'abord : la notice ne demandait PAS de saisir.** Réconciliation faite avant d'écrire — les chiffres
+de la notice (SD-4 = 10, SO-5 = 60, SI-1 = 60…) sont **les cotes que l'app produit déjà** à partir des
+bandes saisies le 23/07, pas des valeurs à entrer. Vérifié dans `ros-model.js` (bande « procédure » = 10,
+« ≥ 3 sites dont certains hors zone » = 60). Re-saisir aurait écrasé des données correctes et sourcées.
+**Piège de lecture à retenir** : une cellule porte **soit `value` (num), soit `band` (qualitatif)** — un
+script qui ne lit que `value` déclare « vide » la moitié du parc.
+
+**Les trois écarts réellement appliqués** :
+1. **Déclassement CS** : `sn2` et `so1` **supprimées** (elles étaient encore saisies **sans source** —
+   le handoff du 23/07 le notait). → SN 38 → **30**, SO 55 → **60**.
+2. **Critères de gouvernance saisis** : ils étaient **vides sur les deux cas**, donc le moteur appliquait
+   le **plancher 0,70 par défaut, pas par codage**. CS = reporting CRO OUI / veto formalisé NON / veto
+   exercé NON → **coefficient 0,70 → 0,80**. Lafarge = les trois NON, explicitement (0,70 inchangé).
+3. **Marquage v4** dans le libellé (« Credit Suisse · 28/02/2021 · **v4** »). *Choix assumé : suffixe
+   plutôt que renommage en « CS 28-02-2021 v4 », pour garder un intitulé lisible dans `/rapport` et la
+   figure 3.7 — à changer si le mémoire exige la forme courte.*
+
+### A.3 — Relevés (règle de titre = pénalisée k=1)
+
+| | **Credit Suisse** (banque) | **Lafarge** (industrie) |
+|---|---|---|
+| Score global final | **27** ⚠ Critique *(était 25)* | **40** ↓ Faible *(inchangé)* |
+| Coefficient gouvernance | **0,80** *(était 0,70 par défaut)* | **0,70** *(désormais explicite)* |
+| SI / SD / SN / SO | 60 / 18 / **30** / **60** | — / 46 / 82 / 55 |
+| linéaire · géométrique | 38 · 33 | 48 · 44 |
+| pénalisée k=1 · k=2 · k=3 | **27** · 4 · 0 | **40** · 26 · 0 |
+| Couverture | SI 33 % · SD 100 % · SN 50 % · SO 33 % | SI 0 % · SD 100 % · SN 100 % · SO 50 % |
+
+### A.4 — Expérience F11 : l'estimation de l'annexe B.6 est fausse
+
+Lafarge, SD-4 de « aucune » (100) à la bande médiane « citée » (50) :
+
+| Règle | avant | après | écart |
+|---|---|---|---|
+| linéaire | 48 | 42 | **6** |
+| géométrique | 44 | 39 | **5** |
+| **pénalisée k=1 (titre)** | **40** | **37** | **3** |
+| pénalisée k=2 | 26 | 31 | **−5** |
+| pénalisée k=3 | 0 | 25 | **−25** |
+
+**L'écart réel est de 3 points**, pas les « 10-15 points » estimés en annexe B.6 — un facteur 4. La
+bascule n'a **pas** été persistée : Lafarge reste à `aucune`.
+
+**🔴 ET SURTOUT — NON-MONOTONIE DE LA RÈGLE PÉNALISÉE À k ≥ 2.** Aux lignes k=2 et k=3, **dégrader
+l'entreprise AUGMENTE son score** (26 → 31, et 0 → 25). Cause : la pénalité porte sur la **dispersion** ;
+abaisser une valeur haute réduit la variance, et le gain de pénalité dépasse la perte de moyenne. À k=1,
+la règle de titre, le comportement reste **correct et monotone**. C'est une propriété attaquable en
+soutenance dès lors que le mémoire présente k=2/k=3 comme un comparatif de robustesse : **à documenter
+comme limite connue, ou à borner**. Découvert par l'exécution, pas par le raisonnement.
+
+**Vérifié après écriture** : JSON valide, site 200, api 401, `/rapport` 200, 4 évaluations en base.
+
+**⏭️ Reste de la notice** : **B** (7 opérations de paramétrage — B.2 à B.7 touchent `ros-model.js`, donc
+TDD avec le verrou « 11 voies justifiées ») puis **C** (7 exports vers les annexes). B.1 déjà fait le 27/07.
+
+---
+
 ## ✅ V4 EN PRODUCTION (2026-07-16) — https://ros.taraji-conseil.fr
 
 **État vérifié le 2026-07-16 12:00** : prod `/var/www/ros` sur `e84bdfd` (dev `main` = `07f545d`, docs uniquement → prod à jour côté code). Site 200, `/rapport` 200, API 401 (auth normale). Backend pm2 **root** (`sudo pm2 restart ros-backend`).
@@ -18,7 +80,9 @@
 
 **✅ PASSE DE SOURÇAGE CS + LAFARGE ÉCRITE EN PROD (2026-07-23)** — source de vérité = Drive `3-3-6_deux_cas_codes_V1.md` (section mémoire 3.3.6, id `1B4ompWliGGwX3ewxHra7Pl_pN-KK11rH`). Réconciliation v1↔prod → dry-run moteur → écriture prod (backup `storage.json.bak-2026-07-23-source-pass`, ids préservés, backend relit à chaud → sans restart). **CS** (id `5a131caf`) : SI-1 `souverain→ue` (fait sourcé « sans qualification » — arbitrage Naouphel), SN-5 `2→4,8`, +source sur 5/7 cellules (SN-2 & SO-1 restent saisi-non-sourcé) → scores **{SI 60, SD 18, SN 38, SO 55, ros 25 Critique}** (SI 100→60 ; ros 24→25, hausse due à la pénalité de dispersion Mazziotta-Pareto). **Lafarge** (id `88015b73`) : SN-5 `0,2→0,1`, SO-1 & SO-2 **déclassées** (vidées, granularité OSINT inaccessible), +source sur 6/6 → scores **{SD 46, SN 82, SO 55, ros 40 Faible}** (inchangés ; couverture SO 1→0,5). Vérif : JSON valide, site 200, api 401, backup OK. **2 notes prose v2 mémoire** (données correctes, formulation à recaler) : (a) le doc dit Lafarge « 8 codées/3 vides » mais son tableau final = 6 chiffrées/5 vides (SO-1/SO-2 déclassées) ; (b) « zone favorable » pour Lafarge = 40 → en fait ↓ Faible (dire « relativement plus favorable » vs CS 25). Le point F11 tient : banque régulée 25 < industriel opaque 40. Scripts : scratchpad `dryrun-source.mjs` / `apply-source.mjs`.
 
-**🟡 COUVERTURE PAR DIMENSION RAPATRIÉE SUR /rapport (2026-07-23, DEV — pas encore déployé)** — `/rapport` n'affichait que sourçage+complétude globaux ; la couverture par dimension (le signal d'opacité, ex. Lafarge SO 50 % / SI 0 %) n'était que sur la saisie. Ajout d'un bloc « Couverture par dimension » dans la carte Complétude de `Report.jsx` (l.164+), consommant `assess.coverageByDim` (déjà calculé l.62), < 100 % coloré orange. Recycle la variable morte `DIM_LABELS` (follow-up clos). **Build vert** (bundle `index-6646dd82.js`), données vérifiées (Lafarge SI 0 %/SO 50 %, CS SI 33 %/SO 67 %). **NON déployé prod** (attente go) ; **non prouvé au navigateur** (pas de puppeteer). Fichier : `frontend/src/pages/Report.jsx`.
+**✅ COUVERTURE PAR DIMENSION DÉPLOYÉE SUR /rapport EN PROD (2026-07-23)** — `/rapport` n'affichait que sourçage+complétude globaux ; la couverture par dimension (signal d'opacité, ex. Lafarge SO 50 % / SI 0 %) n'était que sur la saisie. Ajout bloc « Couverture par dimension » dans la carte Complétude de `Report.jsx` (l.164+), `assess.coverageByDim` (déjà calculé l.62), < 100 % orange. Recycle `DIM_LABELS` (follow-up clos). **Déployé via /ros-ship** : commit dev `157aa61` → push origin → prod FF `6b70c7c`→`157aa61` → build (bundle `index-6646dd82.js`), frontend seul (pas de restart). Preuve : site 200, api 401, pm2 online, chaîne « Couverture par dimension » présente dans le bundle servi. Données vérifiées : Lafarge SI 0 %/SO 50 %, CS SI 33 %/SO 67 %. **✅ PROUVÉ AU NAVIGATEUR (24/07)** : puppeteer-core + google-chrome système, parcours réel (gate login → onglet Rapport → sélecteur Lafarge), screenshot `scratchpad/rapport-lafarge.png` — 0 %/50 % en orange (`rgb(227,179,65)`), 100 % gris, sources en carte Traçabilité. Scripts : `scratchpad/shot-rapport.mjs`.
+
+**✅ SÉCU JWT_SECRET CORRIGÉE (24/07)** — le backend prod tournait avec le `JWT_SECRET` par défaut `'ros-secret-change-in-prod'` (codé en dur, repo public → forge de token admin possible par quiconque). Fix appliqué : `JWT_SECRET` fort (64 hex aléatoire) posé via `sudo env JWT_SECRET=… pm2 restart ros-backend --update-env` + `sudo pm2 save` (persiste reboot via `/root/.pm2/dump.pm2`). **Prouvé** : ancien token forgé → 401, token nouveau secret → 200, site 200. **Résiduel non fail-closed** : le secret vit seulement dans l'env pm2 (pas dans le code) → si `dump.pm2` est perdu / process relancé hors pm2, retour silencieux au défaut. Durcissement recommandé (follow-up) : ajouter `dotenv` + `.env` gitignored + `throw` si `JWT_SECRET` absent en prod (fail-closed), dans `server.js`.
 
 **✅ CORRECTIF THÈSE CS/CRO PRÉPARÉ (2026-07-23)** — doute Naouphel : l'intro Acte II (Drive `Official Memoire_CRO_3.0_EGE (3).md`, id `1sipbsP…Uus-r`) disait « les équipes risque ont fait leur travail… elle ne pouvait pas arrêter » → **contredit par Paul, Weiss (29/07/2021)** : « failure to control limit excesses **across both lines of defense** », « **lack of risk escalation** », CRO démissionnaire. Fait **vérifié web** (source pérenne SEC EDGAR). Réécriture prête (5 remplacements verbatim, ton chirurgical, + parade contre-jury Huynh, + réf citable) : `docs/2026-07-23-memoire-cs-cro-reecriture.md`. **Reste** : appliquer dans le doc Drive maître (méthode à trancher : find-replace manuel vs copie corrigée Drive). NB : la 3.3.6 était déjà alignée (micro-serrage `vetoFormalized`≠`vetoExercised`).
 
