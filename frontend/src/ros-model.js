@@ -156,22 +156,54 @@ export const PROFILES = {
 };
 
 // Famille MATURITÉ — 8 indicateurs, lecture « capacité à voir ». Hors score.
+// B.5 / B.6 (notice du 27/07). Deux régimes dans les lectures :
+//  · NOTABLE — indicateur numérique, mesurable sur pièce, doté d'une `cible` dont
+//    l'`origine` est écrite. AUCUNE de ces cibles n'est un seuil juridique : ce sont
+//    des arbitrages du référentiel, et le champ `origine` doit le dire sans détour.
+//  · DÉCLARATIF (`declaratif: true`) — repose sur du déclaratif interne, invisible
+//    en source ouverte. Recueilli et affiché, JAMAIS coté : lui donner une note
+//    fabriquerait la précision que le mémoire dénonce lui-même sous le nom de F11.
+//    Arbitrage Naouphel du 27/07. Le verrou de test (readings.test.js) l'impose.
 export const MATURITE = [
-  { id: 'sd2', code: 'SD-2', label: 'Diversification des options stratégiques', kind: 'num', target: 100 },
-  { id: 'sd5', code: 'SD-5', label: 'Couverture cartographie des dépendances', kind: 'num', target: 80 },
-  { id: 'sn4', code: 'SN-4', label: 'Conformité proactive vs réactive', kind: 'num', target: 70 },
-  { id: 'siq1', code: 'SI-Q1', label: 'Maturité classification info', kind: 'qual' },
-  { id: 'sdq1', code: 'SD-Q1', label: 'Maturité IE interne', kind: 'qual' },
-  { id: 'snq1', code: 'SN-Q1', label: 'Maturité veille réglementaire', kind: 'qual' },
-  { id: 'soq1', code: 'SO-Q1', label: 'Maturité PCA (condition de licéité)', kind: 'qual' },
-  { id: 'ciq1', code: 'CI-Q1', label: 'Maturité guerre cognitive', kind: 'qual' },
+  {
+    id: 'sd2', code: 'SD-2', label: 'Diversification des options stratégiques', kind: 'num', target: 100,
+    origine: "Cible indicative du référentiel, placée au plein (100 %) : la diversification n'a pas de seuil externe, et toute cible inférieure reviendrait à déclarer acceptable une dépendance résiduelle sans pouvoir dire laquelle.",
+  },
+  {
+    id: 'sd5', code: 'SD-5', label: 'Couverture cartographie des dépendances', kind: 'num', target: 80,
+    origine: "Cible indicative du référentiel. 80 % traduit qu'une cartographie exhaustive est un objectif théorique : au-delà, on cartographie des dépendances marginales à un coût qui n'éclaire plus la décision. Aucun texte ne fixe de taux de couverture.",
+  },
+  {
+    id: 'sn4', code: 'SN-4', label: 'Conformité proactive vs réactive', kind: 'num', target: 70,
+    origine: "Cible indicative du référentiel. 70 % marque le basculement d'une conformité subie à une conformité anticipée, sans exiger l'anticipation totale — irréaliste face à un flux normatif continu. Arbitrage, pas seuil réglementaire.",
+  },
+  { id: 'siq1', code: 'SI-Q1', label: 'Maturité classification info', kind: 'qual', declaratif: true },
+  { id: 'sdq1', code: 'SD-Q1', label: 'Maturité IE interne', kind: 'qual', declaratif: true },
+  { id: 'snq1', code: 'SN-Q1', label: 'Maturité veille réglementaire', kind: 'qual', declaratif: true },
+  { id: 'soq1', code: 'SO-Q1', label: 'Maturité PCA (condition de licéité)', kind: 'qual', declaratif: true },
+  { id: 'ciq1', code: 'CI-Q1', label: 'Maturité guerre cognitive', kind: 'qual', declaratif: true },
 ];
 
 // Famille INFLUENCE — 5 indicateurs (doublons SN/CI fusionnés). Lecture « capacité à peser ». Hors score.
 export const INFLUENCE = [
-  { id: 'inf_sieges', code: 'INF-1', label: 'Sièges en instances (ex SN-1/CI-1)', kind: 'num', target: 50 },
-  { id: 'inf_lobbying', code: 'INF-2', label: 'Budget lobbying (ex SN-3/CI-5)', kind: 'num', target: 60 },
-  { id: 'ci2', code: 'CI-2', label: 'Part de voix + tonalité', kind: 'num', target: 75 },
-  { id: 'ci3', code: 'CI-3', label: 'Capacité de contre-influence', kind: 'num', target: 60 },
-  { id: 'ci4', code: 'CI-4', label: 'Réseau d\'alliés activables', kind: 'num', target: 60 },
+  {
+    id: 'inf_sieges', code: 'INF-1', label: 'Sièges en instances (ex SN-1/CI-1)', kind: 'num', target: 50,
+    origine: "Cible indicative du référentiel. 50 % de présence dans les instances qui produisent les normes du secteur : en deçà, l'entreprise subit plus qu'elle ne participe ; au-delà, la présence relève de l'exception plutôt que d'un objectif atteignable. Fusion des ex-SN-1 et CI-1 (réparation de la faille F7).",
+  },
+  {
+    id: 'inf_lobbying', code: 'INF-2', label: 'Budget lobbying (ex SN-3/CI-5)', kind: 'num', target: 60,
+    origine: "Cible indicative du référentiel, relative aux pairs du secteur et non en valeur absolue : aucun montant n'a de sens hors comparaison. Fusion des ex-SN-3 et CI-5 (réparation de F7).",
+  },
+  {
+    id: 'ci2', code: 'CI-2', label: 'Part de voix + tonalité', kind: 'num', target: 75,
+    origine: "Cible indicative du référentiel, la plus haute des cinq : la part de voix est la seule lecture d'influence mesurable en continu par des moyens ouverts, donc la plus exigible. Aucun seuil externe.",
+  },
+  {
+    id: 'ci3', code: 'CI-3', label: 'Capacité de contre-influence', kind: 'num', target: 60,
+    origine: "Cible indicative du référentiel. 60 % traduit une capacité de réponse établie sans exiger la parité avec un adversaire dont on ne connaît pas les moyens. Arbitrage assumé.",
+  },
+  {
+    id: 'ci4', code: 'CI-4', label: 'Réseau d\'alliés activables', kind: 'num', target: 60,
+    origine: "Cible indicative du référentiel, alignée sur CI-3 : un réseau d'alliés n'a de valeur qu'activable, et la même exigence de 60 % s'applique faute de tout étalon externe.",
+  },
 ];

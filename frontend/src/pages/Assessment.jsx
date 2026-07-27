@@ -252,6 +252,13 @@ export default function Assessment({ showToast, onSaved }) {
               <div className="ind-id">{ind.code}</div>
               <div className="ind-label-block">
                 <div className="ind-label">{ind.label}</div>
+                {/* B.5 : le régime de l'indicateur est dit à l'écran, pas seulement au modèle.
+                    Sans cette ligne, rien ne distingue une lecture cotée d'une déclaration. */}
+                {ind.declaratif
+                  ? <div style={{ fontSize: 12, color: 'var(--text2)', fontStyle: 'italic', marginTop: 2 }}>déclaratif — non noté, ne compte ni dans la lecture ni dans la couverture</div>
+                  : ind.origine
+                    ? <div style={{ fontSize: 12, color: 'var(--text2)', marginTop: 2 }} title={ind.origine}>cible {ind.target} — cible indicative du référentiel</div>
+                    : null}
               </div>
               <div />
               <input
@@ -275,6 +282,13 @@ export default function Assessment({ showToast, onSaved }) {
               <div className="ind-id">{ind.code}</div>
               <div className="ind-label-block">
                 <div className="ind-label">{ind.label}</div>
+                {/* B.5 : le régime de l'indicateur est dit à l'écran, pas seulement au modèle.
+                    Sans cette ligne, rien ne distingue une lecture cotée d'une déclaration. */}
+                {ind.declaratif
+                  ? <div style={{ fontSize: 12, color: 'var(--text2)', fontStyle: 'italic', marginTop: 2 }}>déclaratif — non noté, ne compte ni dans la lecture ni dans la couverture</div>
+                  : ind.origine
+                    ? <div style={{ fontSize: 12, color: 'var(--text2)', marginTop: 2 }} title={ind.origine}>cible {ind.target} — cible indicative du référentiel</div>
+                    : null}
               </div>
               <div />
               <input

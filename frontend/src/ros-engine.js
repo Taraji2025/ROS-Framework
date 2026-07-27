@@ -127,6 +127,11 @@ export function computeAssessment(assessment) {
 
 // Normalisation v3 des lectures : qual 1-5 -> 0-100 ; num -> value/target×100 borné.
 function normReading(ind, cell) {
+  // B.5 : un indicateur déclaratif est recueilli et affiché, jamais coté. Il ne
+  // produit aucune valeur normalisée, donc ne pèse ni sur la moyenne ni sur la
+  // couverture de sa famille. Le garde est ici, au plus près du calcul, pour qu'un
+  // futur appelant ne puisse pas contourner la règle en appelant normReading seul.
+  if (ind.declaratif) return null;
   if (!cell || !isNum(cell.value)) return null;
   const v = parseFloat(cell.value);
   if (ind.kind === 'qual') {
@@ -143,7 +148,9 @@ function readFamily(indicators, cells) {
     const s = normReading(ind, cells[ind.id]);
     if (s !== null) { scores.push(s); filled++; }
   }
-  const applicable = indicators.length;
+  // La couverture ne porte que sur les lectures NOTABLES : compter les déclaratifs
+  // au dénominateur ferait plafonner la couverture à 3/8 même sur un dossier complet.
+  const applicable = indicators.filter(i => !i.declaratif).length;
   return {
     score: aggregate(scores, 'linear', 1), // lecture = moyenne simple
     coverage: applicable > 0 ? filled / applicable : 0,
