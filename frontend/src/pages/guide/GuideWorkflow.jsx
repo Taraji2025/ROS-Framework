@@ -46,15 +46,18 @@ export default function GuideWorkflow() {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
-              <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--text2)' }}>Profil</th>
-              <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--text2)' }}>Voies sans objet</th>
+              <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--text2)', width: '14%' }}>Profil</th>
+              <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--text2)', width: '16%' }}>Voies sans objet</th>
+              <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--text2)' }}>Pourquoi</th>
             </tr>
           </thead>
           <tbody>
             {Object.keys(PROFILES).map(p => (
               <tr key={p} style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '6px 8px', fontWeight: 600 }}>{PROFILES[p].label}</td>
-                <td style={{ padding: '6px 8px', color: 'var(--text2)' }}>{sansObjet(p).join(', ') || 'aucune'}</td>
+                <td style={{ padding: '6px 8px', fontWeight: 600, verticalAlign: 'top' }}>{PROFILES[p].label}</td>
+                <td style={{ padding: '6px 8px', color: 'var(--text2)', verticalAlign: 'top' }}>{sansObjet(p).join(', ') || 'aucune'}</td>
+                {/* Dérivé du modèle — l'annexe B.4 du mémoire s'exporte depuis ici. */}
+                <td style={{ padding: '6px 8px', color: 'var(--text2)', verticalAlign: 'top', lineHeight: 1.5 }}>{PROFILES[p].justification}</td>
               </tr>
             ))}
           </tbody>

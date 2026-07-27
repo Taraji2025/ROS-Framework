@@ -123,12 +123,36 @@ const ALL_VOIE_IDS = VOIES.map(v => v.id);
 // Profils : applicabilité seule, poids égaux (D-D).
 // Tech : SO-2 (stocks physiques) et SO-4 (autonomie énergétique) sans objet.
 // Banque : SO-2 sans objet uniquement ; SO-4 applicable (décision de session 16/07 — 10 voies).
+// Les profils ne portent QUE de l'applicabilité (poids égaux — décision V4) : ils
+// disent quelles voies ont un objet pour le secteur, jamais lesquelles comptent plus.
+// Toute exclusion se justifie ici, et le verrou de test l'exige (ros-model.test.js) :
+// une exclusion non justifiée est une pondération sectorielle qui ne dit pas son nom.
 export const PROFILES = {
-  standard:  { label: 'Standard',  applicable: ALL_VOIE_IDS },
-  banque:    { label: 'Banque',    applicable: ALL_VOIE_IDS.filter(id => !['so2'].includes(id)) },
-  industrie: { label: 'Industrie', applicable: ALL_VOIE_IDS },
-  tech:      { label: 'Tech',      applicable: ALL_VOIE_IDS.filter(id => !['so2', 'so4'].includes(id)) },
-  energie:   { label: 'Énergie',   applicable: ALL_VOIE_IDS },
+  standard: {
+    label: 'Standard',
+    applicable: ALL_VOIE_IDS,
+    justification: "Profil de référence : aucune exclusion. Les onze voies ont un objet pour une entreprise quelconque, et c'est ce profil qui sert d'étalon quand le secteur n'est pas déterminant ou n'est pas connu. Toute exclusion des autres profils se lit comme un écart à celui-ci.",
+  },
+  banque: {
+    label: 'Banque',
+    applicable: ALL_VOIE_IDS.filter(id => !['so2'].includes(id)),
+    justification: "SO-2 (stocks stratégiques, en jours de couverture) est exclue : une banque ne détient pas d'intrant physique dont la rupture d'approvisionnement interromprait la production. La voie est sans objet, et la coter à zéro pénaliserait un risque qui n'existe pas. SO-4 (autonomie énergétique) reste applicable : la continuité des salles de marché et des centres de données en dépend réellement.",
+  },
+  industrie: {
+    label: 'Industrie',
+    applicable: ALL_VOIE_IDS,
+    justification: "Aucune exclusion : les onze voies ont un objet. L'industrie est le secteur où la chaîne physique (stocks, énergie, fournisseurs critiques, dispersion des actifs) est la plus exposée — l'exclure de quoi que ce soit reviendrait à masquer sa surface de risque principale.",
+  },
+  tech: {
+    label: 'Tech',
+    applicable: ALL_VOIE_IDS.filter(id => !['so2'].includes(id)),
+    justification: "SO-2 (stocks stratégiques) est exclue : un éditeur ou un opérateur de services ne constitue pas de stock physique de couverture. SO-4 (autonomie énergétique) a été RÉINTÉGRÉE le 27/07 (notice, B.2) : le test d'applicabilité sur OVHcloud a montré que l'étiquette « tech » couvre aussi les opérateurs d'infrastructure, dont les centres de données font de l'approvisionnement électrique une dépendance de premier ordre. L'exclure revenait à rendre invisible la vulnérabilité la plus matérielle du secteur.",
+  },
+  energie: {
+    label: 'Énergie',
+    applicable: ALL_VOIE_IDS,
+    justification: "Aucune exclusion : les onze voies ont un objet, et deux d'entre elles (SO-2 stocks, SO-4 autonomie énergétique) portent le cœur même du métier. Un profil énergie qui en exclurait une serait contradictoire avec sa raison d'être.",
+  },
 };
 
 // Famille MATURITÉ — 8 indicateurs, lecture « capacité à voir ». Hors score.
