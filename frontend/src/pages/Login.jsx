@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { api } from '../api.js';
+// Dérivé du modèle, jamais écrit en dur : l'écran de connexion annonçait encore
+// « v3.0 » le 28/07 alors que la barre latérale avait été corrigée le 20/07 —
+// c'est pourtant le premier écran qu'un jury voit. Même correctif que la sidebar.
+import { MODEL_VERSION } from '../ros-model.js';
 
 export default function Login({ onLogin }) {
   const [username, setUsername] = useState('');
@@ -25,7 +29,7 @@ export default function Login({ onLogin }) {
     <div className="login-wrap">
       <div className="login-box">
         <div className="login-logo">RoS</div>
-        <div className="login-sub">Return on Sovereignty v3.0</div>
+        <div className="login-sub">Return on Sovereignty {MODEL_VERSION}</div>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="form-label">Identifiant</label>
