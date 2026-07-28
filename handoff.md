@@ -2,7 +2,44 @@
 
 > État de reprise rapide. Détail des tâches dans `tasks/todo.md`, leçons dans `tasks/lessons.md`.
 
-## 🔧 SESSION 2026-07-27 SOIR — PARTIE B (4/6) + LE GRAPHE FAUX DU DASHBOARD (reprendre ICI)
+## ✅ 2026-07-28 06h30 — TOUT EST DÉPLOYÉ EN PRODUCTION (reprendre ICI)
+
+**Prod = dev = `43376f1`.** Frontend seul, **aucun redémarrage backend** (nginx sert `dist`).
+Preuve : site **200**, api **401** (vivant), `/rapport` **200**, `ros-backend` online, **dist à jour**,
+**68 tests verts**. Bundle servi `index-2c8bf376.js` : « Évolution temporelle » **absent**,
+« Comparaison des cas codés » **présent**, `v4.0` **présent**.
+
+**Vérification visuelle faite AVANT de déployer** (serveur de dev + Chrome, compte `demo`) :
+Dashboard et Historique capturés, **0 erreur JS**, barres neutres Lafarge **40** / Credit Suisse **27**
+— les chiffres calculés la veille. Captures : `scratchpad/` de session.
+
+**⚠️ Deux défauts trouvés PAR la vérification visuelle, que ni les tests ni le build ne voyaient** :
+1. **L'écran de connexion annonçait encore « RETURN ON SOVEREIGNTY V3.0 »** — le premier écran qu'un
+   jury voit, resté en v3 alors que la barre latérale avait été corrigée le 20/07. Corrigé : la version
+   vient de `MODEL_VERSION`, plus aucune chaîne v3 dans l'interface (`c74e579`).
+2. **Le correctif du faux graphe ne couvrait que le Dashboard.** La page **Historique** portait le
+   **même graphe**, reliant par des courbes des entreprises différentes à des dates différentes. Corrigé
+   à l'identique (`43376f1`). C'était un correctif à moitié fait, livré comme s'il était complet.
+
+**⚠️ CONSTAT À CONFIRMER PAR NAOUPHEL** : `storage.json` a été modifié le **27/07 à 21h27**, soit
+**après** l'écriture de la partie A (~21h00). Les **deux évaluations v3 de test** (« T4 2025 »,
+« T1 2026 ») ont disparu — il ne reste que les deux vrais cas. Très probablement une suppression
+volontaire via l'interface pendant les captures. **Rien n'est perdu** : la sauvegarde
+`storage.json.bak-2026-07-27-notice-A` (20h58) contient les quatre. À confirmer, sinon c'est une perte
+de données à instruire.
+
+*(Correction d'une fausse alerte de ma part : j'avais cru l'API `/api/assessments` invalide — un
+« caractère de contrôle » dans le JSON. C'était mon propre enchaînement shell qui mangeait la sortie.
+**L'API renvoie du JSON valide.**)*
+
+**⏭️ RESTE** : **B.3 et B.4** (rédaction de référentiel à valider phrase par phrase) · les corrections
+de texte du mémoire (dont les deux hors notice : « dix à quinze points » écrit en toutes lettres dans
+la prose, et « sept à huit voies sur onze » alors que c'est 5/10 et 6/11) · le durcissement `JWT_SECRET`
+en fail-closed · la révocation du jeton GitHub `ghp_`.
+
+---
+
+## 🔧 SESSION 2026-07-27 SOIR — PARTIE B (4/6) + LE GRAPHE FAUX DU DASHBOARD
 
 **État : 68 tests verts, build vert, RIEN DE DÉPLOYÉ.** Prod inchangée depuis `157aa61` côté code
 (seules les **données** des deux cas ont bougé, cf. bloc partie A ci-dessous).
