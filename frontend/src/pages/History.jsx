@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api.js';
-import { rosLevel, fmt } from '../ros-engine.js';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend } from 'chart.js';
+import { rosLevel, fmt, comparableAssessments } from '../ros-engine.js';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Tooltip, Legend } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Tooltip, Legend);
 
 export default function History({ showToast }) {
   const [assessments, setAssessments] = useState([]);
@@ -34,15 +34,19 @@ export default function History({ showToast }) {
 
   const sorted = [...assessments].reverse();
 
-  const lineData = {
-    labels: sorted.map(a => a.period),
-    datasets: [
-      { label: 'RoS', data: sorted.map(a => a.scores?.ros), borderColor: '#f0c040', backgroundColor: 'rgba(240,192,64,.1)', borderWidth: 3, tension: .3 },
-      { label: 'SI',  data: sorted.map(a => a.scores?.SI),  borderColor: '#58a6ff', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
-      { label: 'SD',  data: sorted.map(a => a.scores?.SD),  borderColor: '#bc8cff', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
-      { label: 'SN',  data: sorted.map(a => a.scores?.SN),  borderColor: '#f0883e', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
-      { label: 'SO',  data: sorted.map(a => a.scores?.SO),  borderColor: '#3fb950', borderWidth: 1.5, tension: .3, borderDash: [4,2] },
-    ]
+  // Même correctif que le Dashboard (28/07) : ce graphe reliait par des courbes
+  // des évaluations d'entreprises DIFFÉRENTES à des dates différentes, comme si
+  // une entité avait évolué. On compare des cas ; une seule série, donc pas de
+  // légende ni de palette catégorielle.
+  const comparaison = comparableAssessments(sorted);
+  const barData = {
+    labels: comparaison.retenues.map(a => a.period),
+    datasets: [{
+      data: comparaison.retenues.map(a => a.scores?.ros),
+      backgroundColor: '#8b949e',
+      borderRadius: 4,
+      barThickness: 22,
+    }],
   };
 
   return (
@@ -64,19 +68,33 @@ export default function History({ showToast }) {
         </div>
       ) : (
         <>
-          {sorted.length >= 2 && (
+          {comparaison.retenues.length >= 2 && (
             <div className="card" style={{ marginBottom: 16 }}>
-              <div className="card-title">Évolution temporelle</div>
+              <div className="card-title">Comparaison des cas codés</div>
+              <div className="page-sub" style={{ marginBottom: 12 }}>
+                Score RoS par évaluation. Ce ne sont pas des points d'une trajectoire : chaque barre
+                est une entreprise à une date donnée.
+              </div>
               <div className="chart-wrap">
-                <Line data={lineData} options={{
+                <Bar data={barData} options={{
+                  indexAxis: 'y',
                   responsive: true, maintainAspectRatio: false,
                   scales: {
-                    y: { beginAtZero: true, max: 100, grid: { color: '#30363d' }, ticks: { color: '#8b949e' } },
-                    x: { grid: { color: '#30363d' }, ticks: { color: '#8b949e' } }
+                    x: { beginAtZero: true, max: 100, grid: { color: '#30363d' }, ticks: { color: '#8b949e' } },
+                    y: { grid: { display: false }, ticks: { color: '#8b949e' } }
                   },
-                  plugins: { legend: { position: 'top', labels: { color: '#8b949e', boxWidth: 12, padding: 15 } } }
+                  plugins: { legend: { display: false } }
                 }} />
               </div>
+              {comparaison.exclues.length > 0 && (
+                <div className="page-sub" style={{ marginTop: 12 }}>
+                  {comparaison.exclues.length} évaluation{comparaison.exclues.length > 1 ? 's' : ''} antérieure
+                  {comparaison.exclues.length > 1 ? 's' : ''} au modèle v4 ({comparaison.exclues.map(a => a.period).join(', ')})
+                  {comparaison.exclues.length > 1 ? ' sont écartées' : ' est écartée'} du graphe : sans cellules
+                  codées, {comparaison.exclues.length > 1 ? 'elles ne sont' : 'elle n’est'} pas recalculable
+                  {comparaison.exclues.length > 1 ? 's' : ''}. {comparaison.exclues.length > 1 ? 'Elles restent' : 'Elle reste'} dans le tableau ci-dessous.
+                </div>
+              )}
             </div>
           )}
           <div className="card">
