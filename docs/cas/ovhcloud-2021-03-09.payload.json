@@ -1,0 +1,72 @@
+{
+  "period": "OVHcloud · 09/03/2021",
+  "sector": "tech",
+  "cells": {
+    "si1": {
+      "band": "souverain",
+      "source": "OVH Groupe, Registration Document (IPO), 17/09/2021, p. 114 : « In January 2021, the ANSSI granted a security visa to OVHcloud for the \"SecNumCloud\" qualification for its hosted private cloud »",
+      "note": "Arbitrage Naouphel 05/10/2026 : cotation des OFFRES. Réserve : l'activité qualifiée pèse ~2 % du CA (24 M€ d'ARR, URD 2025 p. 231) ; l'hébergement des données propres du groupe n'est publié nulle part."
+    },
+    "sd3": {
+      "value": "16.76",
+      "source": "OVH Groupe, Registration Document (IPO), 17/09/2021, p. 160-161 : Spiral Holdings BV (TowerBrook) 8,38 % DDV + Spiral Holdings SCA (KKR) 8,38 % DDV (9,92 % + 9,92 % du capital)",
+      "note": "Droits de vote retenus (16,76 %) ; en capital 19,84 %. Même palier (10-25) dans les deux lectures. Table datée de sept. 2021 : aucune opération sur le capital trouvée entre mars et sept. 2021."
+    },
+    "sd4": {
+      "band": "citee",
+      "source": "OVH Groupe, Registration Document (IPO), 17/09/2021, p. 21-22 (CLOUD Act cité comme facteur de risque) ; p. 12 : « U.S. entities representing 5.7% of its FY2020 revenue »",
+      "note": "Aucune procédure étrangère trouvée avant mars 2021. Part du CA en USD non isolée (≥ 5,7 %)."
+    },
+    "sn2": {
+      "band": "federation",
+      "source": "OVH Groupe, Registration Document (IPO), 17/09/2021, p. 61 : « founding member of CISPE, and is represented on the CISPE Board of Directors » ; p. 59 (membre fondateur Gaia-X) ; p. 118 (co-rédaction des codes SWIPO, juillet 2020)",
+      "note": "Arbitrage Naouphel 05/10/2026 : lecture stricte. CISPE/Gaia-X = associations ; aucune présence trouvée à l'ISO, au CEN, à l'ETSI ni à l'AFNOR."
+    },
+    "sn5": {
+      "value": "0",
+      "source": "OVH Groupe, Registration Document (IPO), 17/09/2021, ch. 3 (facteurs de risque) et 18.5 (procédures) : aucune sanction étrangère mentionnée",
+      "note": "Preuve par absence (2016-2021), recherche presse comprise. Non compté : exploitation ICPE de Roubaix sans autorisation, sans sanction (p. 18)."
+    },
+    "so1": {
+      "band": "concentre",
+      "source": "OVH Groupe, Registration Document (IPO), 17/09/2021, p. 19 (processeurs Intel/AMD, « limited number of suppliers ») ; p. 25 (AixMétal, « significant amount of time to find an alternative supplier »)",
+      "note": "Aucune part d'achat par fournisseur publiée (seuil de 30 % non vérifiable). Intégration verticale : serveurs fabriqués en interne."
+    },
+    "so4": {
+      "band": "dispositif",
+      "source": "BEA-RI, rapport n° MTE-BEARI-2022-005, 24/05/2022, p. 14-15 : groupes électrogènes fioul + 2 liaisons HTA 20 kV ; OVH Groupe, Registration Document (IPO), 17/09/2021, p. 20 : panne de l'alimentation de secours en 2017 (~3 h)",
+      "note": "Durée d'autonomie en heures non publiée."
+    },
+    "so5": {
+      "band": "disperse-mixte",
+      "source": "OVH Groupe, Registration Document (IPO), 17/09/2021, p. 33 : « 33 data centers worldwide in 12 locations » (hors SBG1/SBG2) ; p. 41 : 9 datacenters dans les Amériques ; p. 17 : les 4 datacenters de Strasbourg formaient un seul site",
+      "note": "Décompte avant l'incendie (~35) déduit, non publié. DE21 p. 62 se contredit (« 30 locations in 12 countries »)."
+    }
+  },
+  "governance": {
+    "croReporting": false,
+    "vetoFormalized": false,
+    "vetoExercised": false
+  },
+  "readings": {
+    "maturite": {
+      "score": null,
+      "coverage": 0,
+      "filled": 0,
+      "applicable": 3
+    },
+    "influence": {
+      "score": null,
+      "coverage": 0,
+      "filled": 0,
+      "applicable": 5
+    }
+  },
+  "scores": {
+    "SI": 100,
+    "SD": 58,
+    "SN": 67,
+    "SO": 53,
+    "ros": 45
+  }
+}
