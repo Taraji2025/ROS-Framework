@@ -1,6 +1,9 @@
 # ROS — tâches en cours
 
-## 🟢 CHANTIER (2026-10-05) — Cas n° 3 : OVHcloud · 09/03/2021 (veille de l'incendie de SBG)
+## 🟢 CHANTIER (2026-10-05) — Démo OVHcloud HORS MÉMOIRE : 09/03/2021 (45,3) + 05/10/2026 (32,5)
+Fiche 2026 : `docs/cas/2026-10-05-ovhcloud-2026.md` · payload `docs/cas/ovhcloud-2026-10-05.payload.json`.
+- [x] Statut tranché (Naouphel) : démo live, hors mémoire. Conventions des deux dates gardées telles quelles (écart documenté).
+- [ ] Saisie en prod des DEUX payloads (2021 et 2026).
 Fiche : `docs/cas/2026-10-05-cas-ovhcloud.md` · charge utile : `docs/cas/ovhcloud-2021-03-09.payload.json` · recherche : `docs/cas/ovhcloud-recherche-sourcee.md`.
 - [x] Date tranchée (Naouphel) : veille de la crise, même logique que CS et Lafarge.
 - [x] Sourcé dès le départ : 8/8 cellules sourcées (le doc d'IPO de 2021 revérifié dans le PDF), SI-2 et SI-3 vides.

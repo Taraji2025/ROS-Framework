@@ -1,0 +1,72 @@
+{
+  "period": "OVHcloud · 05/10/2026 · v4 · démo hors mémoire",
+  "sector": "tech",
+  "cells": {
+    "si1": {
+      "band": "ue",
+      "source": "Décision ANSSI 2025-559 du 24/03/2025 (BAREMETAL POD, SecNumCloud 3.2) ; cyber.gouv.fr, prestations en cours de qualification, consultée le 05/10/2026 (SNC Cloud Platform encore en cours) ; DEU 2025 : CA 48 % France, 29 % reste Europe, 23 % reste du monde",
+      "note": "Groupe codé, pas l'offre : la qualification couvre un périmètre (« plus de 80 clients » HPC en 01/2024). Périmètre qualifié seul = 100."
+    },
+    "si2": {
+      "band": "contractuelle",
+      "source": "OVHcloud Global Reversibility Policy (docs.ovhcloud.com, MAJ 05/05/2021), conformité SWIPO IaaS ; DEU 2025 §1.3.1.2 (OpenStack, Kubernetes ; pas de frais de sortie sauf stockage block/archive et Asie-Pacifique)",
+      "note": "« Multi-cloud » lu comme capacité offerte au client. Exception : Data Processing Engine sans export. Conformité Data Act non documentée."
+    },
+    "sd3": {
+      "value": "20.2",
+      "source": "Tableau d'actionnariat OVH Groupe, 04/12/2025 (corporate.ovhcloud.com) : concert Klaba 79,0 % du capital / 79,6 % DDV ; flottant 18,4 % ; employés et administrateurs 1,8 % ; autodétention 0,8 %",
+      "note": "Majorant (flottant + salariés) : la nationalité des porteurs n'est pas publiée. Moins de 10 % non démontrable."
+    },
+    "sd4": {
+      "band": "procedure",
+      "source": "Ordonnance de production (C. crim. canadien, art. 487.014) du 19/04/2024 visant OVH Groupe SA et Hébergement OVH Inc. ; maintenue le 25/09/2025 (Ontario) ; blog OVHcloud du 31/07/2026 (poursuites, art. 487.0198 et 139(2))",
+      "note": "Extension hors FCPA assumée : injonction extraterritoriale en conflit avec la loi de blocage 68-678. Statut des poursuites ambigu (« filed » / « threatened »)."
+    },
+    "sn2": {
+      "band": "comites",
+      "source": "Gaia-X, conseil d'administration 2025-2027 : Dominique Michiels, membre du COMEX d'OVHcloud (gaia-x.eu/board-of-directors, consulté le 05/10/2026) ; DEU 2025 §1.1 (membre fondateur Gaia-X, 2020) et §1.6.1.3 (co-rédaction des codes SWIPO)",
+      "note": "Lecture de facto, conforme à la convention SN-2 du mémoire (§3.3.6) : siège direct dans l'instance qui écrit le cadre de confiance Gaia-X. Aucune présence directe trouvée à l'ISO/IEC JTC 1/SC 38, au CEN, à l'ETSI ni à l'AFNOR ; pas de siège au conseil du CISPE. En lecture de jure seule : 50."
+    },
+    "so1": {
+      "band": "concentre",
+      "source": "DEU 2025 §1.4.1 (GPU exclusivement NVIDIA) ; Next, 02/12/2019 (pénurie de CPU Intel, O. Klaba)",
+      "note": "CPU désormais double source (AMD, Intel). NVIDIA mono-source sur l'offre IA, pas sur le cœur d'activité."
+    },
+    "so4": {
+      "band": "dispositif",
+      "source": "DEU 2025 §3.2.1.6 (groupes électrogènes de secours, HVO à Roubaix, Gravelines, Strasbourg, Erith) ; rapport BEA-RI n° MTE-BEARI-2022-005 du 24/05/2022 (SBG : deux liaisons HTA 20 kV redondantes, groupes fioul)",
+      "note": "Aucune durée d'autonomie publiée."
+    },
+    "so5": {
+      "band": "disperse-mixte",
+      "source": "DEU 2025 §1.4.1 (44 datacenters au 31/08/2025) ; blog OVHcloud du 31/07/2026 (« more than 46 data centers across four continents »)",
+      "note": "Sites hors UE : Canada, USA, Singapour, Australie, Inde. Périmètre SecNumCloud (Roubaix, Gravelines, Strasbourg) = 100."
+    }
+  },
+  "governance": {
+    "croReporting": false,
+    "vetoFormalized": false,
+    "vetoExercised": false
+  },
+  "readings": {
+    "maturite": {
+      "score": null,
+      "coverage": 0,
+      "filled": 0,
+      "applicable": 3
+    },
+    "influence": {
+      "score": null,
+      "coverage": 0,
+      "filled": 0,
+      "applicable": 5
+    }
+  },
+  "scores": {
+    "SI": 75,
+    "SD": 18,
+    "SN": 100,
+    "SO": 53,
+    "ros": 32
+  }
+}

@@ -1,4 +1,8 @@
-# Cas n° 3 — OVHcloud · 09/03/2021 (veille de l'incendie de SBG)
+# Démo OVHcloud · 09/03/2021 (veille de l'incendie de SBG) — hors mémoire
+
+> **Statut (arbitrage Naouphel, 05/10/2026) : démo live, hors mémoire.** Le mémoire ne code pas
+> OVHcloud (§3.3.6 : deux cas). Les constats sur le modèle ci-dessous servent à la soutenance orale,
+> pas au texte. Version 2026 et comparaison : `docs/cas/2026-10-05-ovhcloud-2026.md`.
 
 > Fiche de codage rédigée le 05/10/2026. **Non saisie en production** : la saisie passe par l'API
 > (le sélecteur de période de l'interface ne propose que des trimestres, « T1 2026 », etc.).
@@ -33,7 +37,7 @@ datacenters de Strasbourg, qui formaient un seul site électrique. La question p
 | Géométrique | 48,1 | 48,1 | 48,1 |
 | Pénalisée | **45,3** | 39,1 | 31,0 |
 
-**Lecture croisée des trois cas** (titre) : Credit Suisse **27** < Lafarge **40** < OVHcloud **45**.
+**À côté des deux cas du mémoire** (titre) : Credit Suisse **27** < Lafarge **40** < OVHcloud **45**.
 
 ## Cellules
 
@@ -76,7 +80,7 @@ faut l'une de ces deux issues :
   compte comme « comité » pour SN-2 ;
 - **un alignement** des deux voies sur la même sévérité.
 
-## Ce que le cas apprend sur le modèle (matière pour le mémoire)
+## Ce que le cas apprend sur le modèle (pour la soutenance orale)
 
 1. **Le modèle n'a pas vu le risque qui s'est réalisé.** L'incendie relève de SO-5 (concentration
    physique d'un site) et de SO-4 (continuité électrique). Le modèle les cote **60** et **50**, des
