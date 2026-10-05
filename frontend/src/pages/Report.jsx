@@ -8,6 +8,7 @@ import { VOIES, DIMENSIONS } from '../ros-model.js';
 import { Radar } from 'react-chartjs-2';
 import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler, Tooltip } from 'chart.js';
 import { DISCLAIMER_REPORT } from '../disclaimer.js';
+import ReadingsLines from './ReadingsLines.jsx';
 import { radarData as radarDataShared, radarOptions } from '../chart-theme.js';
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip);
@@ -95,6 +96,7 @@ export default function Report({ showToast }) {
         <div style={{ marginTop: 12, color: 'var(--text2)', fontSize: 13, lineHeight: 1.6, position: 'relative' }}>
           {interp.verdict}
         </div>
+        <ReadingsLines cells={assessment.cells} />
       </div>
 
       {/* Top / flop : morceau #1 */}

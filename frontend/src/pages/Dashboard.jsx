@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { api } from '../api.js';
 import { rosLevel, fmt, interpretScore, computeActionPlan, comparableAssessments } from '../ros-engine.js';
 import { radarData, radarOptions } from '../chart-theme.js';
+import ReadingsLines from './ReadingsLines.jsx';
 import { Radar, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS, RadialLinearScale, PointElement, LineElement,
@@ -92,6 +93,7 @@ export default function Dashboard({ showToast, onEvaluate }) {
             <span className="chip-level" style={{ color: lvl.color, marginTop: 12 }}>{lvl.label}</span>
           )}
           {interp?.verdict && <div className="hero-verdict">{interp.verdict}</div>}
+          {last && <ReadingsLines cells={last.cells} />}
           {!last && <div className="empty-hint">Aucune évaluation — lance une évaluation pour voir le score.</div>}
         </div>
         <div className="card">
