@@ -1,5 +1,17 @@
 # ROS — tâches en cours
 
+## 🟢 CHANTIER (2026-10-05) — Démo OVHcloud HORS MÉMOIRE : 09/03/2021 (45,3) + 05/10/2026 (32,5)
+Fiche 2026 : `docs/cas/2026-10-05-ovhcloud-2026.md` · payload `docs/cas/ovhcloud-2026-10-05.payload.json`.
+- [x] Statut tranché (Naouphel) : démo live, hors mémoire. Conventions des deux dates gardées telles quelles (écart documenté).
+- [ ] Saisie en prod des DEUX payloads (2021 et 2026).
+Fiche : `docs/cas/2026-10-05-cas-ovhcloud.md` · charge utile : `docs/cas/ovhcloud-2021-03-09.payload.json` · recherche : `docs/cas/ovhcloud-recherche-sourcee.md`.
+- [x] Date tranchée (Naouphel) : veille de la crise, même logique que CS et Lafarge.
+- [x] Sourcé dès le départ : 8/8 cellules sourcées (le doc d'IPO de 2021 revérifié dans le PDF), SI-2 et SI-3 vides.
+- [x] Arbitrages Naouphel : SI-1 = 100 (offres), SN-2 = 50 (lecture stricte) → **titre 45,3 (Faible)**, coef 0,70.
+- [ ] **Saisie en prod** via l'API (commande dans la fiche) — le sélecteur de période de l'UI ne le permet pas.
+- [ ] Trancher l'incohérence de sévérité SI-1 (large) / SN-2 (strict) : règle écrite au référentiel ou alignement.
+- [ ] Mémoire : SO-5 ne distingue pas un site d'un datacenter (l'incendie a coupé 4 datacenters = 1 site) ; le coefficient de gouvernance punit le silence (même biais que F11).
+
 ## 🟣 CHANTIER EN COURS (2026-07-20) — Refonte graphique « Direction C · Éditorial premium »
 Naouphel veut un rendu plus beau/dynamique. Brainstorming en compagnon visuel → **direction + périmètre tranchés**.
 **Spec écrite** : `docs/superpowers/specs/2026-07-20-ros-visual-refresh-editorial-design.md`.
