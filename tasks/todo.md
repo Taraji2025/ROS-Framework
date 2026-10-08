@@ -1,5 +1,9 @@
 # ROS — tâches en cours
 
+## 🟢 (2026-10-05) — Lectures hors score affichées à côté du score (spec V4 §7, jamais construit)
+- [x] `READING_META` au modèle + verrou de test ; composant `ReadingsLines` sur /rapport et Dashboard. 70/70, build vert, captures `tasks/screenshots/07-*`.
+- [ ] Déploiement prod (après validation Naouphel).
+
 ## 🟣 CHANTIER EN COURS (2026-07-20) — Refonte graphique « Direction C · Éditorial premium »
 Naouphel veut un rendu plus beau/dynamique. Brainstorming en compagnon visuel → **direction + périmètre tranchés**.
 **Spec écrite** : `docs/superpowers/specs/2026-07-20-ros-visual-refresh-editorial-design.md`.

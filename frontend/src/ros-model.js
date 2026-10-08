@@ -155,6 +155,13 @@ export const PROFILES = {
   },
 };
 
+// Libellés des deux lectures affichées À CÔTÉ du score, jamais dedans (spec V4 §7).
+// Clés = familles rendues par computeReadings ; le verrou de test (readings.test.js) l'impose.
+export const READING_META = {
+  maturite:  { label: 'Capacité à voir',  question: "L'entreprise voit-elle ses dépendances ?" },
+  influence: { label: 'Capacité à peser', question: 'Peut-elle agir sur la norme ?' },
+};
+
 // Famille MATURITÉ — 8 indicateurs, lecture « capacité à voir ». Hors score.
 // B.5 / B.6 (notice du 27/07). Deux régimes dans les lectures :
 //  · NOTABLE — indicateur numérique, mesurable sur pièce, doté d'une `cible` dont

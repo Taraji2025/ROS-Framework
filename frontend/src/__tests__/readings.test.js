@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { computeReadings } from '../ros-engine.js';
-import { MATURITE, INFLUENCE } from '../ros-model.js';
+import { MATURITE, INFLUENCE, READING_META } from '../ros-model.js';
 
 const LECTURES = [...MATURITE, ...INFLUENCE];
 
@@ -71,5 +71,21 @@ describe('computeReadings', () => {
     expect(r.maturite.score).toBeNull();
     expect(r.maturite.coverage).toBe(0);
     expect(r.influence.score).toBeNull();
+  });
+});
+
+// Spec V4 §7 (15/07) : la restitution affiche, à côté du score, « Capacité à voir »
+// (maturité) et « Capacité à peser » (influence). Un libellé est un FAIT : il vit au
+// modèle. Le verrou garantit que chaque famille rendue par computeReadings a son
+// libellé — une famille sans libellé disparaîtrait de l'écran sans bruit.
+describe('READING_META — libellés des lectures affichées à côté du score', () => {
+  it('couvre exactement les familles rendues par computeReadings', () => {
+    expect(Object.keys(READING_META).sort()).toEqual(Object.keys(computeReadings({})).sort());
+  });
+  it('chaque famille porte un libellé et la question à laquelle elle répond', () => {
+    for (const meta of Object.values(READING_META)) {
+      expect(meta.label).toMatch(/\S/);
+      expect(meta.question).toMatch(/\S/);
+    }
   });
 });
